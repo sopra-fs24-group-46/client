@@ -29,7 +29,7 @@ const Game = () => {
   // keep its value throughout render cycles.
   // a component can have as many state variables as you like.
   // more information can be found under https://react.dev/learn/state-a-components-memory and https://react.dev/reference/react/useState 
-  const [users, setUsers] = useState<User[]>(null);
+  const [users, setUsers] = useState<User[]>([]);
 
   const logout = (): void => {
     localStorage.removeItem("token");

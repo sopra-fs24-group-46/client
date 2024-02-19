@@ -35,8 +35,8 @@ FormField.propTypes = {
 
 const Login = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState<string>(null);
-  const [username, setUsername] = useState<string>(null);
+  const [name, setName] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
 
   const doLogin = async () => {
     try {
