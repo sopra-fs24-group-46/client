@@ -6,7 +6,6 @@ import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import FormField from "components/ui/FormField"
-
 /*
 It is possible to add multiple components inside a single file,
 however be sure not to clutter your files with an endless amount!
@@ -14,15 +13,16 @@ As a rule of thumb, use one file per component and only add small,
 specific components that belong to the main one in the same file.
  */
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
   const [password, setPassword] = useState<string>("");
+  const [passwordRep, setPasswordRep] = useState<string>("");
   const [username, setUsername] = useState<string>("");
 
-  const doLogin = async () => {
+  const doRegister = async () => {
     try {
       const requestBody = JSON.stringify({ username, password });
-      const response = await api.put("/users/login", requestBody);
+      const response = await api.post("/users", requestBody);
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
@@ -31,11 +31,11 @@ const Login = () => {
       localStorage.setItem("token", user.token);
       sessionStorage.setItem("token", user.token);
 
-      // Login successfully worked --> navigate to the route /game in the GameRouter
+      // Register successfully worked --> navigate to the route /game in the GameRouter
       navigate("/game");
     } catch (error) {
       alert(
-        `Something went wrong during the login: \n${handleError(error)}`
+        `Something went wrong during the Register: \n${handleError(error)}`
       );
     }
   };
@@ -50,24 +50,32 @@ const Login = () => {
             onChange={(un: string) => setUsername(un)}
           />
           <FormField
+            label="Password"
+            name="password"
             type="password"
-            label="password"
             value={password}
             onChange={(n) => setPassword(n)}
+            />
+                  <FormField
+            label="Password"
+            name="repeat password"
+            type="password"
+            value={passwordRep}
+            onChange={(n) => setPasswordRep(n)}
           />
           <div className="login button-container">
             <Button
-              disabled={!username || !password}
+              disabled={!username || !password || password !== passwordRep}
               width="100%"
-              onClick={() => doLogin()}
+              onClick={() => doRegister()}
             >
-              Login
+              Register
             </Button>
             <Button
               width="100%"
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/login")}
             >
-              Go to registration
+              Go to Login
             </Button>
           </div>
         </div>
@@ -79,4 +87,4 @@ const Login = () => {
 /**
  * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
  */
-export default Login;
+export default Register;

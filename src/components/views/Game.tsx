@@ -8,8 +8,8 @@ import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import { User } from "types";
 
-const Player = ({ user }: { user: User }) => (
-  <div className="player container">
+const Player = ({ user, onClick }: { user: User, onClick: ()=>void }) => (
+  <div className="player container" onClick={onClick}>
     <div className="player username">{user.username}</div>
     <div className="player name">{user.name}</div>
     <div className="player id">id: {user.id}</div>
@@ -33,6 +33,7 @@ const Game = () => {
 
   const logout = (): void => {
     localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     navigate("/login");
   };
 
@@ -49,7 +50,7 @@ const Game = () => {
         // delays continuous execution of an async operation for 1 second.
         // This is just a fake async call, so that the spinner can be displayed
         // feel free to remove it :)
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // Get the returned users and update the state.
         setUsers(response.data);
@@ -79,6 +80,10 @@ const Game = () => {
     fetchData();
   }, []);
 
+  const goToProfile = (id: number) => {
+    navigate("/game/profile/?id="+id)
+  }
+
   let content = <Spinner />;
 
   if (users) {
@@ -87,7 +92,7 @@ const Game = () => {
         <ul className="game user-list">
           {users.map((user: User) => (
             <li key={user.id}>
-              <Player user={user} />
+              <Player user={user} onClick={() => goToProfile(user.id)}/>
             </li>
           ))}
         </ul>
