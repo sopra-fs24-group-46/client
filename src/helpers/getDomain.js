@@ -7,7 +7,7 @@ import { isProduction } from "./isProduction"
  * @returns {string}
  */
 export const getDomain = () => {
-  const prodUrl = "sopra-fs24-serscho-server.oa.r.appspot.com" // TODO: insert your prod url for server (once deployed)
+  const prodUrl = "https://sopra-fs24-serscho-server.oa.r.appspot.com/" // TODO: insert your prod url for server (once deployed)
   // const devUrl = "https://sopra-fs24-serscho-server.oa.r.appspot.com"
   const devUrl = "http://localhost:8080"
 
