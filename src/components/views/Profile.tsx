@@ -3,7 +3,7 @@ import { api, handleError } from "helpers/api";
 import User from "models/User";
 import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/Login.scss";
+import "styles/views/profile.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
   
@@ -40,7 +40,7 @@ ProfileField.propTypes = {
 const Profile = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get('id');
+  const id = searchParams.get("id");
 
   const navigate = useNavigate();
   const [name, setName] = useState<string>(null);
@@ -57,17 +57,17 @@ const Profile = () => {
         // Get the returned user and update a new object.
         const user = new User(response.data);
         setName(user.name);
-        setBirthday(user.birthday ? (new Date(user.birthday)).toISOString().split('T')[0]: null);
+        setBirthday(user.birthday ? (new Date(user.birthday)).toISOString().split("T")[0]: null);
         setUsername(user.username);
-        setCreationDate((new Date(user.creation_date)).toISOString().split('T')[0]);
+        setCreationDate((new Date(user.creation_date)).toISOString().split("T")[0]);
         console.log(user.name);
         console.log(user.username);
         console.log(new Date(user.birthday));
         
-        let localToken = sessionStorage.getItem("token");
-        if (localToken === user.token) {
-          setIsOwner(true);
-        }
+        const token = localStorage.getItem("token");
+        const requestBody = JSON.stringify({token});
+        let tempIsOwner = await api.put("/users/verify/" + id, requestBody);
+        setIsOwner(tempIsOwner.isOwner);
 
 
       } catch (error) {
@@ -77,6 +77,7 @@ const Profile = () => {
       }
     };
     fetchData();
+    
   }, []);
 
   const backToDashboard = (): void => {
@@ -85,7 +86,8 @@ const Profile = () => {
 
   const updateProfile = async () => {
     try {
-      const requestBody = JSON.stringify({ username, name, birthday, password });
+      const token = localStorage.getItem("token");
+      const requestBody = JSON.stringify({ username, name, birthday, password, token });
       const response = await api.put("/users/"+id, requestBody);
 
       // Get the returned user and update a new object.
@@ -100,44 +102,53 @@ const Profile = () => {
 
   return (
     <BaseContainer>
-      <h1>Profile of user: {id}</h1>
-      <div className="login container">
-        <div className="login form">
+      
+      <div className="profile title">
+        <h2>User: {name?name:"unnamed"} ({id})</h2>
+        <p className="game paragraph">
+          {is_owner ?
+            "You can edit the fields below. Don't forget to safe the changes" :
+            "Login as this user or change to your user profile to edit the content"
+          }
+        </p>
+      </div>
+      <div className="profile container">
+        <div className="profile form">
           <ProfileField
             label="Username"
             value={username}
             disabled={!is_owner}
             onChange={(un: string) => setUsername(un)}
           />
-        <ProfileField
+          <ProfileField
             label="Name"
             value={name}
             disabled={!is_owner}
             onChange={(n) => setName(n)}
-        />
-        <ProfileField
+          />
+          <ProfileField
             label="Birthday"
             type="Date"
             value={birthday}
             disabled={!is_owner}
             onChange={(n) => setBirthday(n)}
-        />
-        <ProfileField
+          />
+          <ProfileField
             label="Creation date"
             type="Date"
             value={creation_date}
             disabled={true}
             onChange={(n) => setCreationDate(n)}
-        />
-        <ProfileField
+          />
+          <ProfileField
             type="password"
             label="Password"
             value={password}
             disabled={!is_owner}
             onChange={(n) => setPassword(n)}
-        />
+          />
 
-          <div className="login button-container">
+          <div className="profile button-container">
             <Button
               width="100%"
               disabled={!is_owner}
@@ -149,6 +160,7 @@ const Profile = () => {
               Dashboard
             </Button>
           </div>
+          <div/>
         </div>
       </div>
     </BaseContainer>

@@ -29,7 +29,7 @@ const Register = () => {
 
       // Store the token into the local storage.
       localStorage.setItem("token", user.token);
-      sessionStorage.setItem("token", user.token);
+      localStorage.setItem("id", user.id);
 
       // Register successfully worked --> navigate to the route /game in the GameRouter
       navigate("/game");
@@ -55,8 +55,8 @@ const Register = () => {
             type="password"
             value={password}
             onChange={(n) => setPassword(n)}
-            />
-                  <FormField
+          />
+          <FormField
             label="Password"
             name="repeat password"
             type="password"

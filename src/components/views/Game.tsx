@@ -30,10 +30,10 @@ const Game = () => {
   // a component can have as many state variables as you like.
   // more information can be found under https://react.dev/learn/state-a-components-memory and https://react.dev/reference/react/useState 
   const [users, setUsers] = useState<User[]>([]);
+  const [currentUser, setCurrentUser] = useState<User[]>([]);
 
   const logout = (): void => {
     localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
     navigate("/login");
   };
 
@@ -46,14 +46,18 @@ const Game = () => {
     async function fetchData() {
       try {
         const response = await api.get("/users");
-
+        
         // delays continuous execution of an async operation for 1 second.
         // This is just a fake async call, so that the spinner can be displayed
         // feel free to remove it :)
         // await new Promise((resolve) => setTimeout(resolve, 1000));
-
+        
         // Get the returned users and update the state.
         setUsers(response.data);
+
+        let id = localStorage.getItem("id")
+        const response2 = await api.get("/users/" + id);
+        setCurrentUser(response2.data);
 
         // This is just some data for you to see what is available.
         // Feel free to remove it.
@@ -105,7 +109,7 @@ const Game = () => {
 
   return (
     <BaseContainer className="game container">
-      <h2>Happy Coding!</h2>
+      <h2>Logged in as user <b>{currentUser.username}</b></h2>
       <p className="game paragraph">
         Get all users from secure endpoint:
       </p>
