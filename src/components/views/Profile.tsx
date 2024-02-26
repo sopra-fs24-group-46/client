@@ -48,8 +48,37 @@ const Profile = () => {
   const [username, setUsername] = useState<string>(null);
   const [password, setPassword] = useState<string>(null);
   const [creation_date, setCreationDate] = useState<string>(null);
-  const [is_owner, setIsOwner] = useState<string>(false);
+  const [is_owner, setIsOwner] = useState<boolean>(false);
+  const [changeOccurred, setChangeOccurred] = useState<boolean>(false);
 
+  const handleNavigation = (location) => {
+    let leaveConfirmed = true;
+    if (changeOccurred) {
+      leaveConfirmed = window.confirm("Are you sure you want to leave? Information you've entered won't be saved.");
+    }
+    if (leaveConfirmed) {
+      navigate(location);
+    }
+    console.log(`Navigated to ${location.pathname}`);
+  };
+
+  useEffect(() => {//listening for leave page and navigate stuff
+    const handleBeforeUnload = (event) => {
+      if (changeOccurred) {
+        event.preventDefault();
+        event.returnValue = ""; // Required for Chrome
+
+        return ""; // Required for other browsers
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [changeOccurred]);
+  
   useEffect(() => {
     async function fetchData() {
       try {
@@ -67,7 +96,8 @@ const Profile = () => {
         const token = localStorage.getItem("token");
         const requestBody = JSON.stringify({token});
         let tempIsOwner = await api.put("/users/verify/" + id, requestBody);
-        setIsOwner(tempIsOwner.isOwner);
+        setIsOwner(tempIsOwner.data.isOwner);
+        console.log(is_owner);
 
 
       } catch (error) {
@@ -81,7 +111,7 @@ const Profile = () => {
   }, []);
 
   const backToDashboard = (): void => {
-    navigate("/game");
+    handleNavigation("/game")
   };
 
   const updateProfile = async () => {
@@ -92,6 +122,7 @@ const Profile = () => {
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
+      setChangeOccurred(false);
 
     } catch (error) {
       alert(
@@ -99,6 +130,11 @@ const Profile = () => {
       );
     }
   };
+
+  const changeWrapper = (setter: (value) => void, value) => {
+    setChangeOccurred(true);
+    setter(value);
+  }
 
   return (
     <BaseContainer>
@@ -118,45 +154,45 @@ const Profile = () => {
             label="Username"
             value={username}
             disabled={!is_owner}
-            onChange={(un: string) => setUsername(un)}
+            onChange={(un: string) => changeWrapper(setUsername,un)}
           />
           <ProfileField
             label="Name"
             value={name}
             disabled={!is_owner}
-            onChange={(n) => setName(n)}
+            onChange={(n) => changeWrapper(setName,n)}
           />
           <ProfileField
             label="Birthday"
             type="Date"
             value={birthday}
             disabled={!is_owner}
-            onChange={(n) => setBirthday(n)}
+            onChange={(n) => changeWrapper(setBirthday,n)}
           />
           <ProfileField
             label="Creation date"
             type="Date"
             value={creation_date}
             disabled={true}
-            onChange={(n) => setCreationDate(n)}
+            onChange={(n) => changeWrapper(setCreationDate,n)}
           />
           <ProfileField
             type="password"
             label="Password"
             value={password}
             disabled={!is_owner}
-            onChange={(n) => setPassword(n)}
+            onChange={(n) => changeWrapper(setPassword,n)}
           />
 
           <div className="profile button-container">
             <Button
               width="100%"
-              disabled={!is_owner}
+              disabled={!is_owner || !changeOccurred}
               onClick={() => updateProfile()}
             >
               Save changes
             </Button>
-            <Button width="100%" onClick={() => backToDashboard()}>
+            <Button width="100%" onClick={() => handleNavigation("/game")}>
               Dashboard
             </Button>
           </div>
