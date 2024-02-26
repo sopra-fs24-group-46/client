@@ -22,7 +22,7 @@ const AppRouter = () => {
       <Routes>
 
         <Route path="/game/*" element={<GameGuard />}>
-            <Route path="profile" element={<Profile />} />
+          <Route path="profile" element={<Profile />} />
           <Route path="*" element={<GameRouter base="/game" />} >
           </Route>
         </Route>
