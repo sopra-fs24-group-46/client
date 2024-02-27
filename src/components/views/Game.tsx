@@ -32,10 +32,22 @@ const Game = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User[]>([]);
 
-  const logout = (): void => {
+  async function logout(){
+    let id = localStorage.getItem("id")
+    const requestBody = JSON.stringify({ id });
+    await api.post("/users/logout", requestBody);
+    localStorage.removeItem("id")
     localStorage.removeItem("token");
     navigate("/login");
   };
+  // const logout = (): void => {
+  //   let id = localStorage.getItem("id")
+  //   const requestBody = JSON.stringify({ id });
+  //   api.post("/users/logout", requestBody);
+  //   localStorage.removeItem("id")
+  //   localStorage.removeItem("token");
+  //   navigate("/login");
+  // };
 
   // the effect hook can be used to react to change in your component.
   // in this case, the effect hook is only run once, the first time the component is mounted

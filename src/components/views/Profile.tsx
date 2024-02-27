@@ -50,8 +50,9 @@ const Profile = () => {
   const [creation_date, setCreationDate] = useState<string>(null);
   const [is_owner, setIsOwner] = useState<boolean>(false);
   const [changeOccurred, setChangeOccurred] = useState<boolean>(false);
+  const [status, setStatus] = useState<string>(null);
 
-  const handleNavigation = (location) => {
+  const handleNavigation = (location) => {//interrupt before navigating
     let leaveConfirmed = true;
     if (changeOccurred) {
       leaveConfirmed = window.confirm("Are you sure you want to leave? Information you've entered won't be saved.");
@@ -62,6 +63,15 @@ const Profile = () => {
     console.log(`Navigated to ${location.pathname}`);
   };
 
+  async function logout(){
+    let id = localStorage.getItem("id")
+    const requestBody = JSON.stringify({ id });
+    await api.post("/users/logout", requestBody);
+    localStorage.removeItem("id")
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   useEffect(() => {//listening for leave page and navigate stuff
     const handleBeforeUnload = (event) => {
       if (changeOccurred) {
@@ -70,6 +80,7 @@ const Profile = () => {
 
         return ""; // Required for other browsers
       }
+      logout()
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -79,7 +90,7 @@ const Profile = () => {
     };
   }, [changeOccurred]);
   
-  useEffect(() => {
+  useEffect(() => {//loading data
     async function fetchData() {
       try {
         const response = await api.get("/users/" + id);
@@ -89,15 +100,17 @@ const Profile = () => {
         setBirthday(user.birthday ? (new Date(user.birthday)).toISOString().split("T")[0]: null);
         setUsername(user.username);
         setCreationDate((new Date(user.creation_date)).toISOString().split("T")[0]);
+        setStatus(user.status);
         console.log(user.name);
         console.log(user.username);
         console.log(new Date(user.birthday));
         
+        //checking if user is classified to change profile
         const token = localStorage.getItem("token");
         const requestBody = JSON.stringify({token});
         let tempIsOwner = await api.put("/users/verify/" + id, requestBody);
         setIsOwner(tempIsOwner.data.isOwner);
-        console.log(is_owner);
+        console.log("is owner:" + is_owner);
 
 
       } catch (error) {
@@ -109,10 +122,6 @@ const Profile = () => {
     fetchData();
     
   }, []);
-
-  const backToDashboard = (): void => {
-    handleNavigation("/game")
-  };
 
   const updateProfile = async () => {
     try {
@@ -181,6 +190,12 @@ const Profile = () => {
             label="Password"
             value={password}
             disabled={!is_owner}
+            onChange={(n) => changeWrapper(setPassword,n)}
+          />
+          <ProfileField
+            label="Status"
+            value={status}
+            disabled={true}
             onChange={(n) => changeWrapper(setPassword,n)}
           />
 
