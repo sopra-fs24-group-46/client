@@ -131,7 +131,8 @@ const Profile = () => {
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
-      setChangeOccurred(false);
+      await setChangeOccurred(false);
+      navigate("/game")
 
     } catch (error) {
       alert(
@@ -149,11 +150,11 @@ const Profile = () => {
     <BaseContainer>
       
       <div className="profile title">
-        <h2>User: {name?name:"unnamed"} ({id})</h2>
+        <h2>User: {name?name:" add a name to Display here "} ({id})</h2>
         <p className="game paragraph">
           {is_owner ?
-            "You can edit the fields below. Don't forget to safe the changes" :
-            "Login as this user or change to your user profile to edit the content"
+            "Edit fields below" :
+            ""
           }
         </p>
       </div>
