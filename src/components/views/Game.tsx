@@ -8,8 +8,8 @@ import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import { User } from "types";
 
-const Player = ({ user, onClick }: { user: User, onClick: ()=>void }) => (
-  <div className="player container" onClick={onClick}>
+const Player = ({ user }: { user: User }) => (
+  <div className="player container">
     <div className="player username">{user.username}</div>
     <div className="player name">{user.name}</div>
     <div className="player id">id: {user.id}</div>
@@ -29,25 +29,12 @@ const Game = () => {
   // keep its value throughout render cycles.
   // a component can have as many state variables as you like.
   // more information can be found under https://react.dev/learn/state-a-components-memory and https://react.dev/reference/react/useState 
-  const [users, setUsers] = useState<User[]>([]);
-  const [currentUser, setCurrentUser] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[]>(null);
 
-  async function logout(){
-    let id = localStorage.getItem("id")
-    const requestBody = JSON.stringify({ id });
-    await api.post("/users/logout", requestBody);
-    localStorage.removeItem("id")
+  const logout = (): void => {
     localStorage.removeItem("token");
     navigate("/login");
   };
-  // const logout = (): void => {
-  //   let id = localStorage.getItem("id")
-  //   const requestBody = JSON.stringify({ id });
-  //   api.post("/users/logout", requestBody);
-  //   localStorage.removeItem("id")
-  //   localStorage.removeItem("token");
-  //   navigate("/login");
-  // };
 
   // the effect hook can be used to react to change in your component.
   // in this case, the effect hook is only run once, the first time the component is mounted
@@ -58,18 +45,14 @@ const Game = () => {
     async function fetchData() {
       try {
         const response = await api.get("/users");
-        
+
         // delays continuous execution of an async operation for 1 second.
         // This is just a fake async call, so that the spinner can be displayed
         // feel free to remove it :)
-        // await new Promise((resolve) => setTimeout(resolve, 1000));
-        
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
         // Get the returned users and update the state.
         setUsers(response.data);
-
-        let id = localStorage.getItem("id")
-        const response2 = await api.get("/users/" + id);
-        setCurrentUser(response2.data);
 
         // This is just some data for you to see what is available.
         // Feel free to remove it.
@@ -96,10 +79,6 @@ const Game = () => {
     fetchData();
   }, []);
 
-  const goToProfile = (id: number) => {
-    navigate("/game/profile/?id="+id)
-  }
-
   let content = <Spinner />;
 
   if (users) {
@@ -108,7 +87,7 @@ const Game = () => {
         <ul className="game user-list">
           {users.map((user: User) => (
             <li key={user.id}>
-              <Player user={user} onClick={() => goToProfile(user.id)}/>
+              <Player user={user} />
             </li>
           ))}
         </ul>
@@ -121,7 +100,7 @@ const Game = () => {
 
   return (
     <BaseContainer className="game container">
-      <h2>Logged in as user <b>{currentUser.username}</b></h2>
+      <h2>Happy Coding!</h2>
       <p className="game paragraph">
         Get all users from secure endpoint:
       </p>

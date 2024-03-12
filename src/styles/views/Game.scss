@@ -21,7 +21,6 @@
     list-style: none;
     padding-left: 0;
   }
-
   &.user-item {
     display: flex;
     flex-direction: column;
@@ -46,9 +45,6 @@
   &.name {
     font-weight: 300;
     margin-left: 5px;
-  }
-  &:hover {
-    transform: translateY(-2px);
   }
   &.username {
     font-weight: 500;

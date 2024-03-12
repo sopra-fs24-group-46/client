@@ -2,7 +2,6 @@ import React from "react";
 import {Navigate, Route, Routes} from "react-router-dom";
 import Game from "../../views/Game";
 import PropTypes from "prop-types";
-import Profile from "../../views/Profile"
 
 const GameRouter = () => {
   return (
@@ -10,9 +9,8 @@ const GameRouter = () => {
       <Routes>
 
         <Route path="" element={<Game />} />
-        <Route path="/profile" element={<Profile />} />
 
-        <Route path="/game/dashboard" element={<Game />} />
+        <Route path="dashboard" element={<Game />} />
 
         <Route path="*" element={<Navigate to="dashboard" replace />} />
 
