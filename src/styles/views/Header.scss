@@ -7,7 +7,11 @@
 
   &.title {
     font-weight: bold;
+    color: white !important;
+    font-size: 4em;
     color: $background;
     text-align: center;
+    margin-top: 250px; /* Add margin-top to move the title down (adjust as needed) */
+
   }
 }

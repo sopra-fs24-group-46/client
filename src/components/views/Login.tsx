@@ -35,51 +35,69 @@ FormField.propTypes = {
 
 const Login = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState<string>(null);
-  const [username, setUsername] = useState<string>(null);
+  const [gamePin, setGamePin] = useState(""); // State for the game pin
 
   const doLogin = async () => {
     try {
-      const requestBody = JSON.stringify({ username, name });
-      const response = await api.post("/users", requestBody);
+      if (!gamePin) {
+        // Check if game pin is not entered
+        alert("Please enter the Game Pin.");
+        return;
+      }
 
-      // Get the returned user and update a new object.
-      const user = new User(response.data);
+      // Example of API call (replace it with your actual API call)
+      // const response = await api.post("/join-game", { gamePin });
 
-      // Store the token into the local storage.
-      localStorage.setItem("token", user.token);
+      // Placeholder for handling API response
+      // Replace it with your actual logic to navigate to the game page
+      console.log("Joining game with pin:", gamePin);
 
-      // Login successfully worked --> navigate to the route /game in the GameRouter
+      // Dummy navigation to the game page
       navigate("/game");
     } catch (error) {
-      alert(
-        `Something went wrong during the login: \n${handleError(error)}`
-      );
+      alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
+  };
+
+  const handleRegisterClick = () => {
+    // Redirect to the registration page when clicked
+    navigate("/register");
+  };
+
+  const handleLoginClick = () => {
+    navigate("/login");
   };
 
   return (
     <BaseContainer>
       <div className="login container">
         <div className="login form">
-          <FormField
-            label="Username"
-            value={username}
-            onChange={(un: string) => setUsername(un)}
-          />
-          <FormField
-            label="Name"
-            value={name}
-            onChange={(n) => setName(n)}
-          />
+          <div className="login field" style={{ textAlign: "center" }}>
+            <input
+              className="login input"
+              type="text"
+              placeholder="Enter Game Pin"
+              value={gamePin}
+              onChange={(e) => setGamePin(e.target.value)}
+              style={{ textAlign: "center" }} // Center the input text
+            />
+          </div>
+          
           <div className="login button-container">
             <Button
-              disabled={!username || !name}
               width="100%"
-              onClick={() => doLogin()}
+              onClick={doLogin}
             >
-              Login
+              Join Game
             </Button>
+          </div>
+          <div className="login link-container" style={{ marginTop: "1em", display: "flex", justifyContent: "space-between" }}>
+            <div className="login register-link" onClick={handleRegisterClick}>
+              Register here.
+            </div>
+            <div className="login login-link" onClick={handleLoginClick}>
+              Login
+            </div>
           </div>
         </div>
       </div>
@@ -87,7 +105,4 @@ const Login = () => {
   );
 };
 
-/**
- * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
- */
 export default Login;
