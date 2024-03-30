@@ -19,6 +19,7 @@ const FormField = (props) => {
       <label className="login label">{props.label}</label>
       <input
         className="login input"
+        type={props.type} // Set the input type dynamically
         placeholder="enter here.."
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
@@ -30,74 +31,74 @@ const FormField = (props) => {
 FormField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
+  type: PropTypes.string, 
   onChange: PropTypes.func,
 };
 
 const Login = () => {
   const navigate = useNavigate();
-  const [gamePin, setGamePin] = useState(""); // State for the game pin
+  const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
 
   const doLogin = async () => {
     try {
-      if (!gamePin) {
-        // Check if game pin is not entered
-        alert("Please enter the Game Pin.");
-        return;
+      const requestBody = JSON.stringify({ username, password });
+      const response = await api.post("/login", requestBody); 
+  
+      // Log the response data to inspect its structure
+      console.log("hola", response.data);
+      const userData = response.data;
+      localStorage.setItem("token", userData.token);
+      localStorage.setItem("id", userData.user.id);
+  
+      // Check if the token is present in the response data
+      if (response.data && response.data.token) {
+        // Store the token into the local storage
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("id", response.data.user.id);
+  
+        // Navigate to the game page
+        navigate("/game");
+      } else {
+        // Handle the case where the token is not present in the response
+        alert("Token not found in the response");
       }
-
-      // Example of API call (replace it with your actual API call)
-      // const response = await api.post("/join-game", { gamePin });
-
-      // Placeholder for handling API response
-      // Replace it with your actual logic to navigate to the game page
-      console.log("Joining game with pin:", gamePin);
-
-      // Dummy navigation to the game page
-      navigate("/game");
     } catch (error) {
-      alert(`Something went wrong during the login: \n${handleError(error)}`);
+      alert(
+        `Something went wrong during the login: \n${handleError(error)}`
+      );
     }
-  };
-
-  const handleRegisterClick = () => {
-    // Redirect to the registration page when clicked
-    navigate("/register");
-  };
-
-  const handleLoginClick = () => {
-    navigate("/login");
   };
 
   return (
     <BaseContainer>
       <div className="login container">
         <div className="login form">
-          <div className="login field" style={{ textAlign: "center" }}>
-            <input
-              className="login input"
-              type="text"
-              placeholder="Enter Game Pin"
-              value={gamePin}
-              onChange={(e) => setGamePin(e.target.value)}
-              style={{ textAlign: "center" }} // Center the input text
-            />
-          </div>
-          
+          <FormField
+            label="Username"
+            value={username}
+            onChange={(un: string) => setUsername(un)}
+          />
+          <FormField
+            label="Password"
+            type="password" 
+            value={password}
+            onChange={(n) => setPassword(n)}
+          />
           <div className="login button-container">
-            <Button
+          <Button
+              disabled={!username || !password}
               width="100%"
-              onClick={doLogin}
+              onClick={() => doLogin()}
             >
-              Join Game
-            </Button>
-          </div>
-          <div className="login link-container" style={{ marginTop: "1em", display: "flex", justifyContent: "space-between" }}>
-            <div className="login register-link" onClick={handleRegisterClick}>
-              Register here.
-            </div>
-            <div className="login login-link" onClick={handleLoginClick}>
               Login
-            </div>
+            </Button>
+            <Button /* button to create new user*/
+              width="100%"
+              onClick={() => navigate(`/newuser`)}
+            >
+                New User? Click here
+              </Button>
           </div>
         </div>
       </div>
@@ -105,4 +106,7 @@ const Login = () => {
   );
 };
 
+/**
+ * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
+ */
 export default Login;

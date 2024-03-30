@@ -1,9 +1,12 @@
 import React from "react";
-import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import {GameGuard} from "../routeProtectors/GameGuard";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { GameGuard } from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
-import {LoginGuard} from "../routeProtectors/LoginGuard";
+import { LoginGuard } from "../routeProtectors/LoginGuard";
+import Home from "../../views/Home";
 import Login from "../../views/Login";
+import Register from "../../views/Register";
+
 
 /**
  * Main router of your application.
@@ -18,25 +21,22 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-
         <Route path="/game/*" element={<GameGuard />}>
-          <Route path="/game/*" element={<GameRouter base="/game"/>} />
+          <Route path="/game/*" element={<GameRouter base="/game" />} />
         </Route>
 
         <Route path="/login" element={<LoginGuard />}>
-          <Route path="/login" element={<Login/>} />
+          <Route path="/login" element={<Login />} />
         </Route>
 
-        <Route path="/" element={
-          <Navigate to="/game" replace />
-        }/>
+        <Route path="/register" element={<Register />} />
 
+        <Route path="/home" element={<Home />} />
+
+        <Route path="/" element={<Navigate to="/home" replace />} />
       </Routes>
     </BrowserRouter>
   );
 };
 
-/*
-* Don't forget to export your component!
- */
 export default AppRouter;
