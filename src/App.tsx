@@ -40,7 +40,7 @@ function App() {
       <h1>Gwüsst!!</h1>
       <div>
         <p>
-          <bold>Question: </bold>
+          <strong>Question:</strong>
           Find Lake Genevè.
         </p>
       </div>
