@@ -37,6 +37,9 @@ function App() {
   return (
     <div>
       <h1>Gwüsst!!</h1>
+      <div style="text-align: center; margin: 0 auto;">
+        <p>Find Lake Genevè.</p>
+      </div>
       <MapBoxComponent
         initialCenter={[8.227512, 46.818188]} // Example initial center coordinates
         zoom={6} // Example zoom level
