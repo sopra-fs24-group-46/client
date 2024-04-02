@@ -6,6 +6,7 @@ import { LoginGuard } from "../routeProtectors/LoginGuard";
 import Home from "../../views/Home";
 import Login from "../../views/Login";
 import Register from "../../views/Register";
+import MapEndpoint from "../../views/MapEndpoint";
 
 
 /**
@@ -32,6 +33,8 @@ const AppRouter = () => {
         <Route path="/register" element={<Register />} />
 
         <Route path="/home" element={<Home />} />
+
+        <Route path="/question" element={<MapEndpoint />} />
 
         <Route path="/" element={<Navigate to="/home" replace />} />
       </Routes>

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types'; // Import PropTypes for prop validation
 import mapboxgl from 'mapbox-gl'; // Import mapbox-gl library
 
-
 // Define MapBoxComponent function component
 const MapBoxComponent = ({ initialCenter, zoom, mapboxAccessToken, gameId, playerId, onSubmitAnswer }) => {
   const [map, setMap] = useState(null); // State to store the map object
