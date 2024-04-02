@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types'; // Import PropTypes for prop validation
 import mapboxgl from 'mapbox-gl'; // Import mapbox-gl library
+
 
 // Define MapBoxComponent function component
 const MapBoxComponent = ({ initialCenter, zoom, mapboxAccessToken, gameId, playerId, onSubmitAnswer }) => {
@@ -41,6 +43,16 @@ const MapBoxComponent = ({ initialCenter, zoom, mapboxAccessToken, gameId, playe
   return (
     <div ref={mapContainer} style={{ width: '100%', height: '400px' }}></div> // Map container element
   );
+};
+
+// Prop types validation
+MapBoxComponent.propTypes = {
+  initialCenter: PropTypes.array.isRequired,
+  zoom: PropTypes.number.isRequired,
+  mapboxAccessToken: PropTypes.string.isRequired,
+  gameId: PropTypes.string.isRequired,
+  playerId: PropTypes.string.isRequired,
+  onSubmitAnswer: PropTypes.func.isRequired
 };
 
 export default MapBoxComponent;
