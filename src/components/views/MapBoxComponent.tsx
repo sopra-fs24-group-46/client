@@ -17,7 +17,7 @@ const MapBoxComponent = ({ initialCenter, zoom, mapboxAccessToken, gameId, playe
 
   // Effect to initialize the map when component mounts
   useEffect(() => {
-    mapboxgl.accessToken = 'pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w'; // Set Mapbox access token
+    mapboxgl.accessToken = mapboxAccessToken; // Set Mapbox access token
 
     const initializedMap = new mapboxgl.Map({
       container: mapContainer.current, // Reference to the map container element
