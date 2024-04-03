@@ -20,7 +20,6 @@ function App() {
       }),
     })
       .then(response => {
-        console.log(response)
         if (!response.ok) {
           throw new Error('Network response shows no connection to server');
 
