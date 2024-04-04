@@ -1,0 +1,32 @@
+@import "../theme";
+
+/* The '&' is a shorthand for the containing element,
+  so for example a '&.user-list' inside .game will compile to
+  .game.user-list
+
+  for more information visit https://sass-lang.com/guide
+ */
+ .set-game-container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.set-game-content {
+  text-align: center; /* Center text horizontally */
+}
+
+.number-input {
+  margin-bottom: 20px;
+
+  label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  select {
+    width: 100px;
+    height: 30px;
+    font-size: 14px;
+  }
+}

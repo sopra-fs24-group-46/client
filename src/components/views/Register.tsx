@@ -42,22 +42,31 @@ const SignUp = props => {
   
           // Store the token from the response headers into local storage
           const token = response.data.token;
-          localStorage.setItem('token', token);
-  
-          // Check if the response contains user data
-          if (response.data.user) {
-            // Get the returned user data from the response body
-            const user = response.data.user;
+          const id = response.data.id;
 
-            // Store the user ID into local storage
-            localStorage.setItem('id', user.id);
+          localStorage.setItem('token', token);
+          localStorage.setItem('id', id);
+
+
+          console.log('Response data:', response.data);
+
+          
+          // Check if user data is present in the response
+          if (response.data.user) {
+              // Get the returned user data from the response body
+              const user = response.data.user;
+              // Store the user ID into local storage
+              localStorage.setItem('id', user.id);
           }
-  
+
+
+    
           // Navigate to the desired route
-          navigate("/users");
+          navigate("/profile");
       } catch (error) {
-      alert(`Something went wrong during the sign up: \n${handleError(error)}`);
-      window.location.reload();      }
+          alert(`Something went wrong during the sign up: \n${handleError(error)}`);
+          window.location.reload();
+      }
   };
   
 
@@ -84,6 +93,12 @@ const SignUp = props => {
             >
               Sign Up
             </Button>
+            <Button /* button to create new user*/
+              width="100%"
+              onClick={() => navigate(`/home`)}
+            >
+                Go back
+              </Button>
           </div>
         </div>
       </div>

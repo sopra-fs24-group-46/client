@@ -33,7 +33,8 @@ const Game = () => {
 
   const logout = (): void => {
     localStorage.removeItem("token");
-    navigate("/login");
+    localStorage.removeItem("id");
+    navigate("/home");
   };
 
   // the effect hook can be used to react to change in your component.

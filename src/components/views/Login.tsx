@@ -46,7 +46,6 @@ const Login = () => {
       const response = await api.post("/login", requestBody); 
   
       // Log the response data to inspect its structure
-      console.log("hola", response.data);
       const userData = response.data;
       localStorage.setItem("token", userData.token);
       localStorage.setItem("id", userData.user.id);
@@ -58,7 +57,7 @@ const Login = () => {
         localStorage.setItem("id", response.data.user.id);
   
         // Navigate to the game page
-        navigate("/game");
+        navigate("/profile");
       } else {
         // Handle the case where the token is not present in the response
         alert("Token not found in the response");
@@ -95,9 +94,9 @@ const Login = () => {
             </Button>
             <Button /* button to create new user*/
               width="100%"
-              onClick={() => navigate(`/newuser`)}
+              onClick={() => navigate(`/home`)}
             >
-                New User? Click here
+                Go back
               </Button>
           </div>
         </div>
