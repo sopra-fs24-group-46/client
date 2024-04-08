@@ -10,6 +10,7 @@ import MapEndpoint from "../../views/MapEndpoint";
 import Profile from "../../views/Profile";
 import SetGame from "../../views/SetGame";
 import Edit from "../../views/Edit";
+import Lobby from "../../views/Lobby";
 
 
 
@@ -47,6 +48,8 @@ const AppRouter = () => {
         <Route path="/game/create" element={<SetGame/>} />
 
         <Route path="/edit" element={<Edit/>} />
+
+        <Route path="/lobby" element={<Lobby/>} />
 
 
         <Route path="/" element={<Navigate to="/home" replace />} />

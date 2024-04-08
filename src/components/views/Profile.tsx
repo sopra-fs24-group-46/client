@@ -6,6 +6,10 @@ import { useNavigate } from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
+import "styles/views/Profile.scss";
+import "styles/views/Header.scss";
+
+
 import { User } from "types";
 
 const Player = ({ user }: { user: User }) => (
@@ -71,7 +75,7 @@ const Profile = () => {
 
   if (loggedInUser && loggedInUser.username) {
     content = (
-      <div className="game">
+      <div className="profile button-container">
         <Button width="100%" onClick={() => logout()}>
           Logout
         </Button>
@@ -86,9 +90,11 @@ const Profile = () => {
   }
 
   return (
-    <BaseContainer className="game container">
-      <h2>Welcome, {loggedInUser && loggedInUser.username}!</h2>
+    <BaseContainer>
+      <h1 className="header title1">Welcome, {loggedInUser && loggedInUser.username}!</h1>
+      <div className="profile container">
       {content}
+      </div>
     </BaseContainer>
   );
 };

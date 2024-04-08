@@ -6,18 +6,32 @@
 
   for more information visit https://sass-lang.com/guide
  */
- .set-game-container {
-  display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-}
+ .set-game {
+  &.container {
+    height: 40vh;
+    width: 80vw;
+    font-weight: 300;
+    padding-left: 37px;
+    padding-right: 37px;
+    border-radius: 0.75em;
+    background-color: $background;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    box-shadow: $dropShadow;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-.set-game-content {
-  text-align: center; /* Center text horizontally */
-}
+  }
 
-.number-input {
-  margin-bottom: 20px;
+  &.inputs {
+    display: flex;
+    flex-direction: column;
+  }
+
+
+ 
+
 
   label {
     margin-bottom: 5px;
