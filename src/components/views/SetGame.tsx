@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import "styles/views/SetGame.scss";
 import { Button } from "components/ui/Button"; // Import the Button component
 import { useNavigate } from "react-router-dom";
+import "styles/views/Header.scss";
+import BaseContainer from "components/ui/BaseContainer";
 
 
 
@@ -55,30 +57,41 @@ const SetGame = () => {
   };
 
   return (
-    <div className="set-game-container">
-      <div className="set-game-content">
-        <h2>Game Settings</h2>
-        <NumberInput
-          label="Max number of players"
-          value={maxPlayers}
-          onChange={setMaxPlayers}
-        />
-        <NumberInput
-          label="Amount of rounds"
-          value={rounds}
-          onChange={setRounds}
-        />
-        <NumberInput
-          label="Guessing time per round"
-          value={guessingTime}
-          onChange={setGuessingTime}
-        />
-        <Button onClick={createGame}>Create Game</Button> {/* Add the Create Game button */}
-        <Button 
-              onClick={() => goBacktoProfile()}>
-                  Go Back            </Button>
+    <BaseContainer>
+
+      <div className="header container_title1">
+        <h1 className="header title1">
+          CREATE CUSTOM GAME
+        </h1>
       </div>
-    </div>
+      <div className="set-game container">
+          <h2>Game Settings</h2>
+          <div className="set-game inputs">
+            <NumberInput
+              label="Max number of players"
+              value={maxPlayers}
+              onChange={setMaxPlayers}
+            />
+            <NumberInput
+              label="Amount of rounds"
+              value={rounds}
+              onChange={setRounds}
+            />
+            <NumberInput
+              label="Guessing time per round"
+              value={guessingTime}
+              onChange={setGuessingTime}
+            />
+          </div>
+          <div className="set-game button_container">
+            <Button onClick={createGame}>Create Game</Button> {/* Add the Create Game button */}
+            <Button onClick={() => goBacktoProfile()}>Go Back</Button>
+          </div>
+      </div>
+    
+    </BaseContainer>
+    
+
   );
 };
 
