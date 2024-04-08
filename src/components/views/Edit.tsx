@@ -13,6 +13,7 @@ const Edit = () => {
   const [user, setUser] = useState<User | null>(null);
   const [initialUsername, setInitialUsername] = useState<string>('');
   const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>(''); // new for password
 
   useEffect(() => {
     async function fetchData() {
@@ -35,6 +36,7 @@ const Edit = () => {
   
         setUser(user);
         setUsername(user.username);
+        setInitialUsername(user.username);
         console.log("Fetched User:", user);
       } catch (error) {
         console.error(`Something went wrong while fetching the user: \n${handleError(error)}`);
@@ -48,6 +50,10 @@ const Edit = () => {
     setUsername(event.target.value);
   };
 
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
   const doEdit = async () => {
     try {
       const storedUserId = localStorage.getItem('id');
@@ -55,7 +61,7 @@ const Edit = () => {
         throw new Error('User ID not found in localStorage');
       }
   
-      const requestBody = { id: storedUserId, username }; // Include user ID in the request body
+      const requestBody = { id: storedUserId, username, password }; // Include user ID in the request body
       await api.put(`/users/${storedUserId}`, requestBody); // Send PUT request to the correct endpoint with the updated username and user ID
       alert("Changes saved successfully!");
       navigate(`/profile`);
@@ -71,6 +77,7 @@ const Edit = () => {
   
   const handleGoBackClick = () => {
     setUsername(initialUsername);
+    setPassword('');
     navigate(`/profile`);
   };
 
@@ -79,6 +86,7 @@ const Edit = () => {
       <h1>Edit my Profile</h1>
 
       <p>Username: <input type="text" value={username} onChange={handleUsernameChange} /></p>
+      <p>Password: <input type = "password" value={password} onChange={handlePasswordChange} /></p>  {/* Password input field */}
       <button onClick={doEdit}>Save</button> {/* Use doEdit instead of handleSaveButtonClick */}
       <button onClick={handleGoBackClick}>Go back</button>
       {/*<button onClick={() => navigate(`/users/${id}`)}>Go back</button>*/}

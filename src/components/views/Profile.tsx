@@ -35,6 +35,9 @@ const Profile = () => {
     navigate("/game/create");
   };
 
+  const editPassword = () => {
+    navigate("/edit");
+  }
   const editUsername = () => {
     // Redirect to /game/create endpoint
     navigate("/edit");
@@ -76,7 +79,7 @@ const Profile = () => {
           Create custom game
         </Button>
         <Button width="100%" onClick={() => editUsername()}>
-        Edit Username
+        Edit Username or password
         </Button>
       </div>
     );
