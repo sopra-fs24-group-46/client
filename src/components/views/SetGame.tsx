@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { api } from "helpers/api";
+
 import "styles/views/SetGame.scss";
 import { Button } from "components/ui/Button"; // Import the Button component
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "styles/views/Header.scss";
 import BaseContainer from "components/ui/BaseContainer";
 
@@ -44,16 +46,54 @@ const SetGame = () => {
   const [maxPlayers, setMaxPlayers] = useState(1);
   const [rounds, setRounds] = useState(1);
   const [guessingTime, setGuessingTime] = useState(1);
+  const host = localStorage.getItem("id");
+
   const navigate = useNavigate();
 
 
-  const createGame = () => {
-    // Logic for creating the game
-    console.log("Game created!");
+const createGame = async () => {
+  try {
+    // Explicitly convert values to integers
+    const maxPlayersInt = parseInt(maxPlayers);
+    const roundsInt = parseInt(rounds);
+    const guessingTimeInt = parseInt(guessingTime);
+    const hostInt = parseInt(host);
+
+    // Construct the request body
+    const requestBody = {
+      maxPlayers: maxPlayersInt,
+      rounds: roundsInt,
+      guessingTime: guessingTimeInt,
+      host: hostInt
+    };
+
+    // Send a POST request to the backend
+    const response = await api.post("/game/create", requestBody);
+
+    console.log('Response data:', maxPlayers, rounds, guessingTime, host);
+    console.log('Response data:', "Communication client/server is working for lobby creation");
+
+
+
+    // Redirect to "/lobby" after successful creation
+    const queryParams = `?maxPlayers=${maxPlayers}&rounds=${rounds}&guessingTime=${guessingTime}`;
+    navigate(`/lobby${queryParams}`);
+    } catch (error) {
+      // Handle errors
+      console.log('Response data:', maxPlayers, rounds, guessingTime, host);
+      // console.log('Response data:', rounds, guessingTime, host);
+      // console.log('Response data:', guessingTime, host);
+      // console.log('Response data:', host);
+
+
+      console.error("Error creating game:", error);
+    }
   };
 
   const goBacktoProfile = () => {
     navigate("/profile");
+    <Link to="/profile">Go Back</Link>
+
   };
 
   return (

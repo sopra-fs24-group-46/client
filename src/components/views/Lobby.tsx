@@ -1,31 +1,49 @@
-import React, { useState } from "react";
-import { api, handleError } from "helpers/api";
-import User from "models/User";
-import {useNavigate} from "react-router-dom";
-import { Button } from "components/ui/Button";
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types"; // Import PropTypes
+import { useLocation } from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
+import { api, handleError } from "helpers/api";
 
-import "styles/views/Lobby.scss";
-import "styles/views/Header.scss";
+const Lobby = ({ fetchUsername }) => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
 
+  const [username, setUsername] = useState("");
 
-const Lobby = () => {
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        // Call the fetchUsername function passed as a prop
+        const username = await fetchUsername();
+        setUsername(username);
+      } catch (error) {
+        console.error("Error fetching username:", error);
+        // Handle error appropriately
+      }
+    }
 
+    fetchData();
+  }, [fetchUsername]); // Include fetchUsername in the dependencies array
+
+  const maxPlayers = queryParams.get("maxPlayers");
+  const rounds = queryParams.get("rounds");
+  const guessingTime = queryParams.get("guessingTime");
 
   return (
     <BaseContainer>
-      <h1 className="header title1">USERXY GAME LOBBY</h1>
+<h1 className="header title1">{username}&#39;s GAME LOBBY</h1>
       <div className="lobby container">
-        
+        <p>Max Players: {maxPlayers}</p>
+        <p>Rounds: {rounds}</p>
+        <p>Guessing Time: {guessingTime}</p>
       </div>
-
-      
     </BaseContainer>
   );
 };
 
-/**
- * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
- */
+// Add PropTypes validation for fetchUsername
+Lobby.propTypes = {
+  fetchUsername: PropTypes.func.isRequired,
+};
+
 export default Lobby;
