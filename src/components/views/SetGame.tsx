@@ -53,22 +53,27 @@ const SetGame = () => {
 
 const createGame = async () => {
   try {
+    // Save user credentials for verification process
+    const token = localStorage.getItem("token");
+    const id = localStorage.getItem("id");
+
     // Explicitly convert values to integers
     const maxPlayersInt = parseInt(maxPlayers);
     const roundsInt = parseInt(rounds);
     const guessingTimeInt = parseInt(guessingTime);
-    const hostInt = parseInt(host);
+    
 
     // Construct the request body
     const requestBody = {
+      id: id,
+      token: token,
       maxPlayers: maxPlayersInt,
       rounds: roundsInt,
       guessingTime: guessingTimeInt,
-      host: hostInt
     };
 
-    // Send a POST request to the backend
-    const response = await api.post("/game/create", requestBody);
+    // Send a PUT request to the backend
+    const response = await api.put("/game/4a7ef98b/updateSettings", requestBody);
 
     console.log('Response data:', maxPlayers, rounds, guessingTime, host);
     console.log('Response data:', "Communication client/server is working for lobby creation");
