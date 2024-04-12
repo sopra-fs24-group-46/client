@@ -48,7 +48,7 @@ const Profile = () => {
         token: token,
       });
 
-      navigate("game/create");
+      navigate('/game/create');
     } catch (error) {
       console.error("Error creating custom game:", error);
     }
