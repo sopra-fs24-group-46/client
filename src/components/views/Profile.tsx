@@ -43,10 +43,18 @@ const Profile = () => {
         throw new Error("Token or user id not found in localStorage");
       }
 
-      await api.post("/game/create", {
+      const requestBody = {
         id: id,
         token: token,
-      });
+
+      };
+
+      const response = await api.post("/game/create", requestBody);
+
+      // Save the current gameId in the localStorage
+      localStorage.setItem('gameId', response.data.gameId);
+
+      console.log('Game creation worked!');
 
       navigate('/game/create');
     } catch (error) {
