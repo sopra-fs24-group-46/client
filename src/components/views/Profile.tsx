@@ -34,9 +34,24 @@ const Profile = () => {
     navigate("/home");
   };
 
-  const createCustomGame = () => {
-    // Redirect to /game/create endpoint
-    navigate("/game/create");
+  const createCustomGame = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const id = localStorage.getItem("id");
+
+      if (!token || !id) {
+        throw new Error("Token or user id not found in localStorage");
+      }
+
+      await api.post("/game/create", {
+        id: id,
+        token: token,
+      });
+
+      navigate("game/create");
+    } catch (error) {
+      console.error("Error creating custom game:", error);
+    }
   };
 
   const editPassword = () => {
