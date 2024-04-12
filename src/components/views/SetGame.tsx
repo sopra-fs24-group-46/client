@@ -50,52 +50,42 @@ const SetGame = () => {
 
   const navigate = useNavigate();
 
+  const createGame = async () => {
+    try {
+      // Save user credentials for verification process
+      const token = localStorage.getItem("token");
+      const id = localStorage.getItem("id");
+  
+      // Explicitly convert values to integers
+      const maxPlayersInt = parseInt(maxPlayers);
+      const roundsInt = parseInt(rounds);
+      const guessingTimeInt = parseInt(guessingTime);
+      
+      // Construct the request body
+      const requestBody = {
+        id: id,
+        token: token,
+        maxPlayers: maxPlayersInt,
+        rounds: roundsInt,
+        guessingTime: guessingTimeInt,
+      };
+  
+      // Send a PUT request to the backend
+      const response = await api.put(`/game/${localStorage.getItem("gameId")}/updateSettings`, requestBody);
 
-const createGame = async () => {
-  try {
-    // Save user credentials for verification process
-    const token = localStorage.getItem("token");
-    const id = localStorage.getItem("id");
+      console.log('Lobby created');
 
-    // Explicitly convert values to integers
-    const maxPlayersInt = parseInt(maxPlayers);
-    const roundsInt = parseInt(rounds);
-    const guessingTimeInt = parseInt(guessingTime);
-    
-
-    // Construct the request body
-    const requestBody = {
-      id: id,
-      token: token,
-      maxPlayers: maxPlayersInt,
-      rounds: roundsInt,
-      guessingTime: guessingTimeInt,
-    };
-
-    // Send a PUT request to the backend
-    const response = await api.put("/game/4a7ef98b/updateSettings", requestBody);
-
-    console.log('Response data:', maxPlayers, rounds, guessingTime, host);
-    console.log('Response data:', "Communication client/server is working for lobby creation");
-
-
-
-    // Redirect to "/lobby" after successful creation
-    const queryParams = `?maxPlayers=${maxPlayers}&rounds=${rounds}&guessingTime=${guessingTime}`;
-    navigate(`/lobby${queryParams}`);
+  
+      // Redirect to "/lobby" after successful creation
+      navigate(`/lobby/${localStorage.getItem("gameId")}`);
     } catch (error) {
       // Handle errors
-      console.log('Response data:', maxPlayers, rounds, guessingTime, host);
-      // console.log('Response data:', rounds, guessingTime, host);
-      // console.log('Response data:', guessingTime, host);
-      // console.log('Response data:', host);
-
-
       console.error("Error creating game:", error);
     }
   };
-
   const goBacktoProfile = () => {
+    localStorage.removeItem("gameId");
+
     navigate("/profile");
     <Link to="/profile">Go Back</Link>
 

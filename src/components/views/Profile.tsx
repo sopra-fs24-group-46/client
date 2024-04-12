@@ -12,6 +12,30 @@ import "styles/views/Header.scss";
 
 import { User } from "types";
 
+const FormField = (props) => {
+  return (
+    <div className="profile field">
+      <label className="profile label">{props.label}</label>
+      <input
+        type={props.type}
+        className="profile input"
+        placeholder={props.placeholder}
+        value={props.value}
+        onChange={(e) => props.onChange(e.target.value)}
+      />
+    </div>
+  );
+};
+
+FormField.propTypes = {
+  type: PropTypes.string,
+  label: PropTypes.string,
+  placeholder: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+};
+
+
 const Player = ({ user }: { user: User }) => (
   <div className="player container">
     <div className="player username">{user.username}</div>
@@ -27,6 +51,8 @@ Player.propTypes = {
 const Profile = () => {
   const navigate = useNavigate();
   const [loggedInUser, setLoggedInUser] = useState<User>(null);
+  const [gamePin, setGamePin] = useState<string>('');
+
 
   const logout = (): void => {
     localStorage.removeItem("token");
@@ -43,22 +69,55 @@ const Profile = () => {
         throw new Error("Token or user id not found in localStorage");
       }
 
-      const requestBody = {
+      const response = await api.post("/game/create", {
         id: id,
         token: token,
+      });
+  
+      // Extract gameId from the response
+      const { gameId } = response.data;
+  
+      // Save gameId to localStorage
+      localStorage.setItem("gameId", gameId);
 
-      };
+      
 
-      const response = await api.post("/game/create", requestBody);
+      console.log('Game creation');
 
-      // Save the current gameId in the localStorage
-      localStorage.setItem('gameId', response.data.gameId);
-
-      console.log('Game creation worked!');
 
       navigate('/game/create');
     } catch (error) {
       console.error("Error creating custom game:", error);
+    }
+  };
+
+  const joinGame = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const gameId = gamePin;
+  
+      if (!token || !gameId) {
+        throw new Error("Token or game id not found");
+      }
+  
+      const response = await api.post(`/game/${gameId}/join`, {
+        displayName: loggedInUser.username, // Send username as displayName
+        gamePin: gamePin,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      console.log('Joining game response:', response.data);
+      navigate(`/lobby/${gameId}`);
+    } catch (error) {
+
+      console.log('Error response data:', error.response.data); // Log error response data
+
+
+      
+      console.error("Error joining game:", error);
     }
   };
 
@@ -108,6 +167,15 @@ const Profile = () => {
         <Button width="100%" onClick={() => editUsername()}>
         Edit Username or password
         </Button>
+        <Button width="100%" onClick={() => joinGame()}>
+          Join Game
+        </Button>
+        <FormField
+          label="Enter Game Pin"
+          placeholder="Enter game pin here..."
+          value={gamePin}
+          onChange={(pin) => setGamePin(pin)}
+        />
       </div>
     );
   }
