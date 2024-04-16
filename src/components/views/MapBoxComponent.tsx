@@ -1,57 +1,117 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types'; // Import PropTypes for prop validation
-import mapboxgl from 'mapbox-gl'; // Import mapbox-gl library
+import PropTypes from 'prop-types';
+import mapboxgl from 'mapbox-gl';
 
-// Define MapBoxComponent function component
-const MapBoxComponent = ({ initialCenter, zoom, mapboxAccessToken, gameId, playerId, onSubmitAnswer }) => {
-  const [map, setMap] = useState(null); // State to store the map object
-  const mapContainer = useRef(null); // Ref for the map container element
+const MapBoxComponent = ({ currentQuestionName, roundState, mapboxAccessToken, onSubmitAnswer }) => {
+  const [map, setMap] = useState(null);
+  const mapContainer = useRef(null);
 
-  // Function to handle user click on the map
   const handleMapClick = (event) => {
+    if (roundState === 'GUESSING') {
+      const clickedCoordinates = {
+        x: event.lngLat.lng,
+        y: event.lngLat.lat,
+      };
+      onSubmitAnswer(clickedCoordinates);
+    }
+  };
+
+  useEffect(() => {
+    mapboxgl.accessToken = mapboxAccessToken;
+
+    const initializedMap = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center:  [8.2275, 46.8182],
+      zoom: 7,
+    });
+
+    initializedMap.on('click', handleMapClick);
+
+    setMap(initializedMap);
+
+    return () => {
+      initializedMap.remove();
+    };
+  }, [currentQuestionName, roundState, mapboxAccessToken, onSubmitAnswer]);
+
+  useEffect(() => {
+    if (map && currentQuestionName) {
+      map.setCenter([8.2275, 46.8182]);
+    }
+  }, [map, currentQuestionName]);
+
+  return <div ref={mapContainer} style={{ width: '100%', height: '400px' }} />;
+};
+
+MapBoxComponent.propTypes = {
+  currentQuestionName: PropTypes.string.isRequired,
+  roundState: PropTypes.string.isRequired,
+  mapboxAccessToken: PropTypes.string.isRequired,
+  onSubmitAnswer: PropTypes.func.isRequired,
+};
+
+export default MapBoxComponent;
+
+
+
+
+/*
+15-04-2024
+import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import mapboxgl from 'mapbox-gl';
+
+
+interface MapBoxComponentProps {
+  initialCenter: [number, number];
+  zoom: number;
+  mapboxAccessToken: string;
+  onSubmitAnswer: (coordinates: { latitude: number, longitude: number }) => void;
+}
+
+const MapBoxComponent: React.FC<MapBoxComponentProps> = ({ initialCenter, zoom, mapboxAccessToken, onSubmitAnswer }) => {
+  const [map, setMap] = useState<mapboxgl.Map | null>(null);
+  const mapContainer = useRef<HTMLDivElement>(null);
+
+  const handleMapClick = (event: mapboxgl.MapMouseEvent & mapboxgl.EventData) => {
     const clickedCoordinates = {
       longitude: event.lngLat.lng,
       latitude: event.lngLat.lat
     };
-    onSubmitAnswer(clickedCoordinates); // Call the onSubmitAnswer callback with clicked coordinates
+    onSubmitAnswer(clickedCoordinates);
   };
 
-  // Effect to initialize the map when component mounts
   useEffect(() => {
-    mapboxgl.accessToken = mapboxAccessToken; // Set Mapbox access token
+    mapboxgl.accessToken = mapboxAccessToken;
 
     const initializedMap = new mapboxgl.Map({
-      container: mapContainer.current, // Reference to the map container element
-      style: 'mapbox://styles/mapbox/streets-v11', // Map style
-      center: initialCenter, // Initial map center
-      zoom: zoom // Initial zoom level
+      container: mapContainer.current!,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: initialCenter,
+      zoom: zoom
     });
 
-    // Add event listener for map click
     initializedMap.on('click', handleMapClick);
 
-    // Set the map state
     setMap(initializedMap);
 
-    // Cleanup function to remove map on component unmount
     return () => {
       initializedMap.remove();
     };
   }, [initialCenter, zoom, mapboxAccessToken, onSubmitAnswer]);
 
   return (
-    <div ref={mapContainer} style={{ width: '100%', height: '400px' }}></div> // Map container element
+    <div ref={mapContainer} style={{ width: '100%', height: '400px' }}></div>
   );
 };
 
-// Prop types validation
 MapBoxComponent.propTypes = {
-  initialCenter: PropTypes.array.isRequired,
+  initialCenter: PropTypes.arrayOf(PropTypes.number).isRequired,
   zoom: PropTypes.number.isRequired,
   mapboxAccessToken: PropTypes.string.isRequired,
-  gameId: PropTypes.string.isRequired,
-  playerId: PropTypes.string.isRequired,
   onSubmitAnswer: PropTypes.func.isRequired
 };
 
 export default MapBoxComponent;
+*/

@@ -35,3 +35,50 @@ export const handleError = error => {
     return error.message;
   }
 };
+
+export const getAuthToken = () => {
+  let token = localStorage.getItem("token");
+  return  {
+    headers: {
+      token: token,
+    },
+  };
+}
+
+
+// used in the MapEndpoint
+// api.js
+export const fetchGameState = async (gameId) => {
+  try {
+    const response = await fetch(`http://localhost:8080/game/${gameId}/getView`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching game state:', error);
+    throw error;
+  }
+};
+
+export const submitAnswer = async (gameId, playerId, coordinates) => {
+  try {
+    const response = await fetch(`http://localhost:8080/game/${gameId}/guess`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        gameId,
+        playerId,
+        x: coordinates.latitude,
+        y: coordinates.longitude,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error submitting answer:', error);
+    throw error;
+  }
+};
