@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 
-const MapBoxComponent = ({ currentQuestionName, roundState, mapboxAccessToken, onSubmitAnswer }) => {
+const MapBoxComponent = ({ currentQuestionName, currentQuestionLocation, gameId, playerId, roundState, mapboxAccessToken, onSubmitAnswer }) => {
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
 
@@ -33,19 +33,22 @@ const MapBoxComponent = ({ currentQuestionName, roundState, mapboxAccessToken, o
     return () => {
       initializedMap.remove();
     };
-  }, [currentQuestionName, roundState, mapboxAccessToken, onSubmitAnswer]);
+  }, [ mapboxAccessToken, onSubmitAnswer]);
 
   useEffect(() => {
     if (map && currentQuestionName) {
       map.setCenter([8.2275, 46.8182]);
     }
-  }, [map, currentQuestionName]);
+  }, [map,currentQuestionLocation,roundState, currentQuestionName]);
 
   return <div ref={mapContainer} style={{ width: '100%', height: '400px' }} />;
 };
 
 MapBoxComponent.propTypes = {
   currentQuestionName: PropTypes.string.isRequired,
+  currentQuestionLocation: PropTypes.string.isRequired,
+  gameId: PropTypes.string.isRequired,
+  playerId: PropTypes.string.isRequired,
   roundState: PropTypes.string.isRequired,
   mapboxAccessToken: PropTypes.string.isRequired,
   onSubmitAnswer: PropTypes.func.isRequired,

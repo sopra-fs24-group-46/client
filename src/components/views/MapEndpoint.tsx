@@ -4,7 +4,9 @@ import { Player, Score } from 'helpers/types';
 
 function App() {
   const gameId = localStorage.getItem('gameId');
+  //const gameId = useState('1');
   const userId = localStorage.getItem('id');
+  //const userId = useState('123');
   const token = localStorage.getItem('token');
   const [gameState, setGameState] = useState<string>('');
   const [currentQuestionLocation, setCurrentQuestionLocation] = useState<{ x: number, y: number } | ''>('');
@@ -32,7 +34,7 @@ function App() {
 
           setGameState(data.gameState);
           setCurrentQuestionLocation(data.currentQuestion.location); // does not workk
-          setCurrentQuestionName(data.currentQuestion.location_name);
+          setCurrentQuestionName(data.currentQuestion["location_name"]);
           setRoundState(data.roundState);
           setPlayerId(data.players.find((player: Player) => player.playerId === userId)?.id || '');
           setPlayerScores(data.currentScores);
@@ -63,8 +65,8 @@ function App() {
       body: JSON.stringify({
         gameId,
         playerId,
-        x: coordinates.latitude,
-        y: coordinates.longitude
+        x: coordinates.longitude,
+        y: coordinates.latitude
       }),
     })
       .then(response => {
