@@ -2,18 +2,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 
-const MapBoxComponent = ({ currentQuestionName, currentQuestionLocation, gameId, playerId, roundState, mapboxAccessToken, onSubmitAnswer }) => {
+const MapBoxComponent = ({   mapboxAccessToken, onSubmitAnswer }) => {
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
 
   const handleMapClick = (event) => {
-    if (roundState === 'GUESSING') {
+
       const clickedCoordinates = {
+
         x: event.lngLat.lng,
         y: event.lngLat.lat,
       };
       onSubmitAnswer(clickedCoordinates);
-    }
+
   };
 
   useEffect(() => {
@@ -36,20 +37,20 @@ const MapBoxComponent = ({ currentQuestionName, currentQuestionLocation, gameId,
   }, [ mapboxAccessToken, onSubmitAnswer]);
 
   useEffect(() => {
-    if (map && currentQuestionName) {
+    if (map ) {
       map.setCenter([8.2275, 46.8182]);
     }
-  }, [map,currentQuestionLocation,roundState, currentQuestionName]);
+  }, [map, mapboxAccessToken]);
 
   return <div ref={mapContainer} style={{ width: '100%', height: '400px' }} />;
 };
 
 MapBoxComponent.propTypes = {
-  currentQuestionName: PropTypes.string.isRequired,
-  currentQuestionLocation: PropTypes.string.isRequired,
-  gameId: PropTypes.string.isRequired,
-  playerId: PropTypes.string.isRequired,
-  roundState: PropTypes.string.isRequired,
+  //currentQuestionName: PropTypes.string.isRequired,
+  //currentQuestionLocation: PropTypes.string.isRequired,
+  //gameId: PropTypes.string.isRequired,
+  //playerId: PropTypes.string.isRequired,
+  //roundState: PropTypes.string.isRequired,
   mapboxAccessToken: PropTypes.string.isRequired,
   onSubmitAnswer: PropTypes.func.isRequired,
 };

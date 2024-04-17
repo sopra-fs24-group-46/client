@@ -1,15 +1,130 @@
 import React, { useState, useEffect } from 'react';
 import MapData from './MapData';
 import { Player, Score } from 'helpers/types';
+import {useNavigate} from "react-router-dom";
 
 function App() {
+  const navigate = useNavigate();
   const gameId = localStorage.getItem('gameId');
-  //const gameId = useState('1');
-  const userId = localStorage.getItem('id');
-  //const userId = useState('123');
+  const userId = localStorage.getItem('playerId');
   const token = localStorage.getItem('token');
   const [gameState, setGameState] = useState<string>('');
   const [currentQuestionLocation, setCurrentQuestionLocation] = useState<{ x: number, y: number } | ''>('');
+  const [selectedCoordinates, setSelectedCoordinates] = useState<{ x: number, y: number } | ''>('');
+  const [currentQuestionName, setCurrentQuestionName] = useState<string>('');
+  const [roundState, setRoundState] = useState<string>('');
+  const [playerId, setPlayerId] = useState<string>('');
+  //const playerId = localStorage.getItem("playerId");
+  const [playerScores, setPlayerScores] = useState<Record<string, Score>>({});
+  const [cumulativeScores, setCumulativeScores] = useState<Record<string, Score>>({});
+  const mapboxAccessToken = 'pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w';
+
+  useEffect(() => {
+    fetchGameState();
+  }, []);
+
+  const fetchGameState = () => {
+    // Fetch game state from backend using gameId
+    fetch(`http://localhost:8080/game/${gameId}/getView`)
+      .then(response => response.json())
+      .then(data => {
+        // check the data
+        console.log(data);
+        if (data.gameState === 'ENDED') {
+          // Handle game end condition
+          console.log('Game has ended');
+          //navigate('leaderboard');
+        } else {
+          setGameState(data.gameState);
+          setCurrentQuestionLocation(data.currentQuestion["location"]);
+          setCurrentQuestionName(data.currentQuestion["location_name"]);
+          setRoundState(data.roundState);
+          setPlayerId(data.players.find((player: Player) => player.playerId === userId)?.playerId || '');
+
+          //setPlayerScores(data.currentScores);
+          //setCumulativeScores(data.cumulativeScores);
+
+          // Call function to update playerScores after each round
+          // updatePlayerScores(data.currentScores);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching game state:', error);
+      });
+  };
+
+  const updatePlayerScores = (newScores: Record<string, Score>) => {
+    setPlayerScores(newScores);
+  };
+
+  const handleAnswerSubmit = (coordinates: { x: number, y: number }) => {
+    if (roundState !== 'GUESSING') {
+      console.log('Answers are only allowed during guessing. Current state:', roundState);
+      return; // Prevent further execution
+    }
+
+    setSelectedCoordinates(coordinates);
+
+    // Submit coordinates to the backend
+    fetch(`http://localhost:8080/game/${gameId}/guess`, {
+
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        playerId,
+        x: coordinates.x,
+        y: coordinates.y,
+      }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw `Server error: [${response.status}] [${response.statusText}] [${response.url}]`;
+        }
+        return response.json();
+      })
+      .then(receivedJson => {
+        // Handle the received JSON data
+        console.log(receivedJson);
+      })
+      .catch(err => {
+        console.debug("Error in fetch", err);
+      });
+  };
+
+  return (
+    <div>
+      <MapData
+        gameState={gameState}
+        currentQuestionLocation={currentQuestionLocation}
+        currentQuestionName={currentQuestionName}
+        roundState={roundState}
+        mapboxAccessToken={mapboxAccessToken}
+        onSubmitAnswer={handleAnswerSubmit}
+        gameId={gameId}
+        playerId={playerId}
+        playerScores={playerScores}
+        cumulativeScores={cumulativeScores}
+        selectedCoordinates={selectedCoordinates}
+      />
+    </div>
+  );
+}
+
+export default App;
+
+/*
+import React, { useState, useEffect } from 'react';
+
+import MapData from './MapData';
+import { Player, Score } from 'helpers/types';
+
+function App() {
+  const gameId = localStorage.getItem('gameId');
+  const userId = localStorage.getItem('id');
+  const token = localStorage.getItem('token');
+  const [gameState, setGameState] = useState<string>('');
+  const [currentQuestionLocation, setCurrentQuestionLocation] = useState<{ x: number, y: number } | ''>('');
+  const [selectedCoordinates, setselectedCoordinates] = useState<{ x: number, y: number } | ''>('');
   const [currentQuestionName, setCurrentQuestionName] = useState<string>('');
   const [roundState, setRoundState] = useState<string>('');
   const [playerId, setPlayerId] = useState<string>('');
@@ -49,45 +164,53 @@ function App() {
       });
   };
 
-  useEffect(() => {
-    fetchGameState();
-  }, []);
-
   const updatePlayerScores = (newScores: Record<string, Score>) => {
     setPlayerScores(newScores);
   };
 
+
   const handleAnswerSubmit = (coordinates) => {
-    // Implement logic to send coordinates (longitude, latitude) along with game ID and player ID to backend API for answer submission
+    /*
+    * if (data.gameState !== 'GUESSING') {
+      console.log('Answers are only allowed during guessing. Current state:', roundState);
+      return; // Prevent further execution
+    }
+    *
+    * */
+
+
+    // Implement logic to send coordinates (longitude, latitude) along with player ID to backend API for answer submission
+
+/* date: 2024-17-04
+
+  useEffect(() => {
+    fetchGameState();
+
     fetch(`http://localhost:8080/game/${gameId}/guess`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        gameId,
         playerId,
         x: coordinates.longitude,
         y: coordinates.latitude
       }),
     })
-      .then(response => {
-        // Check if the response is OK
-        if (!response.ok) {
-          throw new Error('Network response shows no connection to server');
+      .then(it => {
+        if (!it.ok) {
+          throw `Server error: [${it.status}] [${it.statusText}] [${it.url}]`;
         }
-
-        // Return the response for further processing
-        return response.json();
+        return it.json();
       })
-      .then(data => {
-        // Log the response data
-        console.log(data);
-
-        // Handle backend response (e.g., display success/error message)
+      .then(receivedJson => {
+        // your code with json here...
       })
-      .catch(error => {
-        console.error('Error submitting answer:', error);
+      .catch(err => {
+        console.debug("Error in fetch", err);
+
       });
   };
+
+  }, []);
 
 
   return (
@@ -109,6 +232,7 @@ function App() {
 }
 
 export default App;
+*/
 
 
 /* 15-04-2024

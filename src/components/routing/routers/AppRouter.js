@@ -11,6 +11,7 @@ import Profile from "../../views/Profile";
 import SetGame from "../../views/SetGame";
 import Edit from "../../views/Edit";
 import Lobby from "../../views/Lobby";
+import SimpleMap from "../../views/GL";
 
 
 
@@ -50,6 +51,7 @@ const AppRouter = () => {
         <Route path="/edit" element={<Edit/>} />
 
         <Route path="/lobby/:gameId" element={<Lobby/>} /> 
+        <Route path="/gl" element={<SimpleMap/>} />
 
 
         <Route path="/" element={<Navigate to="/home" replace />} />

@@ -48,10 +48,12 @@ const Lobby = () => {
         const gameId = localStorage.getItem("gameId");
         const userId = localStorage.getItem("id");
         const token = localStorage.getItem("token");
+        const playerId = localStorage.getItem("playerId");
 
         const requestBody = {
           id: userId,
           token: token,
+          playerId: playerId,
         };
 
         try {
@@ -73,6 +75,10 @@ const Lobby = () => {
       console.log('Game settings not available.');
     }
   };
+
+  useEffect(() => {
+    fetchGameView();
+  }, []);
 
 
   const fetchGameView = () => {
@@ -98,9 +104,6 @@ const Lobby = () => {
       });
   };
 
-  useEffect(() => {
-    fetchGameView();
-  }, []);
 
   let content = <Spinner />;
 
