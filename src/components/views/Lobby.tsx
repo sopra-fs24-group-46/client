@@ -80,6 +80,10 @@ const Lobby = () => {
     fetchGameView();
   }, []);
 
+  const handleLeaveLobby = () => {
+    // Redirect the player to the home page
+    navigate('/home');
+  };
 
   const fetchGameView = () => {
     const gameId = localStorage.getItem("gameId");
@@ -118,6 +122,7 @@ const Lobby = () => {
           <p>Guessing Time per Round: {gameSettings.guessingTime}</p>
         </div>
         <button onClick={startGame}>Start Game</button> {/* Button to start the game */}
+        <button onClick={handleLeaveLobby}>Leave Lobby</button> {/* Button to leave the lobby */}
         {/* You can add more components or buttons related to the lobby here */}
       </div>
     );
