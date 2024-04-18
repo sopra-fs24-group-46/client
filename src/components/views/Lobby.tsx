@@ -82,7 +82,7 @@ const Lobby = () => {
 
   const handleLeaveLobby = () => {
     // Redirect the player to the home page
-    navigate('/home');
+    navigate('/profile');
   };
 
   const fetchGameView = () => {

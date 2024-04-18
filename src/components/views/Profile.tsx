@@ -78,7 +78,6 @@ const Profile = () => {
       const { gameId } = response.data;
       const { playerId } = response.data;
 
-      console.log("HAWANI",response.data);
 
       // Save gameId to localStorage
       localStorage.setItem("gameId", gameId);
@@ -97,10 +96,27 @@ const Profile = () => {
       const token = localStorage.getItem("token");
       const gameId = gamePin;
   
+      if (!token || !gamePin) {
+        alert(
+          "No Game Pin provided!"
+        );
+      } else {
+        const response = await api.post(`/game/${gamePin}/join`, {
+          displayName: loggedInUser.username, // Send username as displayName
+          gamePin: gamePin,
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log('Joining game response:', response.data);
+        navigate(`/lobby/${gamePin}`);
+      }
       if (!token || !gameId) {
         throw new Error("Token or game id not found");
       }
-  
+
       const response = await api.post(`/game/${gameId}/join`, {
         displayName: loggedInUser.username, // Send username as displayName
         gamePin: gamePin,
@@ -112,11 +128,15 @@ const Profile = () => {
       navigate(`/lobby/${gameId}`);
       console.log('Joining game response:', response.data);
     } catch (error) {
+      console.log('Error response data:', error.response.data); // Log error response data
 
       console.log('Error response data:', error.response.data);
       // Log error response data
 
       console.error("Error joining game:", error);
+      alert(
+        "Game not found!"
+      );
     }
   };
 

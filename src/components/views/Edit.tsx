@@ -14,6 +14,8 @@ const Edit = () => {
   const [initialUsername, setInitialUsername] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>(''); // new for password
+  const [confirmPassword, setConfirmPassword] = useState<string>(''); //new for password confirmation
+  const [passwordError, setPasswordError] = useState<string>('');
 
   useEffect(() => {
     async function fetchData() {
@@ -54,8 +56,17 @@ const Edit = () => {
     setPassword(event.target.value);
   };
 
+  const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(event.target.value);
+  };
+
   const doEdit = async () => {
     try {
+      if (password !== confirmPassword) {
+        setPasswordError("Passwords do not match");
+        return;
+      }
+
       const storedUserId = localStorage.getItem('id');
       if (!storedUserId) {
         throw new Error('User ID not found in localStorage');
@@ -78,6 +89,8 @@ const Edit = () => {
   const handleGoBackClick = () => {
     setUsername(initialUsername);
     setPassword('');
+    setConfirmPassword('');
+    setPasswordError('');
     navigate(`/profile`);
   };
 
@@ -86,7 +99,9 @@ const Edit = () => {
       <h1>Edit my Profile</h1>
 
       <p>Username: <input type="text" value={username} onChange={handleUsernameChange} /></p>
-      <p>Password: <input type = "password" value={password} onChange={handlePasswordChange} /></p>  {/* Password input field */}
+      <p>Password: <input type="password" value={password} onChange={handlePasswordChange} /></p>  {/* Password input field */}
+      <p>Confirm Password: <input type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} /></p>
+      {passwordError && <p style ={{color: 'red'}}>{passwordError}</p>}
       <button onClick={doEdit}>Save</button> {/* Use doEdit instead of handleSaveButtonClick */}
       <button onClick={handleGoBackClick}>Go back</button>
       {/*<button onClick={() => navigate(`/users/${id}`)}>Go back</button>*/}
