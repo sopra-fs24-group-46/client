@@ -53,7 +53,6 @@ const Profile = () => {
   const [loggedInUser, setLoggedInUser] = useState<User>(null);
   const [gamePin, setGamePin] = useState<string>('');
 
-
   const logout = (): void => {
     localStorage.removeItem("token");
     localStorage.removeItem("id");
@@ -94,30 +93,30 @@ const Profile = () => {
   const joinGame = async () => {
     try {
       const token = localStorage.getItem("token");
-      const gameId = gamePin;
   
-      if (!token || !gameId) {
-        throw new Error("Token or game id not found");
+      if (!token || !gamePin) {
+        alert(
+          "No Game Pin provided!"
+        );
+      } else {
+        const response = await api.post(`/game/${gamePin}/join`, {
+          displayName: loggedInUser.username, // Send username as displayName
+          gamePin: gamePin,
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log('Joining game response:', response.data);
+        navigate(`/lobby/${gamePin}`);
       }
-  
-      const response = await api.post(`/game/${gameId}/join`, {
-        displayName: loggedInUser.username, // Send username as displayName
-        gamePin: gamePin,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
-      console.log('Joining game response:', response.data);
-      navigate(`/lobby/${gameId}`);
     } catch (error) {
-
       console.log('Error response data:', error.response.data); // Log error response data
-
-
-      
       console.error("Error joining game:", error);
+      alert(
+        "Game not found!"
+      );
     }
   };
 
