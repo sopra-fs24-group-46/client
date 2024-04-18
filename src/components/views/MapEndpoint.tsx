@@ -13,8 +13,8 @@ function App() {
   const [selectedCoordinates, setSelectedCoordinates] = useState<{ x: number, y: number } | ''>('');
   const [currentQuestionName, setCurrentQuestionName] = useState<string>('');
   const [roundState, setRoundState] = useState<string>('');
-  const [playerId, setPlayerId] = useState<string>('');
-  //const playerId = localStorage.getItem("playerId");
+  // const [playerId, setPlayerId] = useState<string>('');
+  const playerId = localStorage.getItem("playerId");
   const [playerScores, setPlayerScores] = useState<Record<string, Score>>({});
   const [cumulativeScores, setCumulativeScores] = useState<Record<string, Score>>({});
   const mapboxAccessToken = 'pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w';
@@ -39,7 +39,7 @@ function App() {
           setCurrentQuestionLocation(data.currentQuestion["location"]);
           setCurrentQuestionName(data.currentQuestion["location_name"]);
           setRoundState(data.roundState);
-          setPlayerId(data.players.find((player: Player) => player.playerId === userId)?.playerId || '');
+          playerId;// (data.players.find((player: Player) => player.playerId === userId)?.playerId || '');
 
           //setPlayerScores(data.currentScores);
           //setCumulativeScores(data.cumulativeScores);

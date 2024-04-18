@@ -55,7 +55,8 @@ const SetGame = () => {
       // Save user credentials for verification process
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("id");
-  
+      const gameId = localStorage.getItem("gameId");
+
       // Explicitly convert values to integers
       const maxPlayersInt = parseInt(maxPlayers);
       const roundsInt = parseInt(rounds);
@@ -75,7 +76,9 @@ const SetGame = () => {
 
       console.log('Lobby created');
 
-  
+      // Open the lobby first before starting the game
+      await api.post(`/game/${gameId}/openLobby`, requestBody);
+
       // Redirect to "/lobby" after successful creation
       navigate(`/lobby/${localStorage.getItem("gameId")}`);
     } catch (error) {

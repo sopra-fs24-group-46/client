@@ -73,17 +73,18 @@ const Profile = () => {
         id: id,
         token: token,
       });
-  
+
       // Extract gameId from the response
       const { gameId } = response.data;
-  
+      const { playerId } = response.data;
+
+      console.log("HAWANI",response.data);
+
       // Save gameId to localStorage
       localStorage.setItem("gameId", gameId);
-
-      
+      localStorage.setItem("playerId", playerId);
 
       console.log('Game creation');
-
 
       navigate('/game/create');
     } catch (error) {
@@ -108,15 +109,13 @@ const Profile = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-  
-      console.log('Joining game response:', response.data);
       navigate(`/lobby/${gameId}`);
+      console.log('Joining game response:', response.data);
     } catch (error) {
 
-      console.log('Error response data:', error.response.data); // Log error response data
+      console.log('Error response data:', error.response.data);
+      // Log error response data
 
-
-      
       console.error("Error joining game:", error);
     }
   };

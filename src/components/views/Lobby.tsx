@@ -48,17 +48,17 @@ const Lobby = () => {
         const gameId = localStorage.getItem("gameId");
         const userId = localStorage.getItem("id");
         const token = localStorage.getItem("token");
-        const playerId = localStorage.getItem("playerId");
+        //const playerId = localStorage.getItem("playerId");
 
         const requestBody = {
           id: userId,
           token: token,
-          playerId: playerId,
+
         };
 
         try {
           // Open the lobby first before starting the game
-          await api.post(`/game/${gameId}/openLobby`, requestBody);
+          //await api.post(`/game/${gameId}/openLobby`, requestBody);
 
           // Once the lobby is open, start the game
           const response = await api.post(`/game/${gameId}/start`, requestBody);
