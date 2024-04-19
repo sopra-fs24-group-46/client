@@ -51,7 +51,7 @@ Player.propTypes = {
 const Profile = () => {
   const navigate = useNavigate();
   const [loggedInUser, setLoggedInUser] = useState<User>(null);
-  const [gamePin, setGamePin] = useState<string>('');
+  const [gameId, setGameId] = useState<string>('');
 
 
   const logout = (): void => {
@@ -94,16 +94,16 @@ const Profile = () => {
   const joinGame = async () => {
     try {
       const token = localStorage.getItem("token");
-      const gameId = gamePin;
+      //const gameId = gamePin;
   
-      if (!token || !gamePin) {
+      if (!token || !gameId) {
         alert(
           "No Game Pin provided!"
         );
       } else {
-        const response = await api.post(`/game/${gamePin}/join`, {
+        const response = await api.post(`/game/${gameId}/join`, {
           displayName: loggedInUser.username, // Send username as displayName
-          gamePin: gamePin,
+          gameId: gameId,
         }, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -111,22 +111,22 @@ const Profile = () => {
         });
 
         console.log('Joining game response:', response.data);
-        navigate(`/lobby/${gamePin}`);
+        navigate(`/lobby/${gameId}`);
       }
-      if (!token || !gameId) {
-        throw new Error("Token or game id not found");
-      }
+      // if (!token || !gameId) {
+      //   throw new Error("Token or game id not found");
+      // }
 
-      const response = await api.post(`/game/${gameId}/join`, {
-        displayName: loggedInUser.username, // Send username as displayName
-        gamePin: gamePin,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      navigate(`/lobby/${gameId}`);
-      console.log('Joining game response:', response.data);
+      // const response = await api.post(`/game/${gameId}/join`, {
+      //   displayName: loggedInUser.username, // Send username as displayName
+      //   gameId: gameId,
+      // }, {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
+      // navigate(`/lobby/${gameId}`);
+      // console.log('Joining game response:', response.data);
     } catch (error) {
       console.log('Error response data:', error.response.data); // Log error response data
 
@@ -192,8 +192,8 @@ const Profile = () => {
         <FormField
           label="Enter Game Pin"
           placeholder="Enter game pin here..."
-          value={gamePin}
-          onChange={(pin) => setGamePin(pin)}
+          value={gameId}
+          onChange={(gameId) => setGameId(gameId)}
         />
       </div>
     );
