@@ -42,7 +42,7 @@ const MapBoxComponent = ({   mapboxAccessToken, onSubmitAnswer }) => {
     }
   }, [map, mapboxAccessToken]);
 
-  return <div ref={mapContainer} style={{ width: '100%', height: '400px' }} />;
+  return <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />;
 };
 
 MapBoxComponent.propTypes = {

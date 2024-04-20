@@ -27,7 +27,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ durationInSeconds, onFinish }
   }, [durationInSeconds, onFinish]);
 
   return (
-    <div style={{ width: '100%', height: '20px', backgroundColor: 'lightgray', position: 'relative' }}>
+    <div style={{ width: '100%', height: '2vh', backgroundColor: 'lightgray', position: 'relative' }}>
       <div
         style={{
           width: `${progress}%`,

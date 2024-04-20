@@ -12,7 +12,7 @@ const RoundStart = () => {
     const navigate = useNavigate();
 
 
-    const [questionTime, setquestionTime] = useState(null);
+    const [questionTime, setQuestionTime] = useState(null);
     const [currentRound, setCurrentRound] = useState(null);
     const [currentLocationName, setcurrentLocationName] = useState<string>('');
 
@@ -25,9 +25,17 @@ const RoundStart = () => {
             const response = await api.get(`/game/${gameId}/settings`);
             const data = response.data;
 
-            //TODO DH Switch to question Time after Bug changes
+            //timer does not work when using setQuestionTime directly
             const questionTime = data.questionTime;
-            setquestionTime(questionTime);
+
+            //Save settings variables in localhost
+            localStorage.setItem("questionTime", data.questionTime);
+            localStorage.setItem("guessingTime", data.guessingTime);
+            localStorage.setItem("mapRevealTime", data.mapRevealTime);
+
+            //Set local variables
+            setQuestionTime(questionTime);
+
           } catch (error) {
             console.error("Error fetching game settings:", error);
           }
@@ -45,6 +53,11 @@ const RoundStart = () => {
             const response = await api.get(`game/${gameId}/getView`);
             const data = response.data;
 
+            //Save current round variables in localhost
+            localStorage.setItem("currentRound", data.currentRound);
+            localStorage.setItem("currentLocationName", data.currentQuestion.location_name);
+
+            //Set locat variables
             setCurrentRound(data.currentRound);
             setcurrentLocationName(data.currentQuestion.location_name);
 
@@ -59,8 +72,11 @@ const RoundStart = () => {
 
     //Function which will run when the timer finishes
     const handleProgressBarFinish = () => {
+
+        const gameId = localStorage.getItem("gameId");
         console.log("Timer is finished");
-        navigate("/question");
+        
+        navigate(`/game/${gameId}/round/${currentRound}/guessing`);
 
         //Switch to the Map
    
@@ -79,7 +95,7 @@ const RoundStart = () => {
                     <div>{currentLocationName}</div>
                 </div>
                 <div className="round powerups_container">Powerups will be added here</div>
-                <ProgressBar durationInSeconds={questionTime} onFinish={handleProgressBarFinish} />
+                <ProgressBar durationInSeconds={10} onFinish={handleProgressBarFinish} />
 
             
             </div>

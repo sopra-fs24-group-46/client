@@ -13,6 +13,7 @@ import Edit from "../../views/Edit";
 import Lobby from "../../views/Lobby";
 import SimpleMap from "../../views/GL";
 import RoundStart from "../../views/RoundStart";
+import Question from "../../views/Question";
 
 
 
@@ -45,6 +46,8 @@ const AppRouter = () => {
 
         <Route path="/question" element={<MapEndpoint />} />
 
+        
+
         <Route path="/profile" element={<Profile/>} />
         
         <Route path="/game/create" element={<SetGame/>} />
@@ -55,6 +58,8 @@ const AppRouter = () => {
         <Route path="/gl" element={<SimpleMap/>} />
 
         <Route path="/game/:gameId/round/:currentRound" element={<RoundStart/>} />
+        
+        <Route path="/game/:gameId/round/:currentRound/guessing" element={<Question />} />
 
 
         <Route path="/" element={<Navigate to="/home" replace />} />
