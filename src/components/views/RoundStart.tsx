@@ -16,6 +16,8 @@ const RoundStart = () => {
     const [currentRound, setCurrentRound] = useState(null);
     const [currentLocationName, setcurrentLocationName] = useState<string>('');
 
+    let isTimerFinished = false;
+
 
     //get game settings
     useEffect(() => {
@@ -73,14 +75,17 @@ const RoundStart = () => {
     //Function which will run when the timer finishes
     const handleProgressBarFinish = () => {
 
+      //Makes sure function only runs once -> counters useEffect stuff i dont understand :(
+      if (!isTimerFinished) {
+
         const gameId = localStorage.getItem("gameId");
         console.log("Timer is finished");
         
         navigate(`/game/${gameId}/round/${currentRound}/guessing`);
 
-        //Switch to the Map
-   
-      };
+        isTimerFinished = true;
+      }
+    };
 
     //TODO DH add proper Styling for Fonts usw  
     

@@ -14,6 +14,7 @@ import Lobby from "../../views/Lobby";
 import SimpleMap from "../../views/GL";
 import RoundStart from "../../views/RoundStart";
 import Question from "../../views/Question";
+import MapReveal from "../../views/MapReveal";
 
 
 
@@ -60,6 +61,8 @@ const AppRouter = () => {
         <Route path="/game/:gameId/round/:currentRound" element={<RoundStart/>} />
         
         <Route path="/game/:gameId/round/:currentRound/guessing" element={<Question />} />
+
+        <Route path="/game/:gameId/round/:currentRound/mapReveal" element={<MapReveal />} />
 
 
         <Route path="/" element={<Navigate to="/home" replace />} />

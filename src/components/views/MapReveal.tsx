@@ -13,21 +13,12 @@ const Question_guessing = () => {
     const navigate = useNavigate();
     const mapboxAccessToken = 'pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w';
 
-    let isTimerFinished = false;
 
-
-    //Function which will run when the timer finishes
     const handleProgressBarFinish = () => {
+        console.log("Timer is finished");
 
-        //Makes sure function only runs once -> counters useEffect stuff i dont understand :(
-        if (!isTimerFinished) {
-    
-            console.log("Timer is finished");
-            navigate(`/game/${localStorage.getItem("gameId")}/round/${localStorage.getItem("currentRound")}/mapReveal`);
-    
-            isTimerFinished = true;
-        }
-        };
+   
+    };
 
     const handleonSubmitAnswer = () => {
         console.log("Submitting something");
@@ -41,7 +32,7 @@ const Question_guessing = () => {
             <div className="map question_container">
                 <div className="map text1">Round {localStorage.getItem("currentRound")}</div>
                 <div className="map text2">Find mountain: {localStorage.getItem("currentLocationName")}</div>
-                <div className="map text3">Select a location by clicking on the map.</div>
+                <div className="map text3">This is the map reveal</div>
 
             </div>
             <div className="map container">
@@ -59,6 +50,9 @@ const Question_guessing = () => {
     );
 
 
-};
+
+
+
+}
 
 export default Question_guessing;
