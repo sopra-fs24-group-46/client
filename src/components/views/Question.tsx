@@ -31,8 +31,8 @@ const Question_guessing = () => {
         <BaseContainer>
             <div className="map question_container">
                 <div className="map text1">Round {localStorage.getItem("currentRound")}</div>
-                <div className="map text2"></div>
-                <div className="map text3"></div>
+                <div className="map text2">Find mountain: {localStorage.getItem("currentLocationName")}</div>
+                <div className="map text3">Select a location by clicking on the map.</div>
 
             </div>
             <div className="map container">
@@ -41,7 +41,7 @@ const Question_guessing = () => {
                 onSubmitAnswer={handleonSubmitAnswer}
             />
             </div>
-            <ProgressBar durationInSeconds={10} onFinish={handleProgressBarFinish} />
+            <ProgressBar durationInSeconds={localStorage.getItem("guessingTime")} onFinish={handleProgressBarFinish} />
         
         
         
