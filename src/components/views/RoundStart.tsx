@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { api, handleError, getAuthToken } from "helpers/api";
 import BaseContainer from "components/ui/BaseContainer";
 import ProgressBar from "components/ui/ProgressBar";
@@ -7,6 +8,8 @@ import "styles/ui/Progressbar.scss";
 
 
 const RoundStart = () => {
+
+    const navigate = useNavigate();
 
 
     const [questionTime, setquestionTime] = useState(null);
@@ -23,7 +26,7 @@ const RoundStart = () => {
             const data = response.data;
 
             //TODO DH Switch to question Time after Bug changes
-            const questionTime = data.guessingTime;
+            const questionTime = data.questionTime;
             setquestionTime(questionTime);
           } catch (error) {
             console.error("Error fetching game settings:", error);
@@ -37,8 +40,9 @@ const RoundStart = () => {
     useEffect(() => {
         async function getGameView() {
           try {
-            const gameId = localStorage.getItem("gameId");
-            const response = await api.get(`/game/developer/getView/game1_4_Round1Started`);
+            const gameId = localStorage.getItem("gameId");            
+            //const response = await api.get(`/game/developer/getView/game1_4_Round1Started`);
+            const response = await api.get(`game/${gameId}/getView`);
             const data = response.data;
 
             setCurrentRound(data.currentRound);
@@ -56,6 +60,7 @@ const RoundStart = () => {
     //Function which will run when the timer finishes
     const handleProgressBarFinish = () => {
         console.log("Timer is finished");
+        navigate("/question");
 
         //Switch to the Map
    

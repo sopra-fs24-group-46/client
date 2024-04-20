@@ -13,7 +13,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ durationInSeconds, onFinish }
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress(prevProgress => {
-        const remainingTime = prevProgress - (100 / durationInSeconds);
+        const remainingTime = prevProgress - (1 / durationInSeconds);
         if (remainingTime <= 0) {
           clearInterval(interval);
           onFinish();
@@ -21,7 +21,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ durationInSeconds, onFinish }
         }
         return remainingTime;
       });
-    }, 1000);
+    }, 10);
 
     return () => clearInterval(interval);
   }, [durationInSeconds, onFinish]);
@@ -36,7 +36,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ durationInSeconds, onFinish }
           position: 'absolute',
           top: 0,
           left: 0,
-          transition: 'width 1s linear',
+          transition: 'width 0.01s linear',
         }}
       />
     </div>

@@ -64,7 +64,8 @@ const Lobby = () => {
           const response = await api.post(`/game/${gameId}/start`, requestBody);
           setHasGameStarted(true);
           console.log("game started", response.data);
-          navigate("/question");
+
+          navigate(`/game/${gameId}/round/1`);
         } catch (error) {
           console.log(`Error Details: ${handleError(error)}`);
         }
