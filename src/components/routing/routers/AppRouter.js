@@ -11,7 +11,6 @@ import Profile from "../../views/Profile";
 import SetGame from "../../views/SetGame";
 import Edit from "../../views/Edit";
 import Lobby from "../../views/Lobby";
-import SimpleMap from "../../views/GL";
 import RoundStart from "../../views/RoundStart";
 import Question from "../../views/Question";
 import MapReveal from "../../views/MapReveal";
@@ -56,10 +55,9 @@ const AppRouter = () => {
 
         <Route path="/edit" element={<Edit/>} />
 
-        <Route path="/lobby/:gameId" element={<Lobby/>} /> 
-        <Route path="/gl" element={<SimpleMap/>} />
-
+        <Route path="/lobby/:gameId" element={<Lobby/>} />
         <Route path="/game/:gameId/round/:currentRound" element={<RoundStart/>} />
+
         
         <Route path="/game/:gameId/round/:currentRound/guessing" element={<Question />} />
 

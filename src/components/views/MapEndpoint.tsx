@@ -53,9 +53,6 @@ function App() {
       });
   };
 
-  const updatePlayerScores = (newScores: Record<string, Score>) => {
-    setPlayerScores(newScores);
-  };
 
   const handleAnswerSubmit = (coordinates: { x: number, y: number }) => {
     if (roundState !== 'GUESSING') {

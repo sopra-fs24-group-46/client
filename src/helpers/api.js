@@ -48,7 +48,7 @@ export const getAuthToken = () => {
 
 // used in the MapEndpoint
 // api.js
-export const fetchGameState = async (gameId) => {
+export const fetchGameData = async (gameId) => {
   try {
     const response = await fetch(`http://localhost:8080/game/${gameId}/getView`);
     if (!response.ok) {

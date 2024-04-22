@@ -101,6 +101,6 @@ const Leaderboard_roundEnd = () => {
   }
 
 
-};
+}
 
 export default Leaderboard_roundEnd;

@@ -1,37 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { api, handleError, getAuthToken } from "helpers/api";
+import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import BaseContainer from "components/ui/BaseContainer";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
+//import PropTypes from "prop-types";
 import "styles/views/Lobby.scss";
-import { Score } from "../../helpers/types";
+//import { Score } from "../../helpers/types";
 
 const Lobby = () => {
   const navigate = useNavigate();
   const [gameSettings, setGameSettings] = useState(null);
   const [gameId, setGameId] = useState(null);
-  const [hasGameStarted, setHasGameStarted] = useState(false);
-  const [round, setRound] = useState(null);
-
+  const [maxPlayers, setMaxPlayers] = useState(null);
   const userId = localStorage.getItem('id');
+  const currentRound = localStorage.getItem('currentRound');
 
-  const [currentQuestionLocation, setCurrentQuestionLocation] = useState<{ x: number, y: number } | null>(null);
-  const [currentQuestionName, setCurrentQuestionName] = useState<string>(null);
-  const [roundState, setRoundState] = useState<string>('');
-  const [gameState, setGameState] = useState<string>('');
   const [playerId, setPlayerId] = useState<string>('');
-  const [playerScores, setPlayerScores] = useState<Record<string, Score>>({});
-  const [cumulativeScores, setCumulativeScores] = useState<Record<string, Score>>({});
 
   useEffect(() => {
     async function fetchGameSettings() {
       try {
+
         const gameId = localStorage.getItem("gameId");
+        const maxPlayers = localStorage.getItem("maxPlayers");
         const response = await api.get(`/game/${gameId}/settings`);
         const settings = response.data;
         setGameSettings(settings);
         setGameId(gameId);
+        (setMaxPlayers(maxPlayers));
       } catch (error) {
         console.error("Error fetching game settings:", error);
       }
@@ -41,6 +37,8 @@ const Lobby = () => {
   }, []);
 
   const startGame = async () => {
+    const intervalId = setInterval(fetchGameView, 10000);
+
     // Check if the required conditions are met to start the game
     if (gameSettings && gameSettings.maxPlayers && gameSettings.rounds) {
       // Ensure the number of players meets the requirement
@@ -48,12 +46,10 @@ const Lobby = () => {
         const gameId = localStorage.getItem("gameId");
         const userId = localStorage.getItem("id");
         const token = localStorage.getItem("token");
-        //const playerId = localStorage.getItem("playerId");
 
         const requestBody = {
           id: userId,
           token: token,
-
         };
 
         try {
@@ -62,10 +58,9 @@ const Lobby = () => {
 
           // Once the lobby is open, start the game
           const response = await api.post(`/game/${gameId}/start`, requestBody);
-          setHasGameStarted(true);
           console.log("game started", response.data);
 
-          navigate(`/game/${gameId}/round/1`);
+          navigate(`/game/${gameId}/round/${currentRound}`);
         } catch (error) {
           console.log(`Error Details: ${handleError(error)}`);
         }
@@ -75,11 +70,10 @@ const Lobby = () => {
     } else {
       console.log('Game settings not available.');
     }
+    return () => clearInterval(intervalId);
   };
 
-  useEffect(() => {
-    fetchGameView();
-  }, []);
+
 
   const handleLeaveLobby = () => {
     // Redirect the player to the home page
@@ -101,7 +95,7 @@ const Lobby = () => {
         if (data.gameState === "ENDED") {
           // Handle game end condition
           console.log('Game has ended');
-          navigate("/leaderboard");
+          navigate(`/game/${localStorage.getItem("gameId")}/round/${currentRound}/leaderboard`);
         }
       })
       .catch(error => {
