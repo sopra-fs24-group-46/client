@@ -37,7 +37,6 @@ const Leaderboard_roundEnd = () => {
                 const data = response.data;
                 setGameInfo(data);
                 console.log(typeof gameInfo.currentScores)
-                console.log("ALL THE DATA", data)
 
             } catch (error) {
                 console.error("Error fetching game settings:", error);
