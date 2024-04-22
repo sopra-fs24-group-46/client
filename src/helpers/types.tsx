@@ -9,3 +9,5 @@ export interface Score {
   score: number;
   distance: number | null;
 }
+
+
