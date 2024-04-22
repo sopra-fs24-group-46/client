@@ -31,6 +31,7 @@ const Leaderboard_roundEnd = () => {
         const response = await api.get(`game/${gameId}/getView`);
         const data = response.data;
         setGameInfo(data);
+        console.log(typeof gameInfo.currentScores)
 
       } catch (error) {
         console.error("Error fetching game settings:", error);
@@ -55,8 +56,8 @@ const Leaderboard_roundEnd = () => {
           <h2 className="leaderboard title">Current Leaderboard</h2>
 
           <div className="leaderboard rounds">
-            <div className="leaderboard rounds counters">Rounds played: 1</div>
-            <div className="leaderboard rounds counters">Rounds to play: 6</div>
+            <div className="leaderboard rounds counters">Rounds played: {gameInfo.currentRound}</div>
+            <div className="leaderboard rounds counters">Rounds to play: TODO</div>
           </div>
 
           <div className="leaderboard table-container">
@@ -64,37 +65,29 @@ const Leaderboard_roundEnd = () => {
               <thead>
                 <tr>
                   <th></th>
-                  <th>Wins</th>
-                  <th>Total km off</th>
+                  <th>Km off</th>
                   <th>Points</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>User14</td>
-                  <td>1</td>
-                  <td>1.8</td>
-                  <td>1520</td>
-                </tr>
-                <tr>
-                  <td>UserXY</td>
-                  <td>0</td>
-                  <td>2.1</td>
-                  <td>1110</td>
-                </tr>
-                <tr>
-                  <td>User1234</td>
-                  <td>0</td>
-                  <td>10</td>
-                  <td>256</td>
-                </tr>
+                {Object.entries(gameInfo.currentScores).map(([playerId, playerData]) => {
+                  console.log("PLAYER DATA: " + playerData); // Log playerData
+                  return (
+                    <tr key={playerId}>
+                      <td>{playerId}</td>
+                      {/* todo
+                      <td>{playerData.distance}</td>
+                      <td>{playerData.score}</td>
+                      */}
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
 
 
-          <div className="leaderboard round-timer">Next Round starts in: 9</div>
-
+          <div className="leaderboard round-timer">Next Round starts in: TODO</div>
 
         </div>
         <div className="map container">
