@@ -110,6 +110,11 @@ const Profile = () => {
           },
         });
 
+        const { playerId } = response.data;
+
+        localStorage.setItem("gameId", gameId);
+        localStorage.setItem("playerId", playerId);
+
         console.log('Joining game response:', response.data);
         navigate(`/lobby/${gameId}`);
       }
