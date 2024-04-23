@@ -27,6 +27,7 @@
   &.inputs {
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
   }
 
 
@@ -36,11 +37,19 @@
   label {
     margin-bottom: 5px;
     font-weight: bold;
+    margin-right: 10px;
   }
 
   select {
     width: 100px;
     height: 30px;
     font-size: 14px;
+    margin-left: auto;
+    background-color: rgba(60,179,113,0.3);
+    border: 1px solid rgba(60,179,113,0.5);
+    border-radius: 5px;
+    padding: 5px;
+    appearance: none;
+    color: white;
   }
 }
