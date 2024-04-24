@@ -91,6 +91,7 @@ const Profile = () => {
     }
   };
 
+  //TODO dont let user join if game is full
   const joinGame = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -101,19 +102,21 @@ const Profile = () => {
           "No Game Pin provided!"
         );
       } else {
-        const response = await api.post(`/game/${gameId}/join`, {
-          displayName: loggedInUser.username, // Send username as displayName
-          gameId: gameId,
-        }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
 
-        const { playerId } = response.data;
+
+        // Construct the request body
+        const requestBody = {
+          displayName: loggedInUser.username
+        };
+
+
+        const response = await api.post(`/game/${gameId}/join`, requestBody);
+
+        console.log(response.data);
+
 
         localStorage.setItem("gameId", gameId);
-        localStorage.setItem("playerId", playerId);
+        //localStorage.setItem("playerId", "Player_normal");
 
         console.log('Joining game response:', response.data);
         navigate(`/lobby/${gameId}`);

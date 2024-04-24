@@ -14,9 +14,46 @@ const Lobby = () => {
   const [maxPlayers, setMaxPlayers] = useState(null);
   const userId = localStorage.getItem('id');
   const currentRound = localStorage.getItem('currentRound');
-
   const [playerId, setPlayerId] = useState<string>('');
+  const [players, setPlayers] = useState([]);
 
+  //Gets gameView JSON-File every 0.5 seconds
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+
+        const gameId = localStorage.getItem("gameId");
+
+        const response = await fetch(`http://localhost:8080/game/${gameId}/getView`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const jsonData = await response.json();
+        const gameState = jsonData.gameState;
+        console.log(gameState);
+
+        const gamePlayers = jsonData.players || [];
+        setPlayers(gamePlayers);
+
+        if (gameState === "PLAYING") {
+          console.log("NOW PLAYING");
+          navigate(`/game/${gameId}/round/1`);
+        }
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    const intervalId = setInterval(fetchData, 500);
+
+    // Cleanup function to clear the interval when component unmounts or useEffect runs again
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array to run effect only once on mount
+
+
+
+  //Gets game settings when site loads
   useEffect(() => {
     async function fetchGameSettings() {
       try {
@@ -36,42 +73,29 @@ const Lobby = () => {
     fetchGameSettings();
   }, []);
 
-  const startGame = async () => {
-    const intervalId = setInterval(fetchGameView, 10000);
+  const startGame_test = async () => {
 
-    // Check if the required conditions are met to start the game
-    if (gameSettings && gameSettings.maxPlayers && gameSettings.rounds) {
-      // Ensure the number of players meets the requirement
-      if (gameSettings.maxPlayers >= playerId.length) {
-        const gameId = localStorage.getItem("gameId");
-        const userId = localStorage.getItem("id");
-        const token = localStorage.getItem("token");
+    //Define current variables
+    const gameId = localStorage.getItem("gameId");
+    const userId = localStorage.getItem("id");
+    const token = localStorage.getItem("token");
 
-        const requestBody = {
-          id: userId,
-          token: token,
-        };
+    //Create requestBody
+    const requestBody = {
+      id: userId,
+      token: token,
+    };
 
-        try {
-          // Open the lobby first before starting the game
-          //await api.post(`/game/${gameId}/openLobby`, requestBody);
+    try {
 
-          // Once the lobby is open, start the game
-          const response = await api.post(`/game/${gameId}/start`, requestBody);
-          console.log("game started", response.data);
+      //Start game in the backend
+      const response = await api.post(`/game/${gameId}/start`, requestBody);
 
-          navigate(`/game/${gameId}/round/${currentRound}`);
-        } catch (error) {
-          console.log(`Error Details: ${handleError(error)}`);
-        }
-      } else {
-        console.log('Number of players does not meet the requirement to start the game.');
-      }
-    } else {
-      console.log('Game settings not available.');
-    }
-    return () => clearInterval(intervalId);
-  };
+      //TODO Propper Error Handling
+    } catch (error) {
+      console.log(`Error Details: ${handleError(error)}`);
+    }   
+  }
 
 
 
@@ -80,28 +104,7 @@ const Lobby = () => {
     navigate('/profile');
   };
 
-  const fetchGameView = () => {
-    const gameId = localStorage.getItem("gameId");
 
-    // Fetch game state from backend using gameId
-    fetch(`http://localhost:8080/game/${gameId}/getView`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response shows no connection to server');
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.gameState === "ENDED") {
-          // Handle game end condition
-          console.log('Game has ended');
-          navigate(`/game/${localStorage.getItem("gameId")}/round/${currentRound}/leaderboard`);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching game/round state in lobby:', error);
-      });
-  };
 
 
   let content = <Spinner />;
@@ -115,8 +118,27 @@ const Lobby = () => {
           <p>Max Players: {gameSettings.maxPlayers}</p>
           <p>Rounds: {gameSettings.rounds}</p>
           <p>Guessing Time per Round: {gameSettings.guessingTime}</p>
+          <div>
+            <h1>Player List</h1>
+            <table>
+              <thead>
+                <tr>
+                  <th>Player ID</th>
+                  <th>Display Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {players.map((player, index) => (
+                  <tr key={index}>
+                    <td>{player.playerId}</td>
+                    <td>{player.displayName}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <button onClick={startGame}>Start Game</button> {/* Button to start the game */}
+        <button onClick={startGame_test}>Start Game</button> {/* Button to start the game */}
         <button onClick={handleLeaveLobby}>Leave Lobby</button> {/* Button to leave the lobby */}
         {/* You can add more components or buttons related to the lobby here */}
       </div>

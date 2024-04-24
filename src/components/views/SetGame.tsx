@@ -11,7 +11,7 @@ import BaseContainer from "components/ui/BaseContainer";
 
 
 
-
+//TODO change values for different inputs
 const NumberInput = ({ label, value, onChange }) => {
   
   const handleChange = (event) => {

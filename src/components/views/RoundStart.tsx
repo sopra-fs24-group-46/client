@@ -26,6 +26,7 @@ const RoundStart = () => {
         const data = response.data;
         setGameSettings(data);
         localStorage.setItem("questionTime", data.questionTime);
+        localStorage.setItem("guessingTime", data.guessingTime);
         return () => clearInterval(intervalId);
         // instead of localStorage
       } catch (error) {
