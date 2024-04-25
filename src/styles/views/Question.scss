@@ -1,0 +1,30 @@
+@import "../theme";
+
+.map {
+
+    &.container {
+        position: relative;
+        height: 100%;
+        width: 100%;
+
+        z-index: 0; //Specifies that it is behind the question_container
+        
+
+    }
+
+    &.question_container {
+
+        position: absolute;
+        top: 5vh;
+        height: 20vh;
+        width: 30vw;
+        font-weight: 300;
+        border-radius: 0.75em;
+        background-color: $background;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        box-shadow: $dropShadow;
+
+        z-index: 1; //Overlay over map container
+    }
+
+}

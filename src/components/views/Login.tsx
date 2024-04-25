@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
 import BaseContainer from "components/ui/BaseContainer";
+import Header from "components/views/Header";
 import PropTypes from "prop-types";
 
 /*
@@ -19,6 +20,7 @@ const FormField = (props) => {
       <label className="login label">{props.label}</label>
       <input
         className="login input"
+        type={props.type} // Set the input type dynamically
         placeholder="enter here.."
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
@@ -30,27 +32,37 @@ const FormField = (props) => {
 FormField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
+  type: PropTypes.string, 
   onChange: PropTypes.func,
 };
 
 const Login = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState<string>(null);
-  const [username, setUsername] = useState<string>(null);
+  const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
 
   const doLogin = async () => {
     try {
-      const requestBody = JSON.stringify({ username, name });
-      const response = await api.post("/users", requestBody);
-
-      // Get the returned user and update a new object.
-      const user = new User(response.data);
-
-      // Store the token into the local storage.
-      localStorage.setItem("token", user.token);
-
-      // Login successfully worked --> navigate to the route /game in the GameRouter
-      navigate("/game");
+      const requestBody = JSON.stringify({ username, password });
+      const response = await api.post("/login", requestBody); 
+  
+      // Log the response data to inspect its structure
+      const userData = response.data;
+      localStorage.setItem("token", userData.token);
+      localStorage.setItem("id", userData.user.id);
+  
+      // Check if the token is present in the response data
+      if (response.data && response.data.token) {
+        // Store the token into the local storage
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("id", response.data.user.id);
+  
+        // Navigate to the game page
+        navigate("/profile");
+      } else {
+        // Handle the case where the token is not present in the response
+        alert("Token not found in the response");
+      }
     } catch (error) {
       alert(
         `Something went wrong during the login: \n${handleError(error)}`
@@ -60,6 +72,7 @@ const Login = () => {
 
   return (
     <BaseContainer>
+      <Header/>
       <div className="login container">
         <div className="login form">
           <FormField
@@ -68,18 +81,25 @@ const Login = () => {
             onChange={(un: string) => setUsername(un)}
           />
           <FormField
-            label="Name"
-            value={name}
-            onChange={(n) => setName(n)}
+            label="Password"
+            type="password" 
+            value={password}
+            onChange={(n) => setPassword(n)}
           />
           <div className="login button-container">
-            <Button
-              disabled={!username || !name}
+          <Button
+              disabled={!username || !password}
               width="100%"
               onClick={() => doLogin()}
             >
               Login
             </Button>
+            <Button /* button to create new user*/
+              width="100%"
+              onClick={() => navigate(`/home`)}
+            >
+                Go back
+              </Button>
           </div>
         </div>
       </div>

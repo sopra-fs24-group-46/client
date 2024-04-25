@@ -7,7 +7,25 @@
 
   &.title {
     font-weight: bold;
+    color: white !important;
+    font-size: 4em;
     color: $background;
     text-align: center;
+    margin-top: 25vh; /* Add margin-top to move the title down (adjust as needed) */
+
   }
+
+  &.title1 {
+    font-size: 10vh;  //TODO DH Maybe style in theme 
+    margin-top: 10vh;
+    text-align: center;
+  }
+
+  &.container_title1 {
+    @include center;
+    width: 100vw;
+
+  }
+
+
 }

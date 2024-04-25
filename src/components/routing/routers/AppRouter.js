@@ -1,9 +1,24 @@
 import React from "react";
-import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import {GameGuard} from "../routeProtectors/GameGuard";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { GameGuard } from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
-import {LoginGuard} from "../routeProtectors/LoginGuard";
+import { LoginGuard } from "../routeProtectors/LoginGuard";
+import Home from "../../views/Home";
 import Login from "../../views/Login";
+import Register from "../../views/Register";
+import MapEndpoint from "../../views/MapEndpoint";
+import Profile from "../../views/Profile";
+import SetGame from "../../views/SetGame";
+import Edit from "../../views/Edit";
+import Lobby from "../../views/Lobby";
+import RoundStart from "../../views/RoundStart";
+import Question from "../../views/Question";
+import MapReveal from "../../views/MapReveal";
+import Leaderboard from "../../views/Leaderboard";
+
+
+
+
 
 /**
  * Main router of your application.
@@ -18,25 +33,43 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-
         <Route path="/game/*" element={<GameGuard />}>
-          <Route path="/game/*" element={<GameRouter base="/game"/>} />
+          <Route path="/game/*" element={<GameRouter base="/game" />} />
         </Route>
 
         <Route path="/login" element={<LoginGuard />}>
-          <Route path="/login" element={<Login/>} />
+          <Route path="/login" element={<Login />} />
         </Route>
 
-        <Route path="/" element={
-          <Navigate to="/game" replace />
-        }/>
+        <Route path="/register" element={<Register />} />
 
+        <Route path="/home" element={<Home />} />
+
+        <Route path="/question" element={<MapEndpoint />} />
+
+        
+
+        <Route path="/profile" element={<Profile/>} />
+        
+        <Route path="/game/create" element={<SetGame/>} />
+
+        <Route path="/edit" element={<Edit/>} />
+
+        <Route path="/lobby/:gameId" element={<Lobby/>} />
+        <Route path="/game/:gameId/round/:currentRound" element={<RoundStart/>} />
+
+        
+        <Route path="/game/:gameId/round/:currentRound/guessing" element={<Question />} />
+
+        <Route path="/game/:gameId/round/:currentRound/mapReveal" element={<MapReveal />} />
+
+        <Route path="/game/:gameId/round/:currentRound/leaderboard" element={<Leaderboard />} />
+
+
+        <Route path="/" element={<Navigate to="/home" replace />} />
       </Routes>
     </BrowserRouter>
   );
 };
 
-/*
-* Don't forget to export your component!
- */
 export default AppRouter;

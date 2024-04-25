@@ -1,0 +1,13 @@
+@import "../theme";
+
+.lobby {
+    &.container {
+      height: 60vh;
+      width: 80vw;
+      background-color: $background;
+      border-radius: 0.75em;
+      box-shadow: $dropShadow;
+    }
+
+
+}
