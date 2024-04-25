@@ -29,8 +29,8 @@ const MapData = ({
       <h4>Player: {playerId}</h4>
       <h5>Click anywhere on the map to guess:</h5>
       <MapBoxComponent
-        mapboxAccessToken={mapboxAccessToken}
-        onSubmitAnswer={onSubmitAnswer}
+        reveal={1}
+        guessesMapReveal={[]}
       />
       <div>
         <h3>Time left: (seconds)</h3>

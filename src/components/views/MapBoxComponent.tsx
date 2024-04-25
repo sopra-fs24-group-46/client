@@ -2,49 +2,82 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 
-const MapBoxComponent = ({ mapboxAccessToken, onSubmitAnswer}) => {
-    const [map, setMap] = useState(null);
-    const mapContainer = useRef(null);
+const MapBoxComponent = ({reveal, guessesMapReveal}) => {
+    
+  const mapContainer = useRef(null);
+  const mapboxAccessToken = 'pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w';
 
-    const handleMapClick = (event) => {
-        const clickedCoordinates = {
-            x: event.lngLat.lng,
-            y: event.lngLat.lat,
-        };
-        onSubmitAnswer(clickedCoordinates);
-    };
 
-    useEffect(() => {
-        mapboxgl.accessToken = mapboxAccessToken;
+  let marker = null;
 
-        const initializedMap = new mapboxgl.Map({
-            container: mapContainer.current,
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: [8.2275, 46.8182],
-            zoom: 7,
+  useEffect(() => {
+
+      mapboxgl.accessToken = mapboxAccessToken;
+      console.log(guessesMapReveal);
+
+      const map = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: 'mapbox://styles/mapbox/streets-v11',
+          center: [8.2275, 46.8182],
+          zoom: 7,
+      });
+
+      if(reveal === 1) {
+
+        guessesMapReveal.forEach(player => {
+
+          //TODO Always same colors should be choosen and playername should be displayed in popup and Text should not be white
+          const { answer } = player;
+
+          if(answer) {
+
+            console.log(answer);
+
+            const markerColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+
+            new mapboxgl.Marker({ color: markerColor})
+              .setLngLat([answer.location.x, answer.location.y])
+              .setPopup(new mapboxgl.Popup().setHTML("<h1>Playername</h1>"))
+              .addTo(map);
+
+          }
         });
+      }
 
-        initializedMap.on('click', handleMapClick);
+      //initializedMap.on('click', handleMapClick);
+      map.on('click', (e) => {
 
-        setMap(initializedMap);
-
-        return () => {
-            initializedMap.remove();
-        };
-    }, [mapboxAccessToken, onSubmitAnswer]);
-
-    useEffect(() => {
-        if (map) {
-            map.setCenter([8.2275, 46.8182]);
+        if(marker) {
+          marker.remove();
         }
-    }, [map, mapboxAccessToken]);
+
+        localStorage.setItem("x", e.lngLat.lng);
+        localStorage.setItem("y", e.lngLat.lat);
+        
+        
+        const newMarker = new mapboxgl.Marker()
+          .setLngLat([e.lngLat.lng, e.lngLat.lat])
+          .addTo(map);
+
+        marker = newMarker;
+      });
+
+      return () => {
+        map.remove();
+      };
+  }, [guessesMapReveal]);
+
 
     return <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />;
 };
 
 MapBoxComponent.propTypes = {
-    mapboxAccessToken: PropTypes.string.isRequired,
-    onSubmitAnswer: PropTypes.func.isRequired,
+    reveal: PropTypes.number.isRequired,
+    guessesMapReveal: PropTypes.arrayOf(PropTypes.shape({
+      latitude: PropTypes.number.isRequired,
+      longitude: PropTypes.number.isRequired,
+    })),
+
 
 };
 

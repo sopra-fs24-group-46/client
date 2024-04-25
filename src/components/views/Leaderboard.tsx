@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "helpers/api";
 import BaseContainer from "components/ui/BaseContainer";
 import MapBoxComponent from "./MapBoxComponent";
+import ProgressBar from "components/ui/ProgressBar";
 
 //Leaderboard container gets styled in here
 import "styles/views/Leaderboard.scss";
@@ -21,6 +22,7 @@ const Leaderboard_roundEnd = () => {
     const mapboxAccessToken = "pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w";
 
     const [gameInfo, setGameInfo] = useState(null);
+    let isTimerFinished = false;
 
 
     //Process to get data from backend
@@ -46,11 +48,50 @@ const Leaderboard_roundEnd = () => {
         getGameView();
     }, []);
 
+    //Gets gameView JSON-File every 0.5 seconds
+    useEffect(() => {
+        const fetchData = async () => {
+        try {
 
-    //Function needed by map
-    const handleonSubmitAnswer = () => {
-        console.log("Submitting something");
+            const gameId = localStorage.getItem("gameId");
 
+            const response = await fetch(`http://localhost:8080/game/${gameId}/getView`);
+            if (!response.ok) {
+            throw new Error('Network response was not ok');
+            }
+            const jsonData = await response.json();
+            const roundState = jsonData.roundState;
+            console.log(roundState);
+
+            //Switch to Guessing View as soon as BE changes
+            if (roundState === "QUESTION") {
+            console.log("NOW QUESTION");
+            navigate(`/game/${localStorage.getItem("gameId")}/round/${localStorage.getItem("currentRound")}`);
+            }
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        };
+
+        const intervalId = setInterval(fetchData, 500);
+
+        // Cleanup function to clear the interval when component unmounts or useEffect runs again
+        return () => clearInterval(intervalId);
+    }, []); // Empty dependency array to run effect only once on mount
+
+
+
+
+    const handleProgressBarFinish = () => {
+
+        const currentRound = parseInt(localStorage.getItem("currentRound") || "0", 10);
+
+
+        if (!isTimerFinished) {
+            console.log("Map Reveal");
+            //navigate(`/game/${localStorage.getItem("gameId")}/round/${currentRound+1}`);
+        }
     };
 
     //Checks if Data, which gets loaded from backend in useEffect, is ready to be displayed
@@ -95,10 +136,11 @@ const Leaderboard_roundEnd = () => {
                 </div>
                 <div className="map container">
                     <MapBoxComponent
-                        mapboxAccessToken={mapboxAccessToken}
-                        onSubmitAnswer={handleonSubmitAnswer}
+                        reveal={0}
+                        guessesMapReveal={[]}
                     />
                 </div>
+                <ProgressBar durationInSeconds={localStorage.getItem("mapRevealTime")} onFinish={handleProgressBarFinish}  />
             </BaseContainer>
         );
     }

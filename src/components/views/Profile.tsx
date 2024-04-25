@@ -116,7 +116,7 @@ const Profile = () => {
 
 
         localStorage.setItem("gameId", gameId);
-        //localStorage.setItem("playerId", "Player_normal");
+        localStorage.setItem("playerId", response.data);
 
         console.log('Joining game response:', response.data);
         navigate(`/lobby/${gameId}`);

@@ -15,38 +15,104 @@ const Question_guessing = () => {
     let isTimerFinished = false;
     const currentRound = localStorage.getItem("currentRound");
 
+    const [playerAnswersArray, setPlayerAnswersArray] = useState([]);
+
+
+    useEffect(() => {
+
+        async function fetchGameView() {
+            try {
+                
+      
+                const gameId = localStorage.getItem("gameId");
+                //const response = await api.get(`/game/developer/getView/game1_6_Round1Ended`);
+                const response = await api.get(`/game/${gameId}/getView`);
+                const gameView = response.data;
+
+                const answerKeys = Object.keys(gameView.answers);
+
+                
+                const playerAnswersArray = answerKeys.map(playerId => {
+                    return {
+                        playerId: playerId,
+                        answer: gameView.answers[playerId]
+                    };
+                });
+
+                setPlayerAnswersArray(playerAnswersArray);
+
+                console.log(playerAnswersArray);
+
+            } catch (error) {
+              console.error("Error fetching game settings:", error);
+            }
+          }
+      
+          fetchGameView();
+
+
+
+    }, []);
+
+    //Gets gameView JSON-File every 0.5 seconds
+    useEffect(() => {
+        const fetchData = async () => {
+        try {
+
+            const gameId = localStorage.getItem("gameId");
+
+            const response = await fetch(`http://localhost:8080/game/${gameId}/getView`);
+            if (!response.ok) {
+            throw new Error('Network response was not ok');
+            }
+            const jsonData = await response.json();
+            const roundState = jsonData.roundState;
+            console.log(roundState);
+
+            //Switch to Guessing View as soon as BE changes
+            if (roundState === "LEADERBOARD") {
+            console.log("NOW LEADERBOARD");
+            navigate(`/game/${localStorage.getItem("gameId")}/round/${localStorage.getItem("currentRound")}/leaderboard`);
+            }
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        };
+
+        const intervalId = setInterval(fetchData, 500);
+
+        // Cleanup function to clear the interval when component unmounts or useEffect runs again
+        return () => clearInterval(intervalId);
+    }, []); // Empty dependency array to run effect only once on mount
+
     const handleProgressBarFinish = () => {
         if (!isTimerFinished) {
             console.log("Map Reveal");
-            //also check the lobby navigate(`/game/${localStorage.getItem("gameId")}/round/${currentRound}/leaderboard`);
+            //navigate(`/game/${localStorage.getItem("gameId")}/round/${currentRound}/leaderboard`);
         }
     };
 
-    const handleonSubmitAnswer = () => {
-        return;
-    };
 
-    return (
-        <BaseContainer>
-            <div className="map question_container">
-                <div className="map text1">Round {localStorage.getItem("currentRound")}</div>
-                <div className="map text2">Find mountain: {localStorage.getItem("currentLocationName")}</div>
-                <div className="map text3">Select a location by clicking on the map.</div>
-            </div>
-            <div className="map container">
-                <MapBoxComponent
-                    mapboxAccessToken={mapboxAccessToken}
-                    onSubmitAnswer={handleonSubmitAnswer}
-                />
-            </div>
-            <ProgressBar durationInSeconds={localStorage.getItem("guessingTime")} onFinish={handleProgressBarFinish} />
-        </BaseContainer>
-    );
+    if (playerAnswersArray) {
+        return (
+            <BaseContainer>
+                <div className="map question_container">
+                    <div className="map text1">Round {localStorage.getItem("currentRound")}</div>
+                    <div className="map text2">Find mountain: {localStorage.getItem("currentLocationName")}</div>
+                    <div className="map text3">Select a location by clicking on the map.</div>
+                </div>
+                <div className="map container">
+                    <MapBoxComponent
+                        reveal={1}
+                        guessesMapReveal={playerAnswersArray}
+                    />
+                </div>
+                <ProgressBar durationInSeconds={localStorage.getItem("mapRevealTime")} onFinish={handleProgressBarFinish}  />
+            </BaseContainer>
+        );
+    }
 };
 
-// Add prop types validation
-Question_guessing.propTypes = {
-    gameId: PropTypes.string.isRequired,
-};
 
 export default Question_guessing;
