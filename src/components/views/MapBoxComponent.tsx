@@ -1,91 +1,87 @@
-import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
-import mapboxgl from 'mapbox-gl';
+import React, { useEffect, useRef } from "react";
+import PropTypes from "prop-types";
+import mapboxgl from "mapbox-gl";
 
-const MapBoxComponent = ({reveal, guessesMapReveal}) => {
-    
+const MapBoxComponent = ({ reveal, guessesMapReveal }) => {
+
   const mapContainer = useRef(null);
-  const mapboxAccessToken = 'pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w';
+  const mapboxAccessToken = "pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w";
 
 
   let marker = null;
 
   useEffect(() => {
 
-      mapboxgl.accessToken = mapboxAccessToken;
-      console.log(guessesMapReveal);
+    mapboxgl.accessToken = mapboxAccessToken;
+    console.log(guessesMapReveal);
 
-      const map = new mapboxgl.Map({
-          container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/streets-v11',
-          center: [8.2275, 46.8182],
-          zoom: 7,
+    const map = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: "mapbox://styles/mapbox/streets-v11",
+      center: [8.2275, 46.8182],
+      zoom: 7,
+    });
+
+    if (reveal === 1) {
+
+      guessesMapReveal.forEach(player => {
+
+        //TODO Always same colors should be choosen and playername should be displayed in popup and Text should not be white
+        const { answer } = player;
+
+        if (answer) {
+
+          console.log(answer);
+
+          const markerColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+
+          new mapboxgl.Marker({ color: markerColor })
+            .setLngLat([answer.location.x, answer.location.y])
+            .setPopup(new mapboxgl.Popup().setHTML("<h1>Playername</h1>"))
+            .addTo(map);
+
+        }
       });
+    }
 
-      if(reveal === 1) {
+    //initializedMap.on('click', handleMapClick);
+    map.on("click", (e) => {
 
-        guessesMapReveal.forEach(player => {
-
-          //TODO Always same colors should be choosen and playername should be displayed in popup and Text should not be white
-          const { answer } = player;
-
-          if(answer) {
-
-            console.log(answer);
-
-            const markerColor = '#' + Math.floor(Math.random()*16777215).toString(16);
-
-            new mapboxgl.Marker({ color: markerColor})
-              .setLngLat([answer.location.x, answer.location.y])
-              .setPopup(new mapboxgl.Popup().setHTML("<h1>Playername</h1>"))
-              .addTo(map);
-
-          }
-        });
+      if (marker) {
+        marker.remove();
       }
 
-      //initializedMap.on('click', handleMapClick);
-      map.on('click', (e) => {
+      localStorage.setItem("x", String(e.lngLat.lng));
+      localStorage.setItem("y", String(e.lngLat.lat));
 
-        if(marker) {
-          marker.remove();
-        }
 
-        localStorage.setItem("x", e.lngLat.lng);
-        localStorage.setItem("y", e.lngLat.lat);
-        
-        
-        const newMarker = new mapboxgl.Marker()
-          .setLngLat([e.lngLat.lng, e.lngLat.lat])
-          .addTo(map);
+      const newMarker = new mapboxgl.Marker()
+        .setLngLat([e.lngLat.lng, e.lngLat.lat])
+        .addTo(map);
 
-        marker = newMarker;
-      });
+      marker = newMarker;
+    });
 
-      return () => {
-        map.remove();
-      };
+    return () => {
+      map.remove();
+    };
   }, [guessesMapReveal]);
 
 
-    return <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />;
+  return <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />;
 };
 
 MapBoxComponent.propTypes = {
-    reveal: PropTypes.number.isRequired,
-    guessesMapReveal: PropTypes.arrayOf(PropTypes.shape({
-      latitude: PropTypes.number.isRequired,
-      longitude: PropTypes.number.isRequired,
-    })),
+  reveal: PropTypes.number.isRequired,
+  guessesMapReveal: PropTypes.arrayOf(PropTypes.shape({
+    latitude: PropTypes.number.isRequired,
+    longitude: PropTypes.number.isRequired,
+  })),
 
 
 };
 
 export default MapBoxComponent;
-
-
-
-
 
 
 /*
