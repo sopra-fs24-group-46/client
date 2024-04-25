@@ -108,22 +108,22 @@ const Leaderboard_roundEnd = () => {
             <div className="leaderboard table-container">
               <table className="leaderboard table-leaderboard">
                 <thead>
-                <tr>
-                  <th></th>
-                  <th>Km off</th>
-                  <th>Points</th>
-                </tr>
+                  <tr>
+                    <th></th>
+                    <th>Km off</th>
+                    <th>Points</th>
+                  </tr>
                 </thead>
                 <tbody>
-                {Object.entries(gameInfo.currentScores).map(([playerId, playerData]: [string, PlayerData]) => {
-                  return (
-                    <tr key={playerId}>
-                      <td>{playerId}</td>
-                      <td>{playerData.distance}</td>
-                      <td>{playerData.score}</td>
-                    </tr>
-                  );
-                })}
+                  {Object.entries(gameInfo.currentScores).map(([playerId, playerData]: [string, PlayerData]) => {
+                    return (
+                      <tr key={playerId}>
+                        <td>{playerId}</td>
+                        <td>{playerData.distance}</td>
+                        <td>{playerData.score}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -141,22 +141,22 @@ const Leaderboard_roundEnd = () => {
             <div className="leaderboard table-container">
               <table className="leaderboard table-leaderboard">
                 <thead>
-                <tr>
-                  <th></th>
-                  <th>Total Km off</th>
-                  <th>Total Points</th>
-                </tr>
+                  <tr>
+                    <th></th>
+                    <th>Total Km off</th>
+                    <th>Total Points</th>
+                  </tr>
                 </thead>
                 <tbody>
-                {Object.entries(gameInfo.cumulativeScores).map(([playerId, playerData]: [string, PlayerData]) => {
-                  return (
-                    <tr key={playerId}>
-                      <td>{playerId}</td>
-                      <td>{playerData.distance}</td>
-                      <td>{playerData.score}</td>
-                    </tr>
-                  );
-                })}
+                  {Object.entries(gameInfo.cumulativeScores).map(([playerId, playerData]: [string, PlayerData]) => {
+                    return (
+                      <tr key={playerId}>
+                        <td>{playerId}</td>
+                        <td>{playerData.distance}</td>
+                        <td>{playerData.score}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

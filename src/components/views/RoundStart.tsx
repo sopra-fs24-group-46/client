@@ -14,7 +14,6 @@ const RoundStart = () => {
   const [gameSettings, setGameSettings] = useState(null);
   const [gameInfo, setGameInfo] = useState(null);
   const [currentRound, setCurrentRound] = useState(null);
-  const [currentLocationName, setCurrentLocationName] = useState('');
   // Add more state variables as needed
 
   useEffect(() => {
@@ -28,6 +27,7 @@ const RoundStart = () => {
         localStorage.setItem("questionTime", data.questionTime);
         localStorage.setItem("guessingTime", data.guessingTime);
         localStorage.setItem("mapRevealTime", data.mapRevealTime);
+        
         return () => clearInterval(intervalId);
         // instead of localStorage
       } catch (error) {
@@ -68,7 +68,7 @@ const RoundStart = () => {
 
         const response = await fetch(`http://localhost:8080/game/${gameId}/getView`);
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const jsonData = await response.json();
         const roundState = jsonData.roundState;
@@ -81,7 +81,7 @@ const RoundStart = () => {
         }
 
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -99,17 +99,17 @@ const RoundStart = () => {
   let content = <Spinner />;
   if (gameSettings && gameInfo) {
     content = (
-        <div>
-          <h1 className="header title1">Round {localStorage.getItem('currentRound')}</h1>
-          <div className="round container">
-            <div className="round text_container">
-              <div>Try to find this Mountain:</div>
-              <div>{localStorage.getItem('currentLocationName')}</div>
-            </div>
-            <div className="round powerups_container">Powerups will be added here</div>
-            <ProgressBar durationInSeconds={4} onFinish={handleProgressBarFinish} />
+      <div>
+        <h1 className="header title1">Round {localStorage.getItem("currentRound")}</h1>
+        <div className="round container">
+          <div className="round text_container">
+            <div>Try to find this Mountain:</div>
+            <div>{localStorage.getItem("currentLocationName")}</div>
           </div>
+          <div className="round powerups_container">Powerups will be added here</div>
+          <ProgressBar durationInSeconds={4} onFinish={handleProgressBarFinish} />
         </div>
+      </div>
     );
   }
 
