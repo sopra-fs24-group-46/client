@@ -4,6 +4,7 @@ import { api, handleError, getAuthToken } from "helpers/api";
 import BaseContainer from "components/ui/BaseContainer";
 import ProgressBar from "components/ui/ProgressBar";
 import MapBoxComponent from './MapBoxComponent';
+import { getDomain } from "helpers/getDomain";
 
 import "styles/views/Question.scss";
 import "styles/ui/Progressbar.scss";
@@ -21,7 +22,7 @@ const Question_guessing = () => {
     let isTimerFinished = false;
 
     const fetchGameView = useCallback(() => {
-        fetch(`http://localhost:8080/game/${gameId}/getView`)
+        fetch(`${getDomain()}game/${gameId}/getView`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response shows no connection to server');
@@ -54,7 +55,7 @@ const Question_guessing = () => {
             const y = parseFloat(localStorage.getItem("y") || "0");
 
             // Submit coordinates to the backend
-            fetch(`http://localhost:8080/game/${gameId}/guess`, {
+            fetch(`${getDomain()}game/${gameId}/guess`, {
 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -101,7 +102,7 @@ const Question_guessing = () => {
         };
     
         try {
-          const response = await api.post(`http://localhost:8080/game/${gameId}/guess`, requestBody);
+          const response = await api.post(`${getDomain()}game/${gameId}/guess`, requestBody);
           console.log(response)
     
           //TODO Propper Error Handling
@@ -117,7 +118,7 @@ const Question_guessing = () => {
 
             const gameId = localStorage.getItem("gameId");
 
-            const response = await fetch(`http://localhost:8080/game/${gameId}/getView`);
+            const response = await fetch(`${getDomain()}game/${gameId}/getView`);
             if (!response.ok) {
             throw new Error('Network response was not ok');
             }
@@ -154,7 +155,7 @@ const Question_guessing = () => {
         setSelectedCoordinates(coordinates);
 
         // Submit coordinates to the backend
-        fetch(`http://localhost:8080/game/${gameId}/guess`, {
+        fetch(`${getDomain()}game/${gameId}/guess`, {
 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

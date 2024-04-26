@@ -7,6 +7,7 @@ import ProgressBar from "components/ui/ProgressBar";
 import MapBoxComponent from './MapBoxComponent';
 import "styles/views/Question.scss";
 import "styles/ui/Progressbar.scss";
+import { getDomain } from "helpers/getDomain";
 
 
 const Question_guessing = () => {
@@ -61,7 +62,7 @@ const Question_guessing = () => {
 
             const gameId = localStorage.getItem("gameId");
 
-            const response = await fetch(`http://localhost:8080/game/${gameId}/getView`);
+            const response = await fetch(`${getDomain()}game/${gameId}/getView`);
             if (!response.ok) {
             throw new Error('Network response was not ok');
             }

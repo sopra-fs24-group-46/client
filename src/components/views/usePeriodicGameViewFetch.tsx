@@ -1,4 +1,5 @@
 import { useEffect, useCallback, useState } from 'react';
+import { getDomain } from "helpers/getDomain";
 
 const usePeriodicGameViewFetch = (gameId, intervalTime = 2000) => {
     const [gameState, setGameState] = useState(null);
@@ -7,7 +8,7 @@ const usePeriodicGameViewFetch = (gameId, intervalTime = 2000) => {
     const [currentLocationName, setCurrentLocationName] = useState(null);
 
     const fetchGameView = useCallback(() => {
-        fetch(`http://localhost:8080/game/${gameId}/getView`)
+        fetch(`${getDomain()}game/${gameId}/getView`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response shows no connection to server');

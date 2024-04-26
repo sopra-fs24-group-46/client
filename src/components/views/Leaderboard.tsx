@@ -4,6 +4,7 @@ import { api } from "helpers/api";
 import BaseContainer from "components/ui/BaseContainer";
 import MapBoxComponent from "./MapBoxComponent";
 import ProgressBar from "components/ui/ProgressBar";
+import { getDomain } from "helpers/getDomain";
 
 //Leaderboard container gets styled in here
 import "styles/views/Leaderboard.scss";
@@ -55,7 +56,7 @@ const Leaderboard_roundEnd = () => {
 
         const gameId = localStorage.getItem("gameId");
 
-        const response = await fetch(`http://localhost:8080/game/${gameId}/getView`);
+        const response = await fetch(`${getDomain()}/game/${gameId}/getView`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
