@@ -50,7 +50,7 @@ export const getAuthToken = () => {
 // api.js
 export const fetchGameData = async (gameId) => {
   try {
-    const response = await fetch(`http://localhost:8080/game/${gameId}/getView`);
+    const response = await fetch(`${getDomain()}game/${gameId}/getView`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -63,7 +63,7 @@ export const fetchGameData = async (gameId) => {
 
 export const submitAnswer = async (gameId, playerId, coordinates) => {
   try {
-    const response = await fetch(`http://localhost:8080/game/${gameId}/guess`, {
+    const response = await fetch(`${getDomain()}game/${gameId}/guess`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

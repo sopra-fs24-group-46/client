@@ -6,6 +6,7 @@ import ProgressBar from "components/ui/ProgressBar";
 import { Spinner } from "components/ui/Spinner";
 import "styles/views/Round.scss";
 import "styles/ui/Progressbar.scss";
+import { getDomain } from "helpers/getDomain";
 
 const RoundStart = () => {
   const navigate = useNavigate();
@@ -66,7 +67,7 @@ const RoundStart = () => {
 
         const gameId = localStorage.getItem("gameId");
 
-        const response = await fetch(`http://localhost:8080/game/${gameId}/getView`);
+        const response = await fetch(`${getDomain()}game/${gameId}/getView`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

@@ -3,6 +3,7 @@ import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import BaseContainer from "components/ui/BaseContainer";
 import { useNavigate } from "react-router-dom";
+import { getDomain } from "helpers/getDomain";
 //import PropTypes from "prop-types";
 import "styles/views/Lobby.scss";
 //import { Score } from "../../helpers/types";
@@ -24,7 +25,7 @@ const Lobby = () => {
 
         const gameId = localStorage.getItem("gameId");
 
-        const response = await fetch(`http://localhost:8080/game/${gameId}/getView`);
+        const response = await fetch(`${getDomain()}game/${gameId}/getView`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

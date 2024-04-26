@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MapData from './MapData';
 import { Player, Score } from 'helpers/types';
 import {useNavigate} from "react-router-dom";
+import { getDomain } from "helpers/getDomain";
 
 function App() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ function App() {
 
   const fetchGameState = () => {
     // Fetch game state from backend using gameId
-    fetch(`http://localhost:8080/game/${gameId}/getView`)
+    fetch(`${getDomain()}game/${gameId}/getView`)
       .then(response => response.json())
       .then(data => {
         // check the data
@@ -63,7 +64,7 @@ function App() {
     setSelectedCoordinates(coordinates);
 
     // Submit coordinates to the backend
-    fetch(`http://localhost:8080/game/${gameId}/guess`, {
+    fetch(`${getDomain()}game/${gameId}/guess`, {
 
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -133,7 +134,7 @@ function App() {
 
   const fetchGameState = () => {
     // Fetch game state from backend using gameId
-    fetch(`http://localhost:8080/game/${gameId}/getView`)
+    fetch(`${getDomain()}game/${gameId}/getView`)
       .then(response => response.json())
       .then(data => {
         // check te data
@@ -183,7 +184,7 @@ function App() {
   useEffect(() => {
     fetchGameState();
 
-    fetch(`http://localhost:8080/game/${gameId}/guess`, {
+    fetch(`${getDomain()}game/${gameId}/guess`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
