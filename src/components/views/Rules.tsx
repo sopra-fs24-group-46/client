@@ -16,14 +16,16 @@ const Rules = () => {
     <BaseContainer>
       <h1 className="header title1">Game Rules!</h1>
       <div className="rules container">
-        <p>Welcome to the game! Here is how it works:</p>
+        <p><strong>Explanation about the game:</strong> Welcome to the game! Here is how it works.</p>
 
-        <h2>Number of Players:</h2>
-        <p>This game can be played with 2 to 6 players.</p>
+        <p><strong>Number of Players:</strong> This game can be played with 1 to 15 players.</p>
 
-        <h2>Power Ups:</h2>
-        <p>Power ups are special abilities or advantages that players can obtain during the game to gain an edge over
-          their opponents.</p>
+        <p><strong>Number of Rounds:</strong> This game can be played for 1 to 15 rounds.</p>
+
+        <p><strong>Guessing Time:</strong> The rounds can have a guessing time from 1 to 15 seconds, depending on how difficult the creator wants the rounds to be.</p>
+
+        <p><strong>Power Ups:</strong> Power ups are special Powers or advantages that players can choose during the
+          game to try to win over their opponents. The possible Power ups are Joker, Shield and double the points</p>
       </div>
     </BaseContainer>
   );
