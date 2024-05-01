@@ -15,6 +15,7 @@ import RoundStart from "../../views/RoundStart";
 import Question from "../../views/Question";
 import MapReveal from "../../views/MapReveal";
 import Leaderboard from "../../views/Leaderboard";
+import Rules from "../../views/Rules";
 
 
 
@@ -50,6 +51,8 @@ const AppRouter = () => {
         
 
         <Route path="/profile" element={<Profile/>} />
+
+        <Route path="/rules" element={<Rules/>} />
         
         <Route path="/game/create" element={<SetGame/>} />
 

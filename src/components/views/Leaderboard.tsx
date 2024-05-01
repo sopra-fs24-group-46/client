@@ -117,7 +117,7 @@ const Leaderboard_roundEnd = () => {
                     return (
                       <tr key={playerId}>
                         <td>{playerId}</td>
-                        <td>{playerData.distance}</td>
+                        <td>{(playerData.distance / 1000).toFixed(2)}</td>
                         <td>{playerData.score}</td>
                       </tr>
                     );

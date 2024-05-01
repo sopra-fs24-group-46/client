@@ -156,6 +156,9 @@ const Profile = () => {
     navigate("/edit");
   };
 
+  const rules = () => {
+    navigate("/rules");
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -193,6 +196,9 @@ const Profile = () => {
         </Button>
         <Button width="100%" onClick={() => editUsername()}>
         Edit Username or password
+        </Button>
+        <Button width="100%" onClick={() => rules()}>
+          Game Rules
         </Button>
         <Button width="100%" onClick={() => joinGame()}>
           Join Game
