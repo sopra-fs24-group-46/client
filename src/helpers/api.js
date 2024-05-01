@@ -46,6 +46,28 @@ export const getAuthToken = () => {
   };
 }
 
+export const usePowerUp = async (powerUp) => {
+    //Define current variables
+    const gameId = localStorage.getItem("gameId");
+    const playerId = localStorage.getItem("playerId");
+
+    //Create requestBody
+    const requestBody = {
+      playerId: playerId,
+      powerUp: powerUp,
+    };
+
+    try {
+
+      //Start game in the backend
+      const response = await api.post(`/game/${gameId}/powerup`, requestBody);
+
+      //TODO Propper Error Handling
+    } catch (error) {
+      console.log(`Error Details: ${handleError(error)}`);
+    }   
+  }
+
 
 // used in the MapEndpoint
 // api.js

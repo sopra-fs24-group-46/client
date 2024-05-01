@@ -5,6 +5,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import ProgressBar from "components/ui/ProgressBar";
 import MapBoxComponent from './MapBoxComponent';
 import { getDomain } from "helpers/getDomain";
+import {PowerUpOverlay} from "components/ui/PowerUp";
 
 import "styles/views/Question.scss";
 import "styles/ui/Progressbar.scss";
@@ -17,6 +18,7 @@ const Question_guessing = () => {
     const [gameState, setGameState] = useState('');
     const [roundState, setRoundState] = useState('');
     const [currentRound, setCurrentRound] = useState('');
+    const [powerUpInUse, setPowerUpInUse] = useState(null);
     const gameId = localStorage.getItem("gameId");
 
     let isTimerFinished = false;
@@ -124,6 +126,10 @@ const Question_guessing = () => {
             }
             const jsonData = await response.json();
             const roundState = jsonData.roundState;
+
+            const playerId = localStorage.getItem("playerId");
+            setPowerUpInUse(jsonData.powerUps[playerId]);
+
             console.log(roundState);
 
             //Switch to Guessing View as soon as BE changes
@@ -184,6 +190,7 @@ const Question_guessing = () => {
 
     return (
         <BaseContainer>
+            <PowerUpOverlay powerUp ={powerUpInUse} />
             <div className="map question_container">
                 <div className="map text1">Round {localStorage.getItem("currentRound")}</div>
                 <div className="map text2">Find mountain: {localStorage.getItem("currentLocationName")}</div>
