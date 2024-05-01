@@ -38,6 +38,7 @@ export const handleError = error => {
 
 export const getAuthToken = () => {
   let token = localStorage.getItem("token");
+  
   return  {
     headers: {
       token: token,
@@ -74,17 +75,19 @@ export const fetchGameData = async (gameId) => {
   try {
     const response = await fetch(`${getDomain()}game/${gameId}/getView`);
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
+    
     return await response.json();
   } catch (error) {
-    console.error('Error fetching game state:', error);
+    console.error("Error fetching game state:", error);
     throw error;
   }
 };
 
 export const submitAnswer = async (gameId, playerId, coordinates) => {
   try {
+
     const response = await fetch(`${getDomain()}game/${gameId}/guess`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -96,11 +99,12 @@ export const submitAnswer = async (gameId, playerId, coordinates) => {
       }),
     });
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
+    
     return await response.json();
   } catch (error) {
-    console.error('Error submitting answer:', error);
+    console.error("Error submitting answer:", error);
     throw error;
   }
 };
