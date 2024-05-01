@@ -25,7 +25,7 @@ const Rules = () => {
         <p><strong>Guessing Time:</strong> The rounds can have a guessing time from 1 to 15 seconds, depending on how difficult the creator wants the rounds to be.</p>
 
         <p><strong>Power Ups:</strong> Power ups are special Powers or advantages that players can choose during the
-          game to try to win over their opponents. The possible Power ups are Joker, Shield and double the points</p>
+          game to try to win over their opponents. The possible Power ups are Joker, Shield and double the points.</p>
       </div>
     </BaseContainer>
   );
