@@ -7,6 +7,7 @@ import "styles/views/Login.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import Header from "components/views/Header";
 import PropTypes from "prop-types";
+import {PowerUpOverlay} from "components/ui/PowerUp";
 
 /*
 It is possible to add multiple components inside a single file,

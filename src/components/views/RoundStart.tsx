@@ -7,7 +7,7 @@ import { Spinner } from "components/ui/Spinner";
 import "styles/views/Round.scss";
 import "styles/ui/Progressbar.scss";
 import { getDomain } from "helpers/getDomain";
-import {PowerUpBar} from "components/ui/PowerUp";
+import {PowerUpBar, PowerUpOverlay} from "components/ui/PowerUp";
 
 const RoundStart = () => {
   const navigate = useNavigate();
@@ -110,6 +110,8 @@ const RoundStart = () => {
   if (gameSettings && gameInfo) {
     content = (
       <div>
+        <PowerUpOverlay
+        powerUp = {powerUpInUse}/>
         <h1 className="header title1">Round {localStorage.getItem("currentRound")}</h1>
         <div className="round container">
           <div className="round text_container">
