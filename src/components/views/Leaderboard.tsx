@@ -53,33 +53,30 @@ const Leaderboard_roundEnd = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         const gameId = localStorage.getItem("gameId");
-
         const response = await fetch(`${getDomain()}/game/${gameId}/getView`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const jsonData = await response.json();
         const roundState = jsonData.roundState;
-        console.log(roundState);
-
-        //Switch to Guessing View as soon as BE changes
+  
+        // Switch to Guessing View as soon as BE changes
         if (roundState === "QUESTION") {
           console.log("NOW QUESTION");
           navigate(`/game/${localStorage.getItem("gameId")}/round/${localStorage.getItem("currentRound")}`);
+        } else if (jsonData.gameState === "ENDED" && !localStorage.getItem("hasReloaded")) {
+          localStorage.setItem("hasReloaded", "true");
+          window.location.reload();
         }
-
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
     const intervalId = setInterval(fetchData, 500);
-
-    // Cleanup function to clear the interval when component unmounts or useEffect runs again
+  
     return () => clearInterval(intervalId);
-  }, []); // Empty dependency array to run effect only once on mount
+  }, [navigate]);
 
 
   const handleProgressBarFinish = () => {
