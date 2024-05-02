@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "../../styles/ui/PowerUp.scss";
-import { Button } from "components/ui/Button";
 import { usePowerUp } from "helpers/api";
 
 export const PowerUpButton = props => (
