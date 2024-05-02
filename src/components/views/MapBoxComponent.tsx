@@ -24,24 +24,36 @@ const MapBoxComponent = ({ reveal, guessesMapReveal }) => {
 
     if (reveal === 1) {
 
-      guessesMapReveal.forEach(player => {
-
+      /*
         //TODO Always same colors should be choosen and playername should be displayed in popup and Text should not be white
+        */
+      guessesMapReveal.forEach(player => {
         const { answer } = player;
 
         if (answer) {
-
-          console.log(answer);
-
           const markerColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
 
           new mapboxgl.Marker({ color: markerColor })
-            .setLngLat([answer.location.x, answer.location.y])
-            .setPopup(new mapboxgl.Popup().setHTML("<h1>Playername</h1>"))
-            .addTo(map);
+              .setLngLat([answer.location.x, answer.location.y])
+              .addTo(map);
 
+          // Create the popup and add it to the map
+          const popup = new mapboxgl.Popup({
+            closeButton: true,
+            closeOnClick: false,
+          })
+              .setLngLat([answer.location.x, answer.location.y])
+              .setHTML(`
+          <div style="background-color: #f4f4f4; color: #333; padding: 12px; border-radius: 8px;">
+            <h3 style="margin: 0; font-size: 13px; font-weight: bold; color: #007bff;">${player.playerId}</h3>
+            <p style="margin: 8px 0 0; font-size: 12px; color: #333;">Coordinates:</p>
+            <p style="margin: 0; font-size: 12px; color: #333;">[${answer.location.x.toFixed(6)}, ${answer.location.y.toFixed(6)}]</p>
+          </div>
+        `);
+          popup.addTo(map);
         }
       });
+
     }
 
     //initializedMap.on('click', handleMapClick);
@@ -81,65 +93,5 @@ MapBoxComponent.propTypes = {
 
 };
 
-export default MapBoxComponent;
-
-
-/*
-15-04-2024
-import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
-import mapboxgl from 'mapbox-gl';
-
-
-interface MapBoxComponentProps {
-  initialCenter: [number, number];
-  zoom: number;
-  mapboxAccessToken: string;
-  onSubmitAnswer: (coordinates: { latitude: number, longitude: number }) => void;
-}
-
-const MapBoxComponent: React.FC<MapBoxComponentProps> = ({ initialCenter, zoom, mapboxAccessToken, onSubmitAnswer }) => {
-  const [map, setMap] = useState<mapboxgl.Map | null>(null);
-  const mapContainer = useRef<HTMLDivElement>(null);
-
-  const handleMapClick = (event: mapboxgl.MapMouseEvent & mapboxgl.EventData) => {
-    const clickedCoordinates = {
-      longitude: event.lngLat.lng,
-      latitude: event.lngLat.lat
-    };
-    onSubmitAnswer(clickedCoordinates);
-  };
-
-  useEffect(() => {
-    mapboxgl.accessToken = mapboxAccessToken;
-
-    const initializedMap = new mapboxgl.Map({
-      container: mapContainer.current!,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: initialCenter,
-      zoom: zoom
-    });
-
-    initializedMap.on('click', handleMapClick);
-
-    setMap(initializedMap);
-
-    return () => {
-      initializedMap.remove();
-    };
-  }, [initialCenter, zoom, mapboxAccessToken, onSubmitAnswer]);
-
-  return (
-    <div ref={mapContainer} style={{ width: '100%', height: '400px' }}></div>
-  );
-};
-
-MapBoxComponent.propTypes = {
-  initialCenter: PropTypes.arrayOf(PropTypes.number).isRequired,
-  zoom: PropTypes.number.isRequired,
-  mapboxAccessToken: PropTypes.string.isRequired,
-  onSubmitAnswer: PropTypes.func.isRequired
-};
 
 export default MapBoxComponent;
-*/

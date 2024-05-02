@@ -106,7 +106,8 @@ const Profile = () => {
 
         // Construct the request body
         const requestBody = {
-          displayName: loggedInUser.username
+          displayName: loggedInUser.username,
+
         };
 
 
