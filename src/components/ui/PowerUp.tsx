@@ -10,11 +10,22 @@ export const PowerUpButton = props => (
   </button>
 );
 
+
 PowerUpButton.propTypes = {
   inUse: PropTypes.bool,
   disabled: PropTypes.bool,
   powerUp: PropTypes.string,
   onClick: PropTypes.func,
+};
+
+export const PowerUp = props => (
+  <div className={"powerup icon"}>
+    <img src={logoPath(props.powerUp)} alt={logoCaption(props.powerUp)} className="powerup logo"/>
+  </div>
+);
+
+PowerUp.propTypes = {
+  powerUp: PropTypes.string,
 };
 
 export const PowerUpBar = props => (
@@ -49,9 +60,7 @@ PowerUpBar.propTypes = {
 export const PowerUpOverlay = props => (
     props.powerUp ?
     <div className="powerup overlay">
-        <PowerUpButton 
-        disabled = {true}
-        inUse = {true}
+        <PowerUp 
         powerUp = {props.powerUp}
         />
     </div> : null
@@ -60,6 +69,38 @@ export const PowerUpOverlay = props => (
 PowerUpOverlay.propTypes = {
     powerUp: PropTypes.string,
 }
+
+export const LeaderBoardPowerUp = props => (
+    props.powerUp ?
+    <div className="powerup leaderboard">
+        <PowerUp 
+        powerUp = {props.powerUp}
+        />
+    </div> : null
+)
+
+LeaderBoardPowerUp.propTypes = {
+    powerUp: PropTypes.array,
+}
+
+
+//dont know how to fix the horizontal spacing
+export const LeaderBoardPowerUpCollection = props => (
+    //iterate over powerUps array
+    <div className="powerup lcontainer">
+        {props.powerUpList.map((powerUp, index) => (
+            <LeaderBoardPowerUp
+                key={index} // Add the missing "key" prop
+                powerUp = {powerUp}
+            />
+        ))}
+    </div>
+)
+
+LeaderBoardPowerUpCollection.propTypes = {
+    powerUpList: PropTypes.array,
+}
+//local helpers
 
 const logoPath = (powerUp) => {
     if (powerUp === "JOKER") {

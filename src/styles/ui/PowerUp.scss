@@ -13,6 +13,18 @@
         z-index: 1; //Overlay over map container
     }
 
+    &.leaderboard {
+        //scale down
+        $size: 26;
+        transform: scale($size/60); //2 * size of font / size of powerup
+        float: left;
+        width: $size + 2px; //two pixel more the scale from above
+    }
+
+    &.lcontainer {
+        width: fit-content;
+    }
+
     &.logo {
         height: 50px;
         width: 50px;
@@ -25,6 +37,14 @@
         width: fit-content;
         align-self: center;
         margin-bottom: 20px;
+    }
+
+    &.icon {
+        background-color: $accentAlt;
+        height: 60px;
+        width: 60px;
+        border-radius: $borderRadius;
+        padding: 5px;
     }
 
     &.button {
@@ -48,7 +68,7 @@
             background-color: $accentAlt;
         }
 
-        padding: 6px;
+        padding: 5px;
         font-weight: 700;
         font-size: 13px;
         text-transform: uppercase;
