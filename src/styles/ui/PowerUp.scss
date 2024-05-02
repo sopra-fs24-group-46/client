@@ -9,6 +9,8 @@
         right: 0;
         margin: 10px;
         padding: 10px;
+
+        z-index: 1; //Overlay over map container
     }
 
     &.logo {
@@ -22,6 +24,7 @@
         justify-content: space-between;
         width: fit-content;
         align-self: center;
+        margin-bottom: 20px;
     }
 
     &.button {
