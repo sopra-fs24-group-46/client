@@ -32,15 +32,17 @@ import ComponentDev from "../../views/ComponentDev";
  * Documentation about routing in React: https://reactrouter.com/en/main/start/tutorial 
  */
 const AppRouter = () => {
+  localStorage.setItem("playerId", "true");
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/game/*" element={<GameGuard />}>
-          <Route path="/game/*" element={<GameRouter base="/game" />} />
+
+        <Route path="/game" element={<GameGuard />}>
+          <Route path="*" element={<GameRouter />}/>
         </Route>
 
         <Route path="/login" element={<LoginGuard />}>
-          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<Login />} />
         </Route>
 
         <Route path="/register" element={<Register />} />
@@ -51,17 +53,22 @@ const AppRouter = () => {
 
         <Route path="/ComponentDev" element={<ComponentDev />} />
 
+
         
 
         <Route path="/profile" element={<Profile/>} />
 
         <Route path="/rules" element={<Rules/>} />
         
-        <Route path="/game/create" element={<SetGame/>} />
 
         <Route path="/edit" element={<Edit/>} />
 
+        <Route path="/game/create" element={<SetGame/>} />
+
         <Route path="/lobby/:gameId" element={<Lobby/>} />
+
+
+        {/*this should be moved into game router*/}
         <Route path="/game/:gameId/round/:currentRound" element={<RoundStart/>} />
 
         

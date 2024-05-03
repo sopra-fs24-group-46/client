@@ -19,7 +19,7 @@ return (
               placeholder="4"
               value={maxPlayers}
               onChange={setMaxPlayers}
-              style = {{width: "100px"}}
+              style = {{width: "50px"}}
             />
         <LeaderBoardPowerUp powerUp = "JOKER"/>
         <LeaderBoardPowerUpCollection powerUpList = {["JOKER", "SHIELD"]}/>
