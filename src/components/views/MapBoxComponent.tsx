@@ -56,6 +56,12 @@ const MapBoxComponent = ({ reveal, guessesMapReveal }) => {
 
     }
 
+    //Make Mountain Names invisible
+    map.on('load', function() {
+      map.setLayoutProperty('natural-point-label', 'visibility', 'none');
+    });
+
+
     //initializedMap.on('click', handleMapClick);
     map.on("click", (e) => {
 
