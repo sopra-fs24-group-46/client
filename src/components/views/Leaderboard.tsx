@@ -5,6 +5,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import MapBoxComponent from "./MapBoxComponent";
 import ProgressBar from "components/ui/ProgressBar";
 import { getDomain } from "helpers/getDomain";
+import {FinalLeaderboard} from "components/ui/LeaderboardComp";
 
 //Leaderboard container gets styled in here
 import "styles/views/Leaderboard.scss";
@@ -90,6 +91,28 @@ const Leaderboard_roundEnd = () => {
     }
   };
 
+
+  const handleProfileRedirect = () => {
+    // Remove specified variables from localStorage
+    localStorage.removeItem("currentRound");
+    localStorage.removeItem("mapbox.eventData");
+    localStorage.removeItem("gameId");
+    localStorage.removeItem("currentLocationName");
+    localStorage.removeItem("hasReloaded");
+    localStorage.removeItem("y");
+    localStorage.removeItem("mapRevealTime");
+    localStorage.removeItem("x");
+    localStorage.removeItem("mapbox.eventData.uuid");
+    localStorage.removeItem("questionTime");
+    localStorage.removeItem("mapbox.eventData:YW1lbWJhZA==");
+    localStorage.removeItem("mapbox.eventData.uuid:YW1lbWJhZA==");
+    localStorage.removeItem("guessingTime");
+    
+
+    // Redirect to profile page
+    navigate("/profile");
+  };
+
   //Checks if Data, which gets loaded from backend in useEffect, is ready to be displayed
   if (gameInfo) {
     return (
@@ -128,39 +151,44 @@ const Leaderboard_roundEnd = () => {
             <div className="leaderboard round-timer">Next Round starts in: TODO</div>
 
           </div>
-        ) : (
-          <div className="leaderboard container">
-            <h2 className="leaderboard title">Final Leaderboard</h2>
+         ) : (
+          <FinalLeaderboard scores={gameInfo.cumulativeScores} currentRound={gameInfo.currentRound} />
+        //   <div className="leaderboard container">
+        //     <h2 className="leaderboard title">Final Leaderboard</h2>
 
-            <div className="leaderboard rounds">
-              <div className="leaderboard rounds counters">Rounds played: {gameInfo.currentRound}</div>
-            </div>
+        //     <div className="leaderboard rounds">
+        //       <div className="leaderboard rounds counters">Rounds played: {gameInfo.currentRound}</div>
+        //     </div>
 
-            <div className="leaderboard table-container">
-              <table className="leaderboard table-leaderboard">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Total Km off</th>
-                    <th>Total Points</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.entries(gameInfo.cumulativeScores).map(([playerId, playerData]: [string, PlayerData]) => {
-                    return (
-                      <tr key={playerId}>
-                        <td>{playerId}</td>
-                        <td>{playerData.distance}</td>
-                        <td>{playerData.score}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-            {/*<div>{JSON.stringify(gameInfo)}</div>*/}
-          </div>
-        )}
+        //     <div className="leaderboard table-container">
+        //       <table className="leaderboard table-leaderboard">
+        //         <thead>
+        //           <tr>
+        //             <th></th>
+        //             <th>Total Km off</th>
+        //             <th>Total Points</th>
+        //           </tr>
+        //         </thead>
+        //         <tbody>
+        //           {Object.entries(gameInfo.cumulativeScores).map(([playerId, playerData]: [string, PlayerData]) => {
+        //             return (
+        //               <tr key={playerId}>
+        //                 <td>{playerId}</td>
+        //                 <td>{(playerData.distance / 1000).toFixed(2)}</td>
+        //                 <td>{playerData.score}</td>
+        //               </tr>
+        //             );
+        //           })}
+        //         </tbody>
+        //       </table>
+        //     </div>
+        //     {/*<div>{JSON.stringify(gameInfo)}</div>*/}
+        //   </div>
+        // 
+      )}
+
+<button className="primary-button" onClick={handleProfileRedirect}>Go to Profile</button>
+
 
         <div className="map container">
           <MapBoxComponent

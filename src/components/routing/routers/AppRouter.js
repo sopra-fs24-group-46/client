@@ -16,6 +16,7 @@ import Question from "../../views/Question";
 import MapReveal from "../../views/MapReveal";
 import Leaderboard from "../../views/Leaderboard";
 import Rules from "../../views/Rules";
+import ComponentDev from "../../views/ComponentDev";
 
 
 
@@ -47,6 +48,8 @@ const AppRouter = () => {
         <Route path="/home" element={<Home />} />
 
         <Route path="/question" element={<MapEndpoint />} />
+
+        <Route path="/ComponentDev" element={<ComponentDev />} />
 
         
 

@@ -4,11 +4,11 @@ import "../../styles/ui/FormField.scss";
 
 export const FormField = (props) => {
   return (
-    <div className="form field">
-      <label className="form label">{props.label}</label>
+    <div className="formfield field">
+      <label className="formfield label">{props.label}: </label>
       <input
         type={props.type}
-        className="form input"
+        className="formfield input"
         placeholder={props.placeholder}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
