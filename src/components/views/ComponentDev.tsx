@@ -24,7 +24,6 @@ return (
         <LeaderBoardPowerUp powerUp = "JOKER"/>
         <LeaderBoardPowerUpCollection powerUpList = {["JOKER", "SHIELD"]}/>
           <FinalLeaderboard scores={[{score: 69, distance: 0}, {score: 0, distance: 0}]} currentRound={1}/>
-      </div>
     </div>
 </BaseContainer>
   );
