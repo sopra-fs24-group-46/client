@@ -1,16 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from "prop-types";
 import "../../styles/ui/MultiSelection.scss";
 
 export const MultiSelection = ({ options, onChange, label}) => {
   const [selectedWords, setSelectedWords] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef(null);
+
+  //close drop down when clicking outside the multi selection
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        closeDropDown();
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
+  }, []);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const closeDropdown = () => {
+  const closeDropDown = () => {
     setIsOpen(false);
   };
 
@@ -27,7 +43,8 @@ export const MultiSelection = ({ options, onChange, label}) => {
   };
 
   return (
-    <div className="multi-selection" onMouseLeave={closeDropdown}>
+  //ref is needed for detection in drop down closing
+    <div ref= {ref} className="multi-selection" >
       <div className="field" >
       <button className = "button" onClick={toggleDropdown}>
         {label}:

@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import "styles/views/Profile.scss";
+import "../../styles/ui/FormField.scss";
 
 export const FormField = (props) => {
   return (
-    <div className="profile field">
-      <label className="profile label">{props.label}</label>
+    <div className="form field">
+      <label className="form label">{props.label}</label>
       <input
         type={props.type}
-        className="profile input"
+        className="form input"
         placeholder={props.placeholder}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
