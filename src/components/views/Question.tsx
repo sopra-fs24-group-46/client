@@ -12,89 +12,27 @@ import "styles/ui/Progressbar.scss";
 
 const Question_guessing = () => {
 
+    //Define variables
     const navigate = useNavigate();
-    const mapboxAccessToken = 'pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w';
-    const [selectedCoordinates, setSelectedCoordinates] = useState<{ x: number, y: number } | ''>('');
-    const [gameState, setGameState] = useState('');
-    const [roundState, setRoundState] = useState('');
-    const [currentRound, setCurrentRound] = useState('');
-    const [powerUpInUse, setPowerUpInUse] = useState(null);
-    const gameId = localStorage.getItem("gameId");
+    const guessingTimer = parseInt(localStorage.getItem("guessingTime") || "0", 10);
 
+    //Define Hooks
+    const [powerUpInUse, setPowerUpInUse] = useState(null);
+
+
+    //Flag so only one guess can be submitted
     let isTimerFinished = false;
 
-    const fetchGameView = useCallback(() => {
-        fetch(`${getDomain()}game/${gameId}/getView`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response shows no connection to server');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setGameState(data.gameState);
-                setRoundState( data.roundState);
-                setCurrentRound(data.currentRound);
-                localStorage.setItem("currentRound", data.currentRound);
-                localStorage.setItem("currentLocationName", data.currentQuestion.location_name);
-            })
-            .catch(error => {
-                console.error('Error fetching game/round state in question guessing:', error);
-            });
-    }, [gameId]);
-
-    useEffect(() => {
-        const interval = setInterval(fetchGameView, 15000); // Check game state every 20 seconds
-        return () => clearInterval(interval);
-    }, [fetchGameView]);
-
-    const handleProgressBarFinish = () => {
-        if (!isTimerFinished) {
-
-            const playerId = localStorage.getItem("playerId");
-            const gameId = localStorage.getItem("gameId");
-            const x = parseFloat(localStorage.getItem("x") || "0");
-            const y = parseFloat(localStorage.getItem("y") || "0");
-
-            // Submit coordinates to the backend
-            fetch(`${getDomain()}game/${gameId}/guess`, {
-
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    playerId,
-                    x: x,
-                    y: y,
-                }),
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw `Server error: [${response.status}] [${response.statusText}] [${response.url}]`;
-                    }
-                    return response.json();
-                })
-                .then(receivedJson => {
-                    // Handle the received JSON data
-                    console.log(receivedJson);
-                })
-                .catch(err => {
-                    console.debug("Error in fetch", err);
-                });
-
-
-            console.log("Timer is finished");
-            //navigate(`/game/${localStorage.getItem("gameId")}/round/${localStorage.getItem("currentRound")}/mapReveal`);
-            isTimerFinished = true;
-        }
-    };
-
-    const handle_finish = async () => {
+    //Submits the current guess of the player
+    const submitGuess = async () => {
 
         //Define current variables
         const playerId = localStorage.getItem("playerId");
         const gameId = localStorage.getItem("gameId");
         const x = parseFloat(localStorage.getItem("x") || "0");
         const y = parseFloat(localStorage.getItem("y") || "0");
+
+        console.log("Guess submitted");
 
         //Create requestBody
         const requestBody = {
@@ -103,6 +41,7 @@ const Question_guessing = () => {
             y: y
         };
     
+        //Sends POST request to the backend
         try {
           const response = await api.post(`${getDomain()}game/${gameId}/guess`, requestBody);
           console.log(response)
@@ -111,10 +50,23 @@ const Question_guessing = () => {
         } catch (error) {
           console.log(`Error Details: ${handleError(error)}`);
         }   
-      }
+    }
 
-    //Gets gameView JSON-File every 0.5 seconds
+    //Function runs as soon as the timer is finished
+    const handleProgressBarFinish = () => {
+
+        if (!isTimerFinished) {
+
+            submitGuess();
+            isTimerFinished = true;
+        }
+    };
+
+    
+
+    //Gets gameView JSON-File every 0.5 seconds to be synchronized with the backend
     useEffect(() => {
+
         const fetchData = async () => {
         try {
 
@@ -149,44 +101,7 @@ const Question_guessing = () => {
         return () => clearInterval(intervalId);
     }, []); // Empty dependency array to run effect only once on mount
 
-    const hanleMapClick = (coordinates) => {
-        console.log(coordinates.x, coordinates.y);
-
-    };
-
-
-    const handleAnswerSubmit = (coordinates: { x: number, y: number }) => {
-    const playerId = localStorage.getItem("playerId");
-    const gameId = localStorage.getItem("gameId");
-        setSelectedCoordinates(coordinates);
-
-        // Submit coordinates to the backend
-        fetch(`${getDomain()}game/${gameId}/guess`, {
-
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                playerId,
-                x: coordinates.x,
-                y: coordinates.y,
-            }),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw `Server error: [${response.status}] [${response.statusText}] [${response.url}]`;
-                }
-                return response.json();
-            })
-            .then(receivedJson => {
-                // Handle the received JSON data
-                console.log(receivedJson);
-            })
-            .catch(err => {
-                console.debug("Error in fetch", err);
-            });
-    };
-
-    const guessingTimer = parseInt(localStorage.getItem("guessingTime") || "0", 10);
+    
 
     return (
         <BaseContainer>
@@ -202,7 +117,7 @@ const Question_guessing = () => {
                     guessesMapReveal={[]}
                 />
             </div>
-            <ProgressBar durationInSeconds={guessingTimer-2} onFinish={handle_finish} />
+            <ProgressBar durationInSeconds={guessingTimer-1} onFinish={handleProgressBarFinish} />
         </BaseContainer>
     );
 };
