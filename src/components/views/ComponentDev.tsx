@@ -6,12 +6,20 @@ import {LeaderBoardPowerUp, LeaderBoardPowerUpCollection} from "components/ui/Po
 
 
 const ComponentDev = () => {
+    const [maxPlayers, setMaxPlayers] = useState(4);
 
 return (
 <BaseContainer>
     <div className="login container">
         <MultiSelection options = {["option 1", "option 2", "option 3", "option 4"]} onChange = {() => {}} label="test"/>
-        <FormField type="text" label="test" placeholder="test" value={""} onChange={() => {}} />
+            <FormField
+              label="Max number of players"
+              type ="number"
+              placeholder="4"
+              value={maxPlayers}
+              onChange={setMaxPlayers}
+              style = {{width: "100px"}}
+            />
         <LeaderBoardPowerUp powerUp = "JOKER"/>
         <LeaderBoardPowerUpCollection powerUpList = {["JOKER", "SHIELD"]}/>
 

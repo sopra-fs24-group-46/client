@@ -116,6 +116,7 @@ const SetGame = () => {
               placeholder="4"
               value={maxPlayers}
               onChange={setMaxPlayers}
+              style = {{width: "50px"}}
             />
             <FormField
               label="Amount of rounds"
@@ -123,6 +124,7 @@ const SetGame = () => {
               placeholder="4"
               value={rounds}
               onChange={setRounds}
+              style = {{width: "50px"}}
             />
             <FormField
               label="Guessing time per round"
@@ -130,6 +132,7 @@ const SetGame = () => {
               placeholder="4"
               value={guessingTime}
               onChange={setGuessingTime}
+              style = {{width: "50px"}}
             />
           </div>
           <MultiSelection 

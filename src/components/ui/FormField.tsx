@@ -12,6 +12,7 @@ export const FormField = (props) => {
         placeholder={props.placeholder}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
+        style = {{width: "50px"}}
       />
     </div>
   );

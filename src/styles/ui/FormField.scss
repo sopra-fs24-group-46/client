@@ -10,16 +10,18 @@
         display: flex;
         align-items: center;
         margin-top: 9px;
+        width: fit-content;
 
         &>.label {
             flex: 0;
+            width: fit-content;
+            white-space: nowrap;
         }
 
         &>.input {
             flex: 1;
             border: none;
             border-radius: $borderRadius;
-            width: 99%;
         }
     }
 }
