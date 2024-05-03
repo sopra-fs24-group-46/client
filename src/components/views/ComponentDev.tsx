@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {MultiSelection} from "components/ui/MultiSelection";
 import {FormField} from "components/ui/FormField";
 import BaseContainer from "components/ui/BaseContainer";
 import {LeaderBoardPowerUp, LeaderBoardPowerUpCollection} from "components/ui/PowerUp";
-
+import {FinalLeaderboard} from "components/ui/LeaderboardComp";
+import { api } from "helpers/api";
 
 const ComponentDev = () => {
     const [maxPlayers, setMaxPlayers] = useState(4);
@@ -22,7 +23,8 @@ return (
             />
         <LeaderBoardPowerUp powerUp = "JOKER"/>
         <LeaderBoardPowerUpCollection powerUpList = {["JOKER", "SHIELD"]}/>
-
+          <FinalLeaderboard scores={[{score: 69, distance: 0}, {score: 0, distance: 0}]} currentRound={1}/>
+      </div>
     </div>
 </BaseContainer>
   );
