@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "helpers/api";
 import BaseContainer from "components/ui/BaseContainer";
-import MapBoxComponent from "./MapBoxComponent";
+import MapBoxComponent from "../ui/MapBoxComponent";
 import ProgressBar from "components/ui/ProgressBar";
 import { getDomain } from "helpers/getDomain";
 import {FinalLeaderboard} from "components/ui/LeaderboardComp";

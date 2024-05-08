@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { api, handleError, getAuthToken } from "helpers/api";
 import BaseContainer from "components/ui/BaseContainer";
 import ProgressBar from "components/ui/ProgressBar";
-import MapBoxComponent from './MapBoxComponent';
+import MapBoxComponent from '../ui/MapBoxComponent';
 import { getDomain } from "helpers/getDomain";
 import {PowerUpOverlay} from "components/ui/PowerUp";
 
