@@ -15,7 +15,7 @@ const Question_guessing = () => {
     //Define variables
     const navigate = useNavigate();
     const guessingTimer = parseInt(localStorage.getItem("guessingTime") || "0", 10);
-
+    const currentQuestionLocation = localStorage.getItem("currentQuestionLocation");
     //Define Hooks
     const [powerUpInUse, setPowerUpInUse] = useState(null);
 
@@ -80,6 +80,7 @@ const Question_guessing = () => {
             const roundState = jsonData.roundState;
 
             const playerId = localStorage.getItem("playerId");
+            localStorage.setItem("currentLocationName", jsonData.currentQuestion.location_name);
             setPowerUpInUse(jsonData.powerUps[playerId]);
 
             console.log(roundState);
@@ -113,6 +114,7 @@ const Question_guessing = () => {
             </div>
             <div className="map container">
                 <MapBoxComponent
+                    currentQuestionLocation={currentQuestionLocation}
                     reveal={0}
                     guessesMapReveal={[]}
                 />

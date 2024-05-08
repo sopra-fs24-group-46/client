@@ -32,8 +32,8 @@ FormField.propTypes = {
 
 const SignUp = (props) => {
     const navigate = useNavigate();
-    const [password, setPassword] = useState(null);
-    const [username, setUsername] = useState(null);
+    const [password, setPassword] = useState<string>(null);
+    const [username, setUsername] = useState<string>(null);
 
     const doSignup = async () => {
         try {

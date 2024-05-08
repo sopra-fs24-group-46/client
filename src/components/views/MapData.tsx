@@ -29,7 +29,8 @@ const MapData = ({
       <h4>Player: {playerId}</h4>
       <h5>Click anywhere on the map to guess:</h5>
       <MapBoxComponent
-        reveal={1}
+          currentQuestionLocation={null}
+          reveal={1}
         guessesMapReveal={[]}
       />
       <div>

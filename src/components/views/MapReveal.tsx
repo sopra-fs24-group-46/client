@@ -17,7 +17,7 @@ const Question_guessing = () => {
     let isTimerFinished = false;
     const currentRound = localStorage.getItem("currentRound");
     const [powerUpInUse, setPowerUpInUse] = useState(null);
-
+    const [currentQuestionLocation, setCurrentQuestionLocation] = useState(null);
     const [playerAnswersArray, setPlayerAnswersArray] = useState([]);
 
 
@@ -43,6 +43,7 @@ const Question_guessing = () => {
                 });
 
                 setPlayerAnswersArray(playerAnswersArray);
+                setCurrentQuestionLocation(gameView.currentQuestion.location);
 
                 console.log(playerAnswersArray);
 
@@ -112,6 +113,7 @@ const Question_guessing = () => {
                 </div>
                 <div className="map container">
                     <MapBoxComponent
+                        currentQuestionLocation={currentQuestionLocation}
                         reveal={1}
                         guessesMapReveal={playerAnswersArray}
                     />

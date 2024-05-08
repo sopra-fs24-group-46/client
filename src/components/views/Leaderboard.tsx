@@ -25,7 +25,7 @@ const Leaderboard_roundEnd = () => {
 
   const [gameInfo, setGameInfo] = useState(null);
   let isTimerFinished = false;
-
+  const currentQuestionLocation = localStorage.getItem("currentQuestionLocation");
 
   //Process to get data from backend
   useEffect(() => {
@@ -192,6 +192,7 @@ const Leaderboard_roundEnd = () => {
 
         <div className="map container">
           <MapBoxComponent
+              currentQuestionLocation={currentQuestionLocation}
             reveal={0}
             guessesMapReveal={[]}
           />

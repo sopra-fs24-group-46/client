@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import mapboxgl from "mapbox-gl";
 
-const MapBoxComponent = ({ reveal, guessesMapReveal }) => {
+const MapBoxComponent = ({ reveal, currentQuestionLocation, guessesMapReveal }) => {
 
   const mapContainer = useRef(null);
   const mapboxAccessToken = "pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w";
@@ -22,6 +22,26 @@ const MapBoxComponent = ({ reveal, guessesMapReveal }) => {
       zoom: 7,
     });
 
+    let currentQuestionMarker = null;
+    // Function to update the current question marker
+    const updateCurrentQuestionMarker = (location) => {
+      if (currentQuestionMarker) {
+        currentQuestionMarker.remove();
+      }
+
+
+      if (location) {
+        currentQuestionMarker = new mapboxgl.Marker({
+          color: "red", // or any other color you prefer
+        })
+            .setLngLat([location.x, location.y])
+            .addTo(map);
+      }
+    };
+
+
+    // Update the current question marker when the component mounts
+    updateCurrentQuestionMarker(currentQuestionLocation);
     if (reveal === 1) {
 
       /*
@@ -81,9 +101,12 @@ const MapBoxComponent = ({ reveal, guessesMapReveal }) => {
     });
 
     return () => {
+      if (currentQuestionMarker) {
+        currentQuestionMarker.remove();
+      }
       map.remove();
     };
-  }, [guessesMapReveal]);
+  }, [currentQuestionLocation, guessesMapReveal]);
 
 
   return <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />;
@@ -91,6 +114,7 @@ const MapBoxComponent = ({ reveal, guessesMapReveal }) => {
 
 MapBoxComponent.propTypes = {
   reveal: PropTypes.number.isRequired,
+  currentQuestionLocation: PropTypes.string.isRequired,
   guessesMapReveal: PropTypes.arrayOf(PropTypes.shape({
     latitude: PropTypes.number.isRequired,
     longitude: PropTypes.number.isRequired,
