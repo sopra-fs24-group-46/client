@@ -53,4 +53,12 @@
     justify-content: center;
     margin-top: 2em;
   }
+
+  &.switch-button {
+    background: none;
+    border: none;
+    color: white; /* Farbe des Textes */
+    text-decoration: underline; /* Unterstrich hinzufügen */
+    cursor: pointer; /* Zeiger-Cursor, um anzugeben, dass es sich um einen anklickbaren Link handelt */
+  }
 }

@@ -76,12 +76,12 @@ const Home = () => {
               justifyContent: "space-between",
             }}
           >
-            <div className="login register-link" onClick={handleRegisterClick}>
+            <button className="login switch-button" onClick={handleRegisterClick}>
               Register here.
-            </div>
-            <div className="login login-link" onClick={handleLoginClick}>
+            </button>
+            <button className="login switch-button" onClick={handleLoginClick}>
               Login
-            </div>
+            </button>
           </div>
         </div>
       </div>
