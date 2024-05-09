@@ -2,18 +2,18 @@ import React from "react";
 import {Navigate, Outlet} from "react-router-dom";
 import PropTypes from "prop-types";
 
-/**
- *
- * Another way to export directly your functional component is to write 'export const' 
- * instead of 'export default' at the end of the file.
- */
+
 export const LoginGuard = () => {
+
+  //If the user has no token inside localStorage, the user will go back to the login 
   if (!localStorage.getItem("token")) {
     
     return <Outlet />;
   }
   
-  return <Navigate to="/game" replace />;
+
+  //If the user already has a token he will be navigated to the profile page
+  return <Navigate to="/profile" replace />;
 };
 
 LoginGuard.propTypes = {
