@@ -99,54 +99,82 @@ const Lobby = () => {
   }
 
 
-
   const handleLeaveLobby = () => {
-    // Redirect the player to the home page
     navigate('/profile');
+  }
+
+  //Change as soon as BE is changed
+  const handleLeaveLobby_test = async () => {
+
+    //Define current variables
+    const gameId = localStorage.getItem("gameId");
+    const playerId = localStorage.getItem("playerId");
+
+    //Create requestBody
+    const requestBody = {
+      playerId : playerId
+    };
+     
+    try {
+      const response = await api.put(`/game/${gameId}/leave`, requestBody);
+
+    } catch (error) {
+      console.log(`Error Details: ${handleError(error)}`);
+    }   
+   navigate('/profile');
   };
-
-
 
 
   let content = <Spinner />;
 
   if (gameSettings) {
     content = (
-      <div className="lobby-container">
-        <h1 className="lobby-title">Game Lobby</h1>
-        <div className="lobby-info">
-          <p>Game ID: {gameId}</p>
-          <p>Max Players: {gameSettings.maxPlayers}</p>
-          <p>Rounds: {gameSettings.rounds}</p>
-          <p>Guessing Time per Round: {gameSettings.guessingTime}</p>
-          <div>
-            <h1>Player List</h1>
-            <table>
-              <thead>
-                <tr>
-                  <th>Player ID</th>
-                  <th>Display Name</th>
-                </tr>
-              </thead>
-              <tbody>
-                {players.map((player, index) => (
-                  <tr key={index}>
-                    <td>{player.playerId}</td>
-                    <td>{player.displayName}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      
+      <div className="lobby container">
+        <div className="lobby settings-container">
+          
+          <div className="lobby gameID-title">Game ID:</div>
+          <div className="lobby gameID-content">{gameId}</div>
+
+          <div className="lobby gameSettings-title">Game settings:</div>
+          <div className="lobby gameSettings-content">Max Players: {gameSettings.maxPlayers}</div>
+          <div className="lobby gameSettings-content">Rounds: {gameSettings.rounds}</div>
+          <div className="lobby gameSettings-content">Guessing Time per Round: {gameSettings.guessingTime}</div>
+        
         </div>
-        <button onClick={startGame_test}>Start Game</button> {/* Button to start the game */}
-        <button onClick={handleLeaveLobby}>Leave Lobby</button> {/* Button to leave the lobby */}
-        {/* You can add more components or buttons related to the lobby here */}
+        <div className="lobby players-container">
+          <div className="lobby playersTable-title">{players.length}/{gameSettings.maxPlayers} Players in the Lobby</div>
+          <div className="lobby playersTable-container">
+            <table className="lobby playersTable">
+                <tbody>
+                  {players.map((player, index) => (
+                    <tr key={index}>
+                      <td>{player.playerId}</td>
+                      <td>{player.displayName}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+          </div>
+
+          <button onClick={startGame_test}>Start Game</button> {/* Button to start the game */}
+          <button onClick={handleLeaveLobby}>Leave Lobby</button>
+
+
+        </div>
+
       </div>
     );
   }
 
-  return <BaseContainer>{content}</BaseContainer>;
+  return (
+    <BaseContainer>
+    <h1 className="header title1">GAME LOBBY</h1>
+    {content}
+    </BaseContainer>
+  );
+
+  
 };
 
 export default Lobby;
