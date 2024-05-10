@@ -10,6 +10,9 @@ import { fetchGameView, handleAnswerSubmit, fetchGameData } from "./hooks";
 import "styles/views/Question.scss";
 import "styles/ui/Progressbar.scss";
 
+
+// the hooks file has some of the logic that is used in this file
+
 const Question_guessing = () => {
     const navigate = useNavigate();
     const gameId = localStorage.getItem("gameId");

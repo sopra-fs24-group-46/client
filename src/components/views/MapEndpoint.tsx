@@ -3,6 +3,7 @@ import MapData from './MapData';
 import { Player, Score } from 'helpers/types';
 import {useNavigate} from "react-router-dom";
 import { getDomain } from "helpers/getDomain";
+import { api, handleError } from "helpers/api";
 
 function App() {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ function App() {
   };
 
 
-  const handleAnswerSubmit = (coordinates: { x: number, y: number }) => {
+  const handleAnswerSubmit = async (coordinates: { x: number, y: number }, playerId: string, gameId: string, roundState: string) => {
     if (roundState !== 'GUESSING') {
       console.log('Answers are only allowed during guessing. Current state:', roundState);
       return; // Prevent further execution
@@ -63,30 +64,22 @@ function App() {
 
     setSelectedCoordinates(coordinates);
 
-    // Submit coordinates to the backend
-    fetch(`${getDomain()}game/${gameId}/guess`, {
-
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    try {
+      const response = await api.post(`${getDomain()}game/${gameId}/guess`, {
         playerId,
         x: coordinates.x,
         y: coordinates.y,
-      }),
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw `Server error: [${response.status}] [${response.statusText}] [${response.url}]`;
-        }
-        return response.json();
-      })
-      .then(receivedJson => {
-        // Handle the received JSON data
-        console.log(receivedJson);
-      })
-      .catch(err => {
-        console.debug("Error in fetch", err);
       });
+      if (!response.ok) {
+        throw new Error(`Server error: [${response.status}] [${response.statusText}] [${response.url}]`);
+      }
+      const receivedJson = await response.json();
+      // Handle the received JSON data
+      console.log(receivedJson);
+    } catch (error) {
+      console.debug("Error in API call", error);
+      handleError(error); // Handle error using helper function
+    }
   };
 
   return (
