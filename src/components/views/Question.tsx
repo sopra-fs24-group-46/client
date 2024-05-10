@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import ProgressBar from "components/ui/ProgressBar";
@@ -20,7 +20,7 @@ const Question_guessing = () => {
     const [currentRound, setCurrentRound] = useState('');
     const [powerUpInUse, setPowerUpInUse] = useState(null);
 
-    const guessingTimer = useMemo(() => parseInt(localStorage.getItem("guessingTime") || "0", 10), []);
+    const guessingTimer = parseInt(localStorage.getItem("guessingTime") || "0", 10);
 
     const fetchGameViewCallback = useCallback(() => fetchGameView(gameId, setGameState, setRoundState, setCurrentRound), [gameId]);
 
