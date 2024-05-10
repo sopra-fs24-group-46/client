@@ -152,11 +152,12 @@ const Leaderboard_roundEnd = () => {
 
           </div>
          ) : (
-          <FinalLeaderboard scores={gameInfo.cumulativeScores} currentRound={gameInfo.currentRound} />
-        //   <div className="leaderboard container">
-        //     <h2 className="leaderboard title">Final Leaderboard</h2>
+            <FinalLeaderboard scores={gameInfo.cumulativeScores} currentRound={gameInfo.currentRound} />
 
-        //     <div className="leaderboard rounds">
+          //   <div className="leaderboard container">
+          //     <h2 className="leaderboard title">Final Leaderboard</h2>
+
+          //     <div className="leaderboard rounds">
         //       <div className="leaderboard rounds counters">Rounds played: {gameInfo.currentRound}</div>
         //     </div>
 
