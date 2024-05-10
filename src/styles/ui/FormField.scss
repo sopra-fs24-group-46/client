@@ -1,0 +1,27 @@
+@import "../theme";
+
+.formfield {
+    color: $text;
+    background-color: $accent;
+    border-radius: $borderRadius/2;
+    width: fit-content;
+
+    &.field {
+        display: flex;
+        align-items: center;
+        margin-top: 9px;
+        width: fit-content;
+
+        &>.label {
+            flex: 0;
+            width: fit-content;
+            white-space: nowrap;
+        }
+
+        &>.input {
+            flex: 1;
+            border: none;
+            border-radius: $borderRadius;
+        }
+    }
+}

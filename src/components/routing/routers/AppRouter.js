@@ -15,6 +15,8 @@ import RoundStart from "../../views/RoundStart";
 import Question from "../../views/Question";
 import MapReveal from "../../views/MapReveal";
 import Leaderboard from "../../views/Leaderboard";
+import Rules from "../../views/Rules";
+import ComponentDev from "../../views/ComponentDev";
 
 
 
@@ -33,12 +35,13 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/game/*" element={<GameGuard />}>
-          <Route path="/game/*" element={<GameRouter base="/game" />} />
+
+        <Route path="/game" element={<GameGuard />}>
+          <Route path="*" element={<GameRouter />}/>
         </Route>
 
-        <Route path="/login" element={<LoginGuard />}>
-          <Route path="/login" element={<Login />} />
+        <Route path="/login/*" element={<LoginGuard />}>
+          <Route path="/login/*" element={<Login />} />
         </Route>
 
         <Route path="/register" element={<Register />} />
@@ -47,15 +50,24 @@ const AppRouter = () => {
 
         <Route path="/question" element={<MapEndpoint />} />
 
+        <Route path="/ComponentDev" element={<ComponentDev />} />
+
+
         
 
         <Route path="/profile" element={<Profile/>} />
+
+        <Route path="/rules" element={<Rules/>} />
         
-        <Route path="/game/create" element={<SetGame/>} />
 
         <Route path="/edit" element={<Edit/>} />
 
+        <Route path="/game/create" element={<SetGame/>} />
+
         <Route path="/lobby/:gameId" element={<Lobby/>} />
+
+
+        {/*this should be moved into game router*/}
         <Route path="/game/:gameId/round/:currentRound" element={<RoundStart/>} />
 
         

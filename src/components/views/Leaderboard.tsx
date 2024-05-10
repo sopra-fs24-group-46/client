@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "helpers/api";
 import BaseContainer from "components/ui/BaseContainer";
-import MapBoxComponent from "./MapBoxComponent";
+import MapBoxComponent from "../ui/MapBoxComponent";
 import ProgressBar from "components/ui/ProgressBar";
 import { getDomain } from "helpers/getDomain";
+import {FinalLeaderboard} from "components/ui/LeaderboardComp";
 
 //Leaderboard container gets styled in here
 import "styles/views/Leaderboard.scss";
@@ -24,7 +25,7 @@ const Leaderboard_roundEnd = () => {
 
   const [gameInfo, setGameInfo] = useState(null);
   let isTimerFinished = false;
-
+  const currentQuestionLocation = localStorage.getItem("currentQuestionLocation");
 
   //Process to get data from backend
   useEffect(() => {
@@ -53,33 +54,30 @@ const Leaderboard_roundEnd = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         const gameId = localStorage.getItem("gameId");
-
         const response = await fetch(`${getDomain()}/game/${gameId}/getView`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const jsonData = await response.json();
         const roundState = jsonData.roundState;
-        console.log(roundState);
-
-        //Switch to Guessing View as soon as BE changes
+  
+        // Switch to Guessing View as soon as BE changes
         if (roundState === "QUESTION") {
           console.log("NOW QUESTION");
           navigate(`/game/${localStorage.getItem("gameId")}/round/${localStorage.getItem("currentRound")}`);
+        } else if (jsonData.gameState === "ENDED" && !localStorage.getItem("hasReloaded")) {
+          localStorage.setItem("hasReloaded", "true");
+          window.location.reload();
         }
-
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
     const intervalId = setInterval(fetchData, 500);
-
-    // Cleanup function to clear the interval when component unmounts or useEffect runs again
+  
     return () => clearInterval(intervalId);
-  }, []); // Empty dependency array to run effect only once on mount
+  }, [navigate]);
 
 
   const handleProgressBarFinish = () => {
@@ -91,6 +89,28 @@ const Leaderboard_roundEnd = () => {
       console.log("Map Reveal");
       //navigate(`/game/${localStorage.getItem("gameId")}/round/${currentRound+1}`);
     }
+  };
+
+
+  const handleProfileRedirect = () => {
+    // Remove specified variables from localStorage
+    localStorage.removeItem("currentRound");
+    localStorage.removeItem("mapbox.eventData");
+    localStorage.removeItem("gameId");
+    localStorage.removeItem("currentLocationName");
+    localStorage.removeItem("hasReloaded");
+    localStorage.removeItem("y");
+    localStorage.removeItem("mapRevealTime");
+    localStorage.removeItem("x");
+    localStorage.removeItem("mapbox.eventData.uuid");
+    localStorage.removeItem("questionTime");
+    localStorage.removeItem("mapbox.eventData:YW1lbWJhZA==");
+    localStorage.removeItem("mapbox.eventData.uuid:YW1lbWJhZA==");
+    localStorage.removeItem("guessingTime");
+    
+
+    // Redirect to profile page
+    navigate("/profile");
   };
 
   //Checks if Data, which gets loaded from backend in useEffect, is ready to be displayed
@@ -120,7 +140,7 @@ const Leaderboard_roundEnd = () => {
                     return (
                       <tr key={playerId}>
                         <td>{playerId}</td>
-                        <td>{playerData.distance}</td>
+                        <td>{(playerData.distance / 1000).toFixed(2)}</td>
                         <td>{playerData.score}</td>
                       </tr>
                     );
@@ -131,42 +151,49 @@ const Leaderboard_roundEnd = () => {
             <div className="leaderboard round-timer">Next Round starts in: TODO</div>
 
           </div>
-        ) : (
-          <div className="leaderboard container">
-            <h2 className="leaderboard title">Final Leaderboard</h2>
+         ) : (
+            <FinalLeaderboard scores={gameInfo.cumulativeScores} currentRound={gameInfo.currentRound} />
 
-            <div className="leaderboard rounds">
-              <div className="leaderboard rounds counters">Rounds played: {gameInfo.currentRound}</div>
-            </div>
+          //   <div className="leaderboard container">
+          //     <h2 className="leaderboard title">Final Leaderboard</h2>
 
-            <div className="leaderboard table-container">
-              <table className="leaderboard table-leaderboard">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Total Km off</th>
-                    <th>Total Points</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.entries(gameInfo.cumulativeScores).map(([playerId, playerData]: [string, PlayerData]) => {
-                    return (
-                      <tr key={playerId}>
-                        <td>{playerId}</td>
-                        <td>{playerData.distance}</td>
-                        <td>{playerData.score}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-            {/*<div>{JSON.stringify(gameInfo)}</div>*/}
-          </div>
-        )}
+          //     <div className="leaderboard rounds">
+        //       <div className="leaderboard rounds counters">Rounds played: {gameInfo.currentRound}</div>
+        //     </div>
+
+        //     <div className="leaderboard table-container">
+        //       <table className="leaderboard table-leaderboard">
+        //         <thead>
+        //           <tr>
+        //             <th></th>
+        //             <th>Total Km off</th>
+        //             <th>Total Points</th>
+        //           </tr>
+        //         </thead>
+        //         <tbody>
+        //           {Object.entries(gameInfo.cumulativeScores).map(([playerId, playerData]: [string, PlayerData]) => {
+        //             return (
+        //               <tr key={playerId}>
+        //                 <td>{playerId}</td>
+        //                 <td>{(playerData.distance / 1000).toFixed(2)}</td>
+        //                 <td>{playerData.score}</td>
+        //               </tr>
+        //             );
+        //           })}
+        //         </tbody>
+        //       </table>
+        //     </div>
+        //     {/*<div>{JSON.stringify(gameInfo)}</div>*/}
+        //   </div>
+        // 
+      )}
+
+<button className="primary-button" onClick={handleProfileRedirect}>Go to Profile</button>
+
 
         <div className="map container">
           <MapBoxComponent
+              currentQuestionLocation={currentQuestionLocation}
             reveal={0}
             guessesMapReveal={[]}
           />

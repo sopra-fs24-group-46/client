@@ -1,0 +1,81 @@
+@import "../theme";
+
+.multi-selection {
+    //main box
+    position: relative;
+    background-color: $accent;
+    border-radius: $borderRadius;
+    width: fit-content;
+    min-width: 80%;
+    margin-top: 5px;
+}
+
+.selected-words {
+    //box for selected content and buttons
+    border-radius: $borderRadius;
+    flex-wrap: wrap;
+    background-color: $accent;
+}
+
+.selected-word {
+    //style of each selected word
+    background-color: $accentAlt;
+    padding: 5px 10px;
+    margin: 5px;
+    float: right;
+    border-radius: $borderRadius;
+    cursor: pointer;
+    color: $text;
+}
+
+.remove-word {
+    //the X to remove selected words
+    opacity: 0.5;
+    border-radius: $borderRadius;
+    cursor: pointer;
+}
+
+
+.remove-word:hover {
+    //the X to remove hover
+    opacity: 1;
+    border-radius: $borderRadius;
+    cursor: pointer;
+}
+
+.button {
+    //the button to open the drop down
+    background-color: $accentAlt;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: $borderRadius;
+    border: none;
+}
+
+.dropdown {
+    //the drop down container
+    border-radius: $borderRadius;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: $accent;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 1;
+    border: none;
+}
+
+.option {
+    //elements in the drop down
+    border-radius: $borderRadius;
+    padding: 5px 10px;
+    cursor: pointer;
+    opacity: 1;
+    color: $text;
+}
+
+.option:hover {
+    //hover effect
+    border-radius: $borderRadius;
+    background-color: #eee;
+}

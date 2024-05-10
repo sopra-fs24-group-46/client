@@ -7,6 +7,8 @@ import { Button } from "components/ui/Button"; // Import the Button component
 import { useNavigate, Link } from "react-router-dom";
 import "styles/views/Header.scss";
 import BaseContainer from "components/ui/BaseContainer";
+import {FormField} from "components/ui/FormField";
+import {MultiSelection} from "components/ui/MultiSelection";
 
 
 
@@ -43,9 +45,10 @@ NumberInput.propTypes = {
 };
 
 const SetGame = () => {
-  const [maxPlayers, setMaxPlayers] = useState(1);
-  const [rounds, setRounds] = useState(1);
-  const [guessingTime, setGuessingTime] = useState(1);
+  const [maxPlayers, setMaxPlayers] = useState(4);
+  const [rounds, setRounds] = useState(4);
+  const [guessingTime, setGuessingTime] = useState(15);
+  const [locationTypes, setLocationTypes] = useState([]);
   const host = localStorage.getItem("id");
 
   const navigate = useNavigate();
@@ -61,7 +64,17 @@ const SetGame = () => {
       const maxPlayersInt = parseInt(maxPlayers);
       const roundsInt = parseInt(rounds);
       const guessingTimeInt = parseInt(guessingTime);
-      
+
+      // Validation checks
+      if (roundsInt <= 0) {
+        alert("Please enter a value greater than 0 for rounds.");
+        return;
+      }
+      if (guessingTimeInt <= 1) {
+        alert("Please enter a guessing time greater than 1.");
+        return;
+      }
+
       // Construct the request body
       const requestBody = {
         id: id,
@@ -69,12 +82,14 @@ const SetGame = () => {
         maxPlayers: maxPlayersInt,
         rounds: roundsInt,
         guessingTime: guessingTimeInt,
+        locationTypes: locationTypes
       };
-  
+
       // Send a PUT request to the backend
       const response = await api.put(`/game/${localStorage.getItem("gameId")}/updateSettings`, requestBody);
 
-      console.log('Lobby created');
+      console.log(requestBody.locationTypes);
+      console.log('Lobby created' + response.data);
 
       // Open the lobby first before starting the game
       await api.post(`/game/${gameId}/openLobby`, requestBody);
@@ -86,6 +101,7 @@ const SetGame = () => {
       console.error("Error creating game:", error);
     }
   };
+
   const goBacktoProfile = () => {
     localStorage.removeItem("gameId");
 
@@ -105,22 +121,35 @@ const SetGame = () => {
       <div className="set-game container">
           <h2>Game Settings</h2>
           <div className="set-game inputs">
-            <NumberInput
+            <FormField
               label="Max number of players"
+              type ="number"
+              placeholder="4"
               value={maxPlayers}
               onChange={setMaxPlayers}
+              style = {{width: "50px"}}
             />
-            <NumberInput
+            <FormField
               label="Amount of rounds"
+              type="number"
+              placeholder="4"
               value={rounds}
               onChange={setRounds}
+              style = {{width: "50px"}}
             />
-            <NumberInput
+            <FormField
               label="Guessing time per round"
+              type="number"
+              placeholder="4"
               value={guessingTime}
               onChange={setGuessingTime}
+              style = {{width: "50px"}}
             />
           </div>
+          <MultiSelection 
+            label = "Locations" 
+            options = {["ALPINE_MOUNTAIN", "MOUNTAIN","MAIN_HILL", "HILL", "LAKE"]} 
+            onChange = {setLocationTypes}/>
           <div className="set-game button_container">
             <Button onClick={createGame}>Create Game</Button> {/* Add the Create Game button */}
             <Button onClick={() => goBacktoProfile()}>Go Back</Button>
