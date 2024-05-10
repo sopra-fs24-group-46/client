@@ -113,6 +113,7 @@ const MapBoxComponent = ({ reveal, currentQuestionLocation, guessesMapReveal }) 
 };
 
 MapBoxComponent.propTypes = {
+
   reveal: PropTypes.number.isRequired,
   currentQuestionLocation: PropTypes.string.isRequired,
   guessesMapReveal: PropTypes.arrayOf(PropTypes.shape({
