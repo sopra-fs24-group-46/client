@@ -1,114 +1,63 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { api, handleError, getAuthToken } from "helpers/api";
 import BaseContainer from "components/ui/BaseContainer";
 import ProgressBar from "components/ui/ProgressBar";
-import MapBoxComponent from '../ui/MapBoxComponent';
+import MapBoxComponent from 'components/ui/MapBoxComponent';
+import { PowerUpOverlay } from "components/ui/PowerUp";
 import { getDomain } from "helpers/getDomain";
-import {PowerUpOverlay} from "components/ui/PowerUp";
+import { fetchGameView, handleAnswerSubmit, fetchGameData } from "./hooks";
 
 import "styles/views/Question.scss";
 import "styles/ui/Progressbar.scss";
 
-const Question_guessing = () => {
 
-    //Define variables
+// the hooks file has some of the logic that is used in this file
+
+const Question_guessing = () => {
     const navigate = useNavigate();
-    const guessingTimer = parseInt(localStorage.getItem("guessingTime") || "0", 10);
+    const gameId = localStorage.getItem("gameId");
     const currentQuestionLocation = localStorage.getItem("currentQuestionLocation");
-    //Define Hooks
+
+    const [gameState, setGameState] = useState('');
+    const [roundState, setRoundState] = useState('');
+    const [currentRound, setCurrentRound] = useState('');
     const [powerUpInUse, setPowerUpInUse] = useState(null);
 
+    const guessingTimer = parseInt(localStorage.getItem("guessingTime") || "0", 10);
 
-    //Flag so only one guess can be submitted
-    let isTimerFinished = false;
+    const fetchGameViewCallback = useCallback(() => fetchGameView(gameId, setGameState, setRoundState, setCurrentRound), [gameId]);
 
-    //Submits the current guess of the player
-    const submitGuess = async () => {
-
-        //Define current variables
-        const playerId = localStorage.getItem("playerId");
-        const gameId = localStorage.getItem("gameId");
-        const x = parseFloat(localStorage.getItem("x") || "0");
-        const y = parseFloat(localStorage.getItem("y") || "0");
-
-        console.log("Guess submitted");
-
-        //Create requestBody
-        const requestBody = {
-            playerId: playerId,
-            x: x,
-            y: y
-        };
-    
-        //Sends POST request to the backend
-        try {
-          const response = await api.post(`${getDomain()}game/${gameId}/guess`, requestBody);
-          console.log(response)
-    
-          //TODO Propper Error Handling
-        } catch (error) {
-          console.log(`Error Details: ${handleError(error)}`);
-        }   
-    }
-
-    //Function runs as soon as the timer is finished
-    const handleProgressBarFinish = () => {
-
-        if (!isTimerFinished) {
-
-            submitGuess();
-            isTimerFinished = true;
-        }
-    };
-
-    
-
-    //Gets gameView JSON-File every 0.5 seconds to be synchronized with the backend
     useEffect(() => {
+        const interval = setInterval(fetchGameViewCallback, 15000);
+        return () => clearInterval(interval);
+    }, [fetchGameViewCallback]);
 
+    useEffect(() => {
         const fetchData = async () => {
-        try {
+            try {
+                const { roundState: newRoundState, powerUps } = await fetchGameData(gameId);
+                const playerId = localStorage.getItem("playerId");
+                setPowerUpInUse(powerUps[playerId]);
 
-            const gameId = localStorage.getItem("gameId");
-
-            const response = await fetch(`${getDomain()}game/${gameId}/getView`);
-            if (!response.ok) {
-            throw new Error('Network response was not ok');
+                if (newRoundState === "MAP_REVEAL") {
+                    navigate(`/game/${gameId}/round/${localStorage.getItem("currentRound")}/mapReveal`);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
-            const jsonData = await response.json();
-            const roundState = jsonData.roundState;
-
-            const playerId = localStorage.getItem("playerId");
-            localStorage.setItem("currentLocationName", jsonData.currentQuestion.location_name);
-            setPowerUpInUse(jsonData.powerUps[playerId]);
-
-            console.log(roundState);
-
-            //Switch to Guessing View as soon as BE changes
-            if (roundState === "MAP_REVEAL") {
-            console.log("NOW MAP_REVEAL");
-            navigate(`/game/${localStorage.getItem("gameId")}/round/${localStorage.getItem("currentRound")}/mapReveal`);
-            }
-
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
         };
 
         const intervalId = setInterval(fetchData, 500);
-
-        // Cleanup function to clear the interval when component unmounts or useEffect runs again
         return () => clearInterval(intervalId);
-    }, []); // Empty dependency array to run effect only once on mount
+    }, [gameId, navigate]);
 
-    
+    const handleFinish = useCallback(() => handleAnswerSubmit(gameId), [gameId]);
 
     return (
         <BaseContainer>
-            <PowerUpOverlay powerUp ={powerUpInUse} />
+            <PowerUpOverlay powerUp={powerUpInUse} />
             <div className="map question_container">
-                <div className="map text1">Round {localStorage.getItem("currentRound")}</div>
+                <div className="map text1">Round {currentRound}</div>
                 <div className="map text2">Find mountain: {localStorage.getItem("currentLocationName")}</div>
                 <div className="map text3">Select a location by clicking on the map.</div>
             </div>
@@ -119,7 +68,7 @@ const Question_guessing = () => {
                     guessesMapReveal={[]}
                 />
             </div>
-            <ProgressBar durationInSeconds={guessingTimer-1} onFinish={handleProgressBarFinish} />
+            <ProgressBar durationInSeconds={guessingTimer - 2} onFinish={handleFinish} />
         </BaseContainer>
     );
 };

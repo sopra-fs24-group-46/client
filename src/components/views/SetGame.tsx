@@ -64,7 +64,17 @@ const SetGame = () => {
       const maxPlayersInt = parseInt(maxPlayers);
       const roundsInt = parseInt(rounds);
       const guessingTimeInt = parseInt(guessingTime);
-      
+
+      // Validation checks
+      if (roundsInt <= 0) {
+        alert("Please enter a value greater than 0 for rounds.");
+        return;
+      }
+      if (guessingTimeInt <= 1) {
+        alert("Please enter a guessing time greater than 1.");
+        return;
+      }
+
       // Construct the request body
       const requestBody = {
         id: id,
@@ -74,7 +84,7 @@ const SetGame = () => {
         guessingTime: guessingTimeInt,
         locationTypes: locationTypes
       };
-  
+
       // Send a PUT request to the backend
       const response = await api.put(`/game/${localStorage.getItem("gameId")}/updateSettings`, requestBody);
 
@@ -91,6 +101,7 @@ const SetGame = () => {
       console.error("Error creating game:", error);
     }
   };
+
   const goBacktoProfile = () => {
     localStorage.removeItem("gameId");
 
