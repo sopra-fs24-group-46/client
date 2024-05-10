@@ -24,6 +24,11 @@ import ComponentDev from "../../views/ComponentDev";
 
 
 
+
+
+
+
+
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/login"
@@ -31,22 +36,24 @@ import ComponentDev from "../../views/ComponentDev";
  * The main difference between these two routes is the following:
  * /login renders another component without any sub-route
  * /game renders a Router that contains other sub-routes that render in turn other react components
- * Documentation about routing in React: https://reactrouter.com/en/main/start/tutorial 
+ * Documentation about routing in React: https://reactrouter.com/en/main/start/tutorial
  */
 const AppRouter = () => {
+  localStorage.setItem("playerId", "true");
   return (
-    <BrowserRouter>
-      <Routes>
+      <BrowserRouter>
 
-        <Route path="/game" element={<GameGuard />}>
-          <Route path="*" element={<GameRouter />}/>
-        </Route>
+        <Routes>
 
-        <Route path="/login/*" element={<LoginGuard />}>
-          <Route path="/login/*" element={<Login />} />
-        </Route>
+          <Route path="/game" element={<GameGuard />}>
+            <Route path="*" element={<GameRouter />}/>
+          </Route>
 
-        <Route path="/register" element={<Register />} />
+          <Route path="/login/*" element={<LoginGuard />}>
+            <Route path="/login/*" element={<Login />} />
+          </Route>
+
+          <Route path="/register" element={<Register />} />
 
         <Route path="/home" element={<HomeGuard />}>
           <Route path="" element={<Home />} />
@@ -57,40 +64,36 @@ const AppRouter = () => {
         </Route>
 
 
-        <Route path="/question" element={<MapEndpoint />} />
+          <Route path="/question" element={<MapEndpoint />} />
 
-        <Route path="/ComponentDev" element={<ComponentDev />} />
+          <Route path="/ComponentDev" element={<ComponentDev />} />
 
+          <Route path="/profile" element={<Profile/>} />
 
-        
+          <Route path="/rules" element={<Rules/>} />
 
-        <Route path="/profile" element={<Profile/>} />
+          <Route path="/edit" element={<Edit/>} />
 
-        <Route path="/rules" element={<Rules/>} />
-        
+          <Route path="/game/create" element={<SetGame/>} />
 
-        <Route path="/edit" element={<Edit/>} />
+          <Route path="/lobby/:gameId" element={<Lobby/>} />
 
-        <Route path="/game/create" element={<SetGame/>} />
+          {/*this should be moved into game router*/}
+          <Route path="/game/:gameId/round/:currentRound" element={<RoundStart/>} />
 
-        <Route path="/lobby/:gameId" element={<Lobby/>} />
+          <Route path="/game/:gameId/round/:currentRound/guessing" element={<Question />} />
 
+          <Route path="/game/:gameId/round/:currentRound/mapReveal" element={<MapReveal />} />
 
-        {/*this should be moved into game router*/}
-        <Route path="/game/:gameId/round/:currentRound" element={<RoundStart/>} />
+          <Route path="/game/:gameId/round/:currentRound/leaderboard" element={<Leaderboard />} />
 
-        
-        <Route path="/game/:gameId/round/:currentRound/guessing" element={<Question />} />
+          <Route path="/" element={<Navigate to="/home" replace />} />
 
-        <Route path="/game/:gameId/round/:currentRound/mapReveal" element={<MapReveal />} />
+        </Routes>
 
-        <Route path="/game/:gameId/round/:currentRound/leaderboard" element={<Leaderboard />} />
-
-
-        <Route path="/" element={<Navigate to="/home" replace />} />
-      </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
   );
 };
+
 
 export default AppRouter;
