@@ -3,6 +3,8 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { GameGuard } from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
 import { LoginGuard } from "../routeProtectors/LoginGuard";
+import { HomeGuard } from "../routeProtectors/HomeGuard"; 
+import { RegisterGuard } from "../routeProtectors/RegisterGuard"; 
 import Home from "../../views/Home";
 import Login from "../../views/Login";
 import Register from "../../views/Register";
@@ -46,7 +48,14 @@ const AppRouter = () => {
 
         <Route path="/register" element={<Register />} />
 
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<HomeGuard />}>
+          <Route path="" element={<Home />} />
+        </Route>
+
+        <Route path="/register" element={<RegisterGuard />}>
+          <Route path="" element={<Register />} />
+        </Route>
+
 
         <Route path="/question" element={<MapEndpoint />} />
 
