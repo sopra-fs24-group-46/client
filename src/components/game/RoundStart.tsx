@@ -7,9 +7,10 @@ import { Spinner } from "components/ui/Spinner";
 import "styles/views/Round.scss";
 import "styles/ui/Progressbar.scss";
 import { getDomain } from "helpers/getDomain";
-import {PowerUpBar, PowerUpOverlay} from "components/ui/PowerUp";
+import { PowerUpBar, PowerUpOverlay } from "components/ui/PowerUp";
+import PropTypes from "prop-types";
 
-const RoundStart = () => {
+const RoundStart = ({ setRoundState }) => {
   const navigate = useNavigate();
 
   // State variables for game data
@@ -22,16 +23,18 @@ const RoundStart = () => {
 
   useEffect(() => {
     async function fetchGameSettings() {
-
       try {
         const intervalId = setInterval(getGameView, 5000);
-        const response = await api.get(`/game/${localStorage.getItem("gameId")}/settings`);
+        const response = await api.get(
+          `/game/${localStorage.getItem("gameId")}/settings`
+        );
         const data = response.data;
         setGameSettings(data);
         localStorage.setItem("questionTime", data.questionTime);
         localStorage.setItem("guessingTime", data.guessingTime);
         localStorage.setItem("mapRevealTime", data.mapRevealTime);
-        
+        localStorage.setItem("leaderBoardTime", data.leaderBoardTime);
+
         return () => clearInterval(intervalId);
         // instead of localStorage
       } catch (error) {
@@ -41,16 +44,17 @@ const RoundStart = () => {
 
     async function getGameView() {
       try {
-        const intervalId = setInterval(() => {
-
-        })
+        const intervalId = setInterval(() => {});
         const gameId = localStorage.getItem("gameId");
         const response = await api.get(`game/${gameId}/getView`);
         const data = response.data;
         setGameInfo(data);
         // Update state variables with game view data
         setCurrentRound(data.currentRound);
-        localStorage.setItem("currentLocationName", data.currentQuestion.location_name);
+        localStorage.setItem(
+          "currentLocationName",
+          data.currentQuestion.location_name
+        );
         localStorage.setItem("currentRound", data.currentRound);
 
         // Add more state updates as needed
@@ -67,7 +71,6 @@ const RoundStart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         const gameId = localStorage.getItem("gameId");
 
         const response = await fetch(`${getDomain()}game/${gameId}/getView`);
@@ -76,20 +79,19 @@ const RoundStart = () => {
         }
         const jsonData = await response.json();
         const roundState = jsonData.roundState;
-//used for powerup buttons
-            const playerId = localStorage.getItem("playerId");
-            setPowerUpInUse(jsonData.powerUps[playerId]);
-            console.log(jsonData.powerUps[playerId]);
-            setUsedPowerUps(jsonData.usedPowerUps[playerId]);
+        //used for powerup buttons
+        const playerId = localStorage.getItem("playerId");
+        setPowerUpInUse(jsonData.powerUps[playerId]);
+        console.log(jsonData.powerUps[playerId]);
+        setUsedPowerUps(jsonData.usedPowerUps[playerId]);
 
         console.log(roundState);
 
         //Switch to Guessing View as soon as BE changes
         if (roundState === "GUESSING") {
           console.log("NOW GUESSING");
-          navigate(`/game/${localStorage.getItem("gameId")}/round/${currentRound}/guessing`);
+          setRoundState(roundState);
         }
-
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -110,25 +112,34 @@ const RoundStart = () => {
   if (gameSettings && gameInfo) {
     content = (
       <div>
-        <PowerUpOverlay
-        powerUp = {powerUpInUse}/>
-        <h1 className="header title1">Round {localStorage.getItem("currentRound")}</h1>
+        <PowerUpOverlay powerUp={powerUpInUse} />
+        <h1 className="header title1">
+          Round {localStorage.getItem("currentRound")}
+        </h1>
         <div className="round container">
           <div className="round text_container">
             <div>Try to find this Mountain:</div>
             <div>{localStorage.getItem("currentLocationName")}</div>
           </div>
-            <PowerUpBar 
-                inUseList ={[powerUpInUse]}
-                disabledList={usedPowerUps}
-                disableAll={powerUpInUse !== null}/>
-          <ProgressBar durationInSeconds={4} onFinish={handleProgressBarFinish} />
+          <PowerUpBar
+            inUseList={[powerUpInUse]}
+            disabledList={usedPowerUps}
+            disableAll={powerUpInUse !== null}
+          />
+          <ProgressBar
+            durationInSeconds={4}
+            onFinish={handleProgressBarFinish}
+          />
         </div>
       </div>
     );
   }
 
   return <BaseContainer>{content}</BaseContainer>;
+};
+
+RoundStart.propTypes = {
+  setRoundState: PropTypes.func.isRequired,
 };
 
 export default RoundStart;

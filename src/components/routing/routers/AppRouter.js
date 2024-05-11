@@ -3,31 +3,18 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { GameGuard } from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
 import { LoginGuard } from "../routeProtectors/LoginGuard";
-import { HomeGuard } from "../routeProtectors/HomeGuard"; 
-import { RegisterGuard } from "../routeProtectors/RegisterGuard"; 
+import { HomeGuard } from "../routeProtectors/HomeGuard";
+import { RegisterGuard } from "../routeProtectors/RegisterGuard";
 import Home from "../../views/Home";
 import Login from "../../views/Login";
 import Register from "../../views/Register";
-import MapEndpoint from "../../views/MapEndpoint";
 import Profile from "../../views/Profile";
 import SetGame from "../../views/SetGame";
 import Edit from "../../views/Edit";
 import Lobby from "../../views/Lobby";
-import RoundStart from "../../views/RoundStart";
-import Question from "../../views/Question";
-import MapReveal from "../../views/MapReveal";
-import Leaderboard from "../../views/Leaderboard";
 import Rules from "../../views/Rules";
 import ComponentDev from "../../views/ComponentDev";
-
-
-
-
-
-
-
-
-
+import GameView from "../../game/GameView";
 
 /**
  * Main router of your application.
@@ -41,19 +28,17 @@ import ComponentDev from "../../views/ComponentDev";
 const AppRouter = () => {
   localStorage.setItem("playerId", "true");
   return (
-      <BrowserRouter>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/game" element={<GameGuard />}>
+          <Route path="*" element={<GameRouter />} />
+        </Route>
 
-        <Routes>
+        <Route path="/login/*" element={<LoginGuard />}>
+          <Route path="/login/*" element={<Login />} />
+        </Route>
 
-          <Route path="/game" element={<GameGuard />}>
-            <Route path="*" element={<GameRouter />}/>
-          </Route>
-
-          <Route path="/login/*" element={<LoginGuard />}>
-            <Route path="/login/*" element={<Login />} />
-          </Route>
-
-          <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<Register />} />
 
         <Route path="/home" element={<HomeGuard />}>
           <Route path="" element={<Home />} />
@@ -64,36 +49,25 @@ const AppRouter = () => {
         </Route>
 
 
-          <Route path="/question" element={<MapEndpoint />} />
+        <Route path="/ComponentDev" element={<ComponentDev />} />
+        <Route path="/GameDev" element={<GameView />} />
 
-          <Route path="/ComponentDev" element={<ComponentDev />} />
+        <Route path="/profile" element={<Profile />} />
 
-          <Route path="/profile" element={<Profile/>} />
+        <Route path="/rules" element={<Rules />} />
 
-          <Route path="/rules" element={<Rules/>} />
+        <Route path="/edit" element={<Edit />} />
 
-          <Route path="/edit" element={<Edit/>} />
+        <Route path="/game/create" element={<SetGame />} />
 
-          <Route path="/game/create" element={<SetGame/>} />
+        <Route path="/lobby/:gameId" element={<Lobby />} />
 
-          <Route path="/lobby/:gameId" element={<Lobby/>} />
+        {/*this should be moved into game router*/}
 
-          {/*this should be moved into game router*/}
-          <Route path="/game/:gameId/round/:currentRound" element={<RoundStart/>} />
-
-          <Route path="/game/:gameId/round/:currentRound/guessing" element={<Question />} />
-
-          <Route path="/game/:gameId/round/:currentRound/mapReveal" element={<MapReveal />} />
-
-          <Route path="/game/:gameId/round/:currentRound/leaderboard" element={<Leaderboard />} />
-
-          <Route path="/" element={<Navigate to="/home" replace />} />
-
-        </Routes>
-
-      </BrowserRouter>
+        <Route path="/" element={<Navigate to="/home" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
-
 
 export default AppRouter;
