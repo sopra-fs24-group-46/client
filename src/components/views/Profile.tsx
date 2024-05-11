@@ -103,8 +103,9 @@ const Profile = () => {
   const joinGame = async () => {
     try {
       const token = localStorage.getItem("token");
-      //const gameId = gamePin;
-      const gameId = localStorage.getItem("gameId");
+      // const gameId = gameId;
+      // const gameId = localStorage.getItem("gameId");
+
       if (!token || !gameId) {
         alert(
             "No Game Pin provided!"
