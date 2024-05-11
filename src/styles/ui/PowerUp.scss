@@ -45,6 +45,9 @@
         width: 60px;
         border-radius: $borderRadius;
         padding: 5px;
+        color: $background;
+        font-weight: 700;
+        font-size: 13px;
     }
 
     &.button {
