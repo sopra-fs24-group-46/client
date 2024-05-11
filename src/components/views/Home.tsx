@@ -24,6 +24,19 @@ const Home = () => {
 
 
   const joinGame = async () => {
+
+    if (!playerName.trim()) {
+      alert("Please enter your name");
+      return;
+    }
+  
+    // Validation: Check if game pin is provided
+    if (!gamePin.trim()) {
+      alert("Please enter game pin");
+      return;
+    }
+  
+  
     try {
       // Construct the request body
       const requestBody = {
@@ -43,8 +56,17 @@ const Home = () => {
       navigate(`/lobby/${gamePin}`);
     } catch (error) {
       console.error("Error joining game:", error);
-      alert("Error joining game. Please try again.");
+      let errorMessage = "Error joining game. Please try again.";
+    
+      if (error.response && error.response.status === 400) {
+        errorMessage = "Error joining game. This username is already taken.";
+      } else if (error.response && error.response.status === 404) {
+        errorMessage = "Error joining game. Game not found.";
+      }
+    
+      alert(errorMessage);
     }
+    
   };
 
 

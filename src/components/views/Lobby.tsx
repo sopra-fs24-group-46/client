@@ -110,9 +110,21 @@ const Lobby = () => {
   }
 
   const handleLeaveLobby = () => {
-    navigate('/profile');
-  }
+    const token = localStorage.getItem("token");
+    if (token) {
+      localStorage.removeItem("gameId");
+      localStorage.removeItem("playerId");
 
+
+      navigate('/profile');
+      
+    } else {
+      localStorage.removeItem("gameId");
+      localStorage.removeItem("playerId");
+
+      navigate('/home');
+    }
+  };
 
   const copyGameCode = () => {
     if (gameId) {

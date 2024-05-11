@@ -3,15 +3,23 @@
         "browser": true,
         "es2021": true
     },
-    "extends": ["plugin:react/recommended"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:prettier/recommended"
+    ],
     "overrides": [],
     "parserOptions": {
         "ecmaVersion": "latest",
-        "ecmaFeatures": { "jsx": true },
+        "ecmaFeatures": {
+            "jsx": true
+        },
         "sourceType": "module"
     },
     "parser": "@babel/eslint-parser",
-    "plugins": ["react"],
+    "plugins": [
+        "react"
+    ],
     "settings": {
         "react": {
             "version": "detect"
@@ -22,13 +30,29 @@
         "no-unreachable": "error",
         "no-duplicate-imports": "error",
         "no-multiple-empty-lines": "warn",
-        "indent": ["warn", 2],
-        "quotes": ["warn", "double"],
+        "indent": [
+            "warn",
+            2
+        ],
+        "quotes": [
+            "warn",
+            "double"
+        ],
         "newline-before-return": "warn",
         "padding-line-between-statements": [
             "warn",
-            { "blankLine": "always", "prev": "*", "next": "export" }
-        ]
+            {
+                "blankLine": "always",
+                "prev": "*",
+                "next": "export"
+            }
+        ],
+        "react/jsx-closing-bracket-location": ["error", "line-aligned"]
     },
-    "ignorePatterns": ["node_modules", "build", "dist", "public"]
+    "ignorePatterns": [
+        "node_modules",
+        "build",
+        "dist",
+        "public"
+    ]
 }
