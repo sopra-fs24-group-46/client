@@ -11,25 +11,32 @@ export const FinalLeaderboard = ({ scores, currentRound }) => {
   const navigate = useNavigate();
 
   const handleReturnToProfile = () => {
-    // Remove specified variables from localStorage
-    localStorage.removeItem("currentRound");
-    localStorage.removeItem("mapbox.eventData");
-    localStorage.removeItem("gameId");
-    localStorage.removeItem("currentLocationName");
-    localStorage.removeItem("hasReloaded");
-    localStorage.removeItem("y");
-    localStorage.removeItem("mapRevealTime");
-    localStorage.removeItem("x");
-    localStorage.removeItem("mapbox.eventData.uuid");
-    localStorage.removeItem("questionTime");
-    localStorage.removeItem("mapbox.eventData:YW1lbWJhZA==");
-    localStorage.removeItem("mapbox.eventData.uuid:YW1lbWJhZA==");
-    localStorage.removeItem("guessingTime");
-
-    // Redirect to /profile
-    navigate("/profile");
+    // Check if there's a token in localStorage
+    const token = localStorage.getItem("token");
+  
+    if (token) {
+      // Remove specified variables from localStorage
+      localStorage.removeItem("currentRound");
+      localStorage.removeItem("mapbox.eventData");
+      localStorage.removeItem("gameId");
+      localStorage.removeItem("currentLocationName");
+      localStorage.removeItem("hasReloaded");
+      localStorage.removeItem("y");
+      localStorage.removeItem("mapRevealTime");
+      localStorage.removeItem("x");
+      localStorage.removeItem("mapbox.eventData.uuid");
+      localStorage.removeItem("questionTime");
+      localStorage.removeItem("mapbox.eventData:YW1lbWJhZA==");
+      localStorage.removeItem("mapbox.eventData.uuid:YW1lbWJhZA==");
+      localStorage.removeItem("guessingTime");
+  
+      // Redirect to /profile
+      navigate("/profile");
+    } else {
+      // Redirect to /home
+      navigate("/home");
+    }
   };
-
   function getHighestScorePlayer(scores) {
     let highestScore = -Infinity;
     let highestScorePlayerId = null;
@@ -100,7 +107,7 @@ export const FinalLeaderboard = ({ scores, currentRound }) => {
       </div>
       <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
         <button className="primary-button" onClick={handleReturnToProfile}>
-          Return to Profile
+          Return to Profile/Home
         </button>
       </div>
     </div>

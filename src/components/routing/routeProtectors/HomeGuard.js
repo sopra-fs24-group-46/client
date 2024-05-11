@@ -13,7 +13,8 @@ export const HomeGuard = () => {
     return <Outlet />;
   }
   
-  return <Navigate to="/home" replace />;
+  return <Navigate to="/profile" replace />;
+
 };
 
 HomeGuard.propTypes = {

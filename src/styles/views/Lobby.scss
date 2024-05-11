@@ -7,20 +7,44 @@
       background-color: $background;
       border-radius: 0.75em;
       box-shadow: $dropShadow;
-      font-size: 1.5em;
+      font-weight: 600;
+      transition: opacity 0.5s ease, transform 0.5s ease;
       display: flex;
       flex-direction: row;
     }
 
     &.settings-container {
+      border: 2px solid white;
+      margin: 0 auto;
       height: 60vh;
-      width: 45vw;
+      width: 35vw;
+      text-align: center;
     }
 
     &.players-container {
+      border: 2px solid white;
+      margin: 0 auto;
       height: 60vh;
-      width: 35vw;
+      width: 45vw;
+      text-align: center;
     }
+
+  &.qr-code {
+    padding: 20px;
+    margin: 0 auto;
+    height: auto;
+    width: auto;
+    text-align: center;
+  }
+
+  &.qr-code title {
+    padding: 20px;
+    margin: 0 auto;
+    height: auto;
+    width: auto;
+    text-align: center;
+    color: #7bf2a3;
+  }
 
     &.gameID-title {
       font-weight: bold;
@@ -28,6 +52,7 @@
       margin-top: 5vh;
       display: flex;
       justify-content: center;
+
     }
 
     &.gameID-content {

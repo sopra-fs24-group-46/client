@@ -103,13 +103,13 @@ LeaderBoardPowerUpCollection.propTypes = {
 
 const logoPath = (powerUp) => {
     if (powerUp === "JOKER") {
-        return "/J.png";
+        return process.env.PUBLIC_URL + "/J.png";
     }
     if (powerUp === "SHIELD") {
-        return "/shield.png";
+        return process.env.PUBLIC_URL + "/shield.png";
     }
     if (powerUp === "X2") {
-        return "/x2.png";
+        return process.env.PUBLIC_URL + "/x2.png";
     }
 }
 
