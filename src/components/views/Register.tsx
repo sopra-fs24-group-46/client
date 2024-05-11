@@ -81,7 +81,10 @@ const SignUp = (props) => {
                         value={password || ""}
                         onChange={(n) => setPassword(n)}
                     />
-                        <div className="login button-container">
+<div className="login password-hint" style={{ fontSize: '12px', marginBottom: '1px' }}>
+                        Password should be at least 6 characters long.
+                    </div>
+                        <div className="login button-container" style={{ marginTop: '10px' }}>
                         <Button
                             disabled={!username || !password}
                             width="100%"
