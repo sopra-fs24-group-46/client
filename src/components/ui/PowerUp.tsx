@@ -4,12 +4,16 @@ import "../../styles/ui/PowerUp.scss";
 import { usePowerUp } from "helpers/api";
 import { TimesTwoLogo, JokerLogo, ShieldLogo } from "components/ui/Logos";
 
-export const PowerUpButton = props => (
-  <button disabled = {props.disabled} className={props.inUse ? "powerup button inuse" : "powerup button"} onClick={props.onClick} name="inUse">
-    { logoSvg(props.powerUp) }
+export const PowerUpButton = (props) => (
+  <button
+    disabled={props.disabled}
+    className={props.inUse ? "powerup button inuse" : "powerup button"}
+    onClick={props.onClick}
+    name="inUse"
+  >
+    {logoSvg(props.powerUp)}
   </button>
 );
-
 
 PowerUpButton.propTypes = {
   inUse: PropTypes.bool,
@@ -18,87 +22,80 @@ PowerUpButton.propTypes = {
   onClick: PropTypes.func,
 };
 
-export const PowerUp = props => (
-  <div className={"powerup icon"}>
-    { logoSvg(props.powerUp) }
-  </div>
+export const PowerUp = (props) => (
+  <div className={"powerup icon"}>{logoSvg(props.powerUp)}</div>
 );
 
 PowerUp.propTypes = {
   powerUp: PropTypes.string,
 };
 
-export const PowerUpBar = props => (
-    <div className="powerup container">
-        <PowerUpButton
-            inUse={props.inUseList.includes("JOKER")}
-            disabled={props.disabledList.includes("JOKER") || props.disableAll}
-            powerUp="JOKER"
-            onClick={() => usePowerUp("JOKER")}
-        />
-        <PowerUpButton
-            inUse={props.inUseList.includes("SHIELD")}
-            disabled={props.disabledList.includes("SHIELD") || props.disableAll}
-            powerUp="SHIELD"
-            onClick={() => usePowerUp("SHIELD")}
-        />
-        <PowerUpButton
-            inUse={props.inUseList.includes("X2")}
-            disabled={props.disabledList.includes("X2") || props.disableAll}
-            powerUp="X2"
-            onClick={() => usePowerUp("X2")}
-        />
-    </div>
-)
+export const PowerUpBar = (props) => (
+  <div className="powerup container">
+    <PowerUpButton
+      inUse={props.inUseList.includes("JOKER")}
+      disabled={props.disabledList.includes("JOKER") || props.disableAll}
+      powerUp="JOKER"
+      onClick={() => usePowerUp("JOKER")}
+    />
+    <PowerUpButton
+      inUse={props.inUseList.includes("SHIELD")}
+      disabled={props.disabledList.includes("SHIELD") || props.disableAll}
+      powerUp="SHIELD"
+      onClick={() => usePowerUp("SHIELD")}
+    />
+    <PowerUpButton
+      inUse={props.inUseList.includes("X2")}
+      disabled={props.disabledList.includes("X2") || props.disableAll}
+      powerUp="X2"
+      onClick={() => usePowerUp("X2")}
+    />
+  </div>
+);
 
 PowerUpBar.propTypes = {
-    inUseList: PropTypes.array,
-    disabledList: PropTypes.array,
-    disableAll: PropTypes.bool,
-}
+  inUseList: PropTypes.array,
+  disabledList: PropTypes.array,
+  disableAll: PropTypes.bool,
+};
 
-export const PowerUpOverlay = props => (
-    props.powerUp ?
+export const PowerUpOverlay = (props) =>
+  props.powerUp ? (
     <div className="powerup overlay">
-        <PowerUp 
-        powerUp = {props.powerUp}
-        />
-    </div> : null
-)
+      <PowerUp powerUp={props.powerUp} />
+    </div>
+  ) : null;
 
 PowerUpOverlay.propTypes = {
-    powerUp: PropTypes.string,
-}
+  powerUp: PropTypes.string,
+};
 
-export const LeaderBoardPowerUp = props => (
-    props.powerUp ?
+export const LeaderBoardPowerUp = (props) =>
+  props.powerUp ? (
     <div className="powerup leaderboard">
-        <PowerUp 
-        powerUp = {props.powerUp}
-        />
-    </div> : null
-)
+      <PowerUp powerUp={props.powerUp} />
+    </div>
+  ) : null;
 
 LeaderBoardPowerUp.propTypes = {
-    powerUp: PropTypes.array,
-}
+  powerUp: PropTypes.array,
+};
 
-
-export const LeaderBoardPowerUpCollection = props => (
-    //iterate over powerUps array
-    <div className="powerup lcontainer">
-        {props.powerUpList.map((powerUp, index) => (
-            <LeaderBoardPowerUp
-                key={index} // Add the missing "key" prop
-                powerUp = {powerUp}
-            />
-        ))}
-    </div>
-)
+export const LeaderBoardPowerUpCollection = (props) => (
+  //iterate over powerUps array
+  <div className="powerup lcontainer">
+    {props.powerUpList.map((powerUp, index) => (
+      <LeaderBoardPowerUp
+        key={index} // Add the missing "key" prop
+        powerUp={powerUp}
+      />
+    ))}
+  </div>
+);
 
 LeaderBoardPowerUpCollection.propTypes = {
-    powerUpList: PropTypes.array,
-}
+  powerUpList: PropTypes.array,
+};
 
 // // Doesn't work on cloud build
 // //local helpers
@@ -127,15 +124,15 @@ LeaderBoardPowerUpCollection.propTypes = {
 // }
 
 const logoSvg = (powerUp) => {
-    if (powerUp === "JOKER") {
-        return <JokerLogo/>;
-    }
-    if (powerUp === "SHIELD") {
-        return <ShieldLogo/>;
-    }
-    if (powerUp === "X2") {
-        return <TimesTwoLogo/>;
-    }
-}
+  if (powerUp === "JOKER") {
+    return <JokerLogo />;
+  }
+  if (powerUp === "SHIELD") {
+    return <ShieldLogo />;
+  }
+  if (powerUp === "X2") {
+    return <TimesTwoLogo />;
+  }
+};
 
 // svg's
