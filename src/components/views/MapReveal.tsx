@@ -9,6 +9,7 @@ import "styles/views/Question.scss";
 import "styles/ui/Progressbar.scss";
 import { getDomain } from "helpers/getDomain";
 import { PowerUpOverlay} from "components/ui/PowerUp";
+import {MapRevealLeaderboard} from "components/ui/MapRevealLeaderboard";
 
 
 const Question_guessing = () => {
@@ -35,10 +36,11 @@ const Question_guessing = () => {
                 const answerKeys = Object.keys(gameView.answers);
 
                 
-                const playerAnswersArray = answerKeys.map(playerId => {
+                const playerAnswersArray = answerKeys.map((playerId, index) => {
                     return {
                         playerId: playerId,
-                        answer: gameView.answers[playerId]
+                        answer: gameView.answers[playerId],
+                        colourNumber: index + 1
                     };
                 });
 
@@ -80,7 +82,7 @@ const Question_guessing = () => {
             //Switch to Guessing View as soon as BE changes
             if (roundState === "LEADERBOARD") {
             console.log("NOW LEADERBOARD");
-            navigate(`/game/${localStorage.getItem("gameId")}/round/${localStorage.getItem("currentRound")}/leaderboard`);
+            //navigate(`/game/${localStorage.getItem("gameId")}/round/${localStorage.getItem("currentRound")}/leaderboard`);
             }
 
         } catch (error) {
@@ -105,12 +107,15 @@ const Question_guessing = () => {
     if (playerAnswersArray) {
         return (
             <BaseContainer>
+                <MapRevealLeaderboard/>
                 <PowerUpOverlay powerUpInUse={powerUpInUse} />
-                <div className="map question_container">
+
+                {/* <div className="map question_container">
                     <div className="map text1">Round {localStorage.getItem("currentRound")}</div>
                     <div className="map text2">Find mountain: {localStorage.getItem("currentLocationName")}</div>
                     <div className="map text3">Select a location by clicking on the map.</div>
-                </div>
+                </div> */}
+                
                 <div className="map container">
                     <MapBoxComponent
                         currentQuestionLocation={currentQuestionLocation}
@@ -118,7 +123,7 @@ const Question_guessing = () => {
                         guessesMapReveal={playerAnswersArray}
                     />
                 </div>
-                <ProgressBar durationInSeconds={localStorage.getItem("mapRevealTime")} onFinish={handleProgressBarFinish}  />
+                {/* <ProgressBar durationInSeconds={localStorage.getItem("mapRevealTime")} onFinish={handleProgressBarFinish}  /> */}
             </BaseContainer>
         );
     }

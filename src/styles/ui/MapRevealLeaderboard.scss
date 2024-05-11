@@ -1,0 +1,21 @@
+@import "../theme";
+
+.mapRevealLeaderboard {
+  &.container {
+
+    align-self: flex-start;
+    margin-left: 5vw;
+
+    height: 60vh;
+    width: 30vw;
+    margin-top: 5vh;
+    background-color: $background;
+    border-radius: 0.75em;
+    box-shadow: $dropShadow;
+
+    z-index: 3;
+
+
+
+  }
+}

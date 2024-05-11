@@ -2,13 +2,17 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import mapboxgl from "mapbox-gl";
 
+
 const MapBoxComponent = ({ reveal, currentQuestionLocation, guessesMapReveal }) => {
 
   const mapContainer = useRef(null);
   const mapboxAccessToken = "pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w";
 
 
+
   let marker = null;
+
+  
 
   useEffect(() => {
 
@@ -50,10 +54,28 @@ const MapBoxComponent = ({ reveal, currentQuestionLocation, guessesMapReveal }) 
       guessesMapReveal.forEach(player => {
         const { answer } = player;
 
+        
+        //TODO make Component
+        const getColorForNumber = (number) => {
+          switch (number) {
+              case 1:
+                  return 'orange';
+              case 2:
+                  return 'green';
+              case 3:
+                  return 'blue';
+              case 4:
+                  return 'pink';
+              default:
+                  return 'gray'; // Fallback-Farbe, wenn keine spezifische Farbe angegeben ist
+          }
+      };
+
         if (answer) {
+          console.log(answer.colourNumber)
           const markerColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
 
-          new mapboxgl.Marker({ color: markerColor })
+          new mapboxgl.Marker({ color: getColorForNumber(player.colourNumber) })
               .setLngLat([answer.location.x, answer.location.y])
               .addTo(map);
 
@@ -70,7 +92,8 @@ const MapBoxComponent = ({ reveal, currentQuestionLocation, guessesMapReveal }) 
             <p style="margin: 0; font-size: 12px; color: #333;">[${answer.location.x.toFixed(6)}, ${answer.location.y.toFixed(6)}]</p>
           </div>
         `);
-          popup.addTo(map);
+
+          //popup.addTo(map);
         }
       });
 
@@ -119,6 +142,7 @@ MapBoxComponent.propTypes = {
   guessesMapReveal: PropTypes.arrayOf(PropTypes.shape({
     latitude: PropTypes.number.isRequired,
     longitude: PropTypes.number.isRequired,
+    colourName: PropTypes.number.isRequired,
   })),
 
 
