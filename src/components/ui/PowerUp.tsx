@@ -2,10 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import "../../styles/ui/PowerUp.scss";
 import { usePowerUp } from "helpers/api";
+import { TimesTwoLogo, JokerLogo, ShieldLogo } from "components/ui/Logos";
 
 export const PowerUpButton = props => (
   <button disabled = {props.disabled} className={props.inUse ? "powerup button inuse" : "powerup button"} onClick={props.onClick} name="inUse">
-    <img src={logoPath(props.powerUp)} alt={logoCaption(props.powerUp)} className="powerup logo"/>
+    { logoSvg(props.powerUp) }
   </button>
 );
 
@@ -19,7 +20,7 @@ PowerUpButton.propTypes = {
 
 export const PowerUp = props => (
   <div className={"powerup icon"}>
-    <img src={logoPath(props.powerUp)} alt={logoCaption(props.powerUp)} className="powerup logo"/>
+    { logoSvg(props.powerUp) }
   </div>
 );
 
@@ -83,7 +84,6 @@ LeaderBoardPowerUp.propTypes = {
 }
 
 
-//dont know how to fix the horizontal spacing
 export const LeaderBoardPowerUpCollection = props => (
     //iterate over powerUps array
     <div className="powerup lcontainer">
@@ -99,28 +99,43 @@ export const LeaderBoardPowerUpCollection = props => (
 LeaderBoardPowerUpCollection.propTypes = {
     powerUpList: PropTypes.array,
 }
-//local helpers
 
-const logoPath = (powerUp) => {
+// // Doesn't work on cloud build
+// //local helpers
+// const logoPath = (powerUp) => {
+//     if (powerUp === "JOKER") {
+//         return process.env.PUBLIC_URL + "/J.png";
+//     }
+//     if (powerUp === "SHIELD") {
+//         return process.env.PUBLIC_URL + "/shield.png";
+//     }
+//     if (powerUp === "X2") {
+//         return process.env.PUBLIC_URL + "/x2.png";
+//     }
+// }
+
+// const logoCaption = (powerUp) => {
+//     if (powerUp === "JOKER") {
+//         return "Joker";
+//     }
+//     if (powerUp === "SHIELD") {
+//         return "Shield";
+//     }
+//     if (powerUp === "X2") {
+//         return "Times Two";
+//     }
+// }
+
+const logoSvg = (powerUp) => {
     if (powerUp === "JOKER") {
-        return process.env.PUBLIC_URL + "/J.png";
+        return <JokerLogo/>;
     }
     if (powerUp === "SHIELD") {
-        return process.env.PUBLIC_URL + "/shield.png";
+        return <ShieldLogo/>;
     }
     if (powerUp === "X2") {
-        return process.env.PUBLIC_URL + "/x2.png";
+        return <TimesTwoLogo/>;
     }
 }
 
-const logoCaption = (powerUp) => {
-    if (powerUp === "JOKER") {
-        return "Joker";
-    }
-    if (powerUp === "SHIELD") {
-        return "Shield";
-    }
-    if (powerUp === "X2") {
-        return "Times Two";
-    }
-}
+// svg's

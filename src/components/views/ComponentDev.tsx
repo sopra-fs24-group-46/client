@@ -14,6 +14,7 @@ return (
     <div className="login container">
         <MultiSelection options = {["option 1", "option 2", "option 3", "option 4"]} onChange = {() => {}} label="test"/>
             <FormField
+
               label="Max number of players"
               type ="number"
               placeholder="4"
