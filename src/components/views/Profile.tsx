@@ -9,6 +9,7 @@ import "styles/views/Game.scss";
 import "styles/views/Profile.scss";
 import "styles/views/Header.scss";
 import { User } from "types";
+import { joinGame } from "helpers/LobbyAPI"; 
 
 
 const FormField = (props) => {
@@ -100,64 +101,16 @@ const Profile = () => {
 
 
   //TODO dont let user join if game is full
-  const joinGame = async () => {
+  const joinGameHandler = async () => {
     try {
       const token = localStorage.getItem("token");
-      // const gameId = gameId;
-      // const gameId = localStorage.getItem("gameId");
-
-      if (!token || !gameId) {
-        alert(
-            "No Game Pin provided!"
-        );
-      } else {
-
-        // Construct the request body
-        const requestBody = {
-          displayName: loggedInUser.username,
-
-        };
-
-        const response = await api.post(`/game/${gameId}/join`, requestBody);
-        console.log(response.data);
-
-        localStorage.setItem("gameId", gameId);
-        localStorage.setItem("playerId", response.data);
-
-
-        console.log('Joining game response:', response.data);
-        navigate(`/lobby/${gameId}`);
-      }
-      // if (!token || !gameId) {
-      //   throw new Error("Token or game id not found");
-      // }
-
-
-      // const response = await api.post(`/game/${gameId}/join`, {
-      //   displayName: loggedInUser.username, // Send username as displayName
-      //   gameId: gameId,
-      // }, {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
-      // navigate(`/lobby/${gameId}`);
-      // console.log('Joining game response:', response.data);
+      await joinGame(token, gameId, loggedInUser);
+      navigate(`/lobby/${gameId}`);
     } catch (error) {
-      console.log('Error response data:', error.response.data); // Log error response data
-
-
-      console.log('Error response data:', error.response.data);
-      // Log error response data
-
-
       console.error("Error joining game:", error);
-      alert(
-          "Game not found!"
-      );
+      alert(error.message);
     }
   };
-
 
   const editPassword = () => {
     navigate("/edit");
@@ -216,7 +169,7 @@ const Profile = () => {
           <Button width="100%" onClick={() => rules()}>
             Game Rules
           </Button>
-          <Button width="100%" onClick={() => joinGame()}>
+          <Button width="100%" onClick={() => joinGameHandler()}>
             Join Game
           </Button>
           <FormField
