@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import { getGameView } from "./GameApi";
 import "styles/views/GameViewContainer.scss";
 
-const RoundStart = ({ setRoundState }) => {
+const RoundStart = () => {
 
   // State variables for game data
   const [gameInfo, setGameInfo] = useState(null);
@@ -28,8 +28,8 @@ const RoundStart = ({ setRoundState }) => {
         setGameInfo(data);
         setCurrentRound(data.currentRound);
         setCurrentLocationName(data.currentQuestion.location_name);
-        setPowerUpInUse(data.powerUps[playerId]);
-        setUsedPowerUps(data.usedPowerUps[playerId]);
+        setPowerUpInUse(data.powerUps[playerId] ?? null);
+        setUsedPowerUps(data.usedPowerUps[playerId] ?? []);
 
       } catch (error) {
         console.error("Error fetching game view:", error);
@@ -39,7 +39,6 @@ const RoundStart = ({ setRoundState }) => {
     init();
   }, []);
 
-  //TODO Set durationsInSeconds to questionTime
   let content = <Spinner />;
   if (gameInfo) {
     content = (

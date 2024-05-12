@@ -20,7 +20,7 @@ import "styles/views/GameViewContainer.scss";
 
 // the hooks file has some of the logic that is used in this file
 
-const Guessing = ({ setRoundState: setRoundState }) => {
+const Guessing = () => {
   const gameId = localStorage.getItem("gameId");
 
   const [currentRound, setCurrentRound] = useState("");

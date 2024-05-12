@@ -13,12 +13,7 @@ import { MapRevealLeaderboard } from "components/ui/MapRevealLeaderboard";
 import "styles/views/GameViewContainer.scss";
 import { getGameView } from "./GameApi";
 
-const MapReveal = ({ setRoundState }) => {
-  const navigate = useNavigate();
-  const mapboxAccessToken =
-    "pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w";
-  let isTimerFinished = false;
-  const currentRound = localStorage.getItem("currentRound");
+const MapReveal = ({ setAnswers }) => {
   const [powerUpInUse, setPowerUpInUse] = useState(null);
   const [currentQuestionLocation, setCurrentQuestionLocation] = useState(null);
   const [playerAnswersArray, setPlayerAnswersArray] = useState([]);
@@ -43,6 +38,7 @@ const MapReveal = ({ setRoundState }) => {
         });
         setPlayerAnswersArray(playerAnswersArray);
         console.log(playerAnswersArray);
+        setAnswers(playerAnswersArray);
         //--------------------------------------------
 
       } catch (error) {
@@ -80,7 +76,7 @@ const MapReveal = ({ setRoundState }) => {
 };
 
 MapReveal.propTypes = {
-  setRoundState: PropTypes.func.isRequired,
+  setAnswers: PropTypes.func.isRequired,
 };
 
 export default MapReveal;

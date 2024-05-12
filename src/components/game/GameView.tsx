@@ -26,7 +26,10 @@ import BaseContainer from "components/ui/BaseContainer";
 import { getGameState, getSettings, getGameView, storeSettings} from "./GameApi";
 
 const GameView = () => {
-  const [gameState, setGameState] = useState("PLAYING");
+  const [answers, setAnswers] = useState([]);
+  const [currentQuestionLocation, setCurrentQuestionLocation] = useState(null);
+  const [mapReveal, setMapReveal] = useState(false);
+  const [runFlag, setRunFlag] = useState(false);
   const [roundState, setRoundState] = useState("QUESTION");
   const [roundStateProgress, setRoundStateProgress] = useState(0); //0 to 100
   const navigate = useNavigate();
@@ -38,14 +41,37 @@ const GameView = () => {
         const gameState = await getGameState();
         console.log(gameState);
         setRoundState(gameState.roundState);
-        setRoundStateProgress(100* (gameState.timeTillNextPhaseInMillis / phaseTimeInMillis(gameState.roundState)));
+        setRoundStateProgress(100 * (gameState.timeTillNextPhaseInMillis / phaseTimeInMillis(gameState.roundState)));
         
 
+        if (gameState.roundState === "MAP_REVEAL") {
+          setMapReveal(1);
+        } else{
+          setMapReveal(0);
+        }
+        if (gameState.roundState === "QUESTION") {
+          if (runFlag === false) {
+            executeOnNewRound();
+            setRunFlag(true);
+          }
+        } else {
+          setRunFlag(false);
+        }
         if (gameState.gameState !== "PLAYING") {
           navigate("../game/ended");
         }
       } catch (error) {
         
+      }
+    }
+    
+    const executeOnNewRound = async () => {
+      try {
+        const gameView = await getGameView();
+        setCurrentQuestionLocation(gameView.currentQuestion.location);
+        console.log(gameView.currentQuestion.location);
+      } catch (error) {
+        console.error("Error fetching game view:", error);
       }
     }
 
@@ -65,13 +91,13 @@ const GameView = () => {
       <NavigateButtons roundState = {roundState} setRoundState={ setRoundState} />
       
       
-      <GameViewChild state={roundState} setState={setRoundState} />
+      <GameViewChild state={roundState} setAnswers={setAnswers} />
       
       <div className="map container">
         <MapBoxComponent
-          currentQuestionLocation={null}
-          reveal={0}
-          guessesMapReveal={[]}
+          currentQuestionLocation={currentQuestionLocation ?? null}
+          reveal={mapReveal ?? 0}
+          guessesMapReveal={answers ?? []}
         />
       </div>
     </BaseContainer>
@@ -79,23 +105,23 @@ const GameView = () => {
 };
 
 //these are the different round states.
-const GameViewChild = ({state, setState}) => {
+const GameViewChild = ({state, setAnswers}) => {
   switch (state) {
     case "QUESTION":
-      return <RoundStart setRoundState={setState} />;
+      return <RoundStart  />;
     case "GUESSING":
-      return <Guessing setRoundState={setState} />;
+      return <Guessing  />;
     case "MAP_REVEAL":
-      return <MapReveal setRoundState={setState} />;
+      return <MapReveal setAnswers={setAnswers} />;
     case "LEADERBOARD":
-      return <LeaderBoard setRoundState={setState} />;
+      return <LeaderBoard  />;
     default:
       return null;
   }
 };
 GameViewChild.propTypes = {
   state: PropTypes.string.isRequired,
-  setState: PropTypes.func.isRequired,
+  setAnswers: PropTypes.func.isRequired,
 };
 
 const phaseTimeInMillis = (state: string) => {

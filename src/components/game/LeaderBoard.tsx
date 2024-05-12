@@ -15,7 +15,7 @@ interface PlayerData {
   distance: number;
 }
 
-const LeaderBoard = ({ setRoundState }) => {
+const LeaderBoard = () => {
 
   const [gameInfo, setGameInfo] = useState(null);
 
