@@ -10,6 +10,8 @@ import "styles/ui/Progressbar.scss";
 import { getDomain } from "helpers/getDomain";
 import { PowerUpOverlay } from "components/ui/PowerUp";
 import { MapRevealLeaderboard } from "components/ui/MapRevealLeaderboard";
+import "styles/views/GameViewContainer.scss";
+import { getGameView } from "./GameApi";
 
 const MapReveal = ({ setRoundState }) => {
   const navigate = useNavigate();
@@ -22,15 +24,16 @@ const MapReveal = ({ setRoundState }) => {
   const [playerAnswersArray, setPlayerAnswersArray] = useState([]);
 
   useEffect(() => {
-    async function fetchGameView() {
+    async function init() {
       try {
-        const gameId = localStorage.getItem("gameId");
-        //const response = await api.get(`/game/developer/getView/game1_6_Round1Ended`);
-        const response = await api.get(`/game/${gameId}/getView`);
-        const gameView = response.data;
+        const playerId = localStorage.getItem("playerId");
+        const gameView = await getGameView();
+        
+        setPowerUpInUse(gameView.powerUps[playerId]);
+        setCurrentQuestionLocation(gameView.currentQuestion.location);
 
+        //not really used at the moment---------------
         const answerKeys = Object.keys(gameView.answers);
-
         const playerAnswersArray = answerKeys.map((playerId, index) => {
           return {
             playerId: playerId,
@@ -38,65 +41,23 @@ const MapReveal = ({ setRoundState }) => {
             colourNumber: index + 1,
           };
         });
-
         setPlayerAnswersArray(playerAnswersArray);
-        setCurrentQuestionLocation(gameView.currentQuestion.location);
-
         console.log(playerAnswersArray);
+        //--------------------------------------------
+
       } catch (error) {
-        console.error("Error fetching game settings:", error);
+        console.error("Error fetching game view:", error);
       }
     }
 
-    fetchGameView();
-  }, []);
-
-  //Gets gameView JSON-File every 0.5 seconds
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const gameId = localStorage.getItem("gameId");
-
-        const response = await fetch(`${getDomain()}game/${gameId}/getView`);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const jsonData = await response.json();
-        const roundState = jsonData.roundState;
-
-        const playerId = localStorage.getItem("playerId");
-        setPowerUpInUse(jsonData.powerUps[playerId]);
-
-        console.log(roundState);
-
-        //Switch to Guessing View as soon as BE changes
-        if (roundState === "LEADERBOARD") {
-          console.log("NOW LEADERBOARD");
-          setRoundState(roundState);
-          //navigate(`/game/${localStorage.getItem("gameId")}/round/${localStorage.getItem("currentRound")}/leaderboard`);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    const intervalId = setInterval(fetchData, 500);
-
-    // Cleanup function to clear the interval when component unmounts or useEffect runs again
-    return () => clearInterval(intervalId);
+    init();
   }, []); // Empty dependency array to run effect only once on mount
 
-  const handleProgressBarFinish = () => {
-    if (!isTimerFinished) {
-      console.log("Map Reveal");
-      //navigate(`/game/${localStorage.getItem("gameId")}/round/${currentRound}/leaderboard`);
-    }
-  };
 
   if (playerAnswersArray) {
     return (
-      <BaseContainer>
-        <MapRevealLeaderboard />
+      <div className="game_view_container">
+        <MapRevealLeaderboard /> {/* Fetches the data inside again, could be passed as props */}
         <PowerUpOverlay powerUpInUse={powerUpInUse} />
 
         {/* <div className="map question_container">
@@ -112,8 +73,8 @@ const MapReveal = ({ setRoundState }) => {
             guessesMapReveal={playerAnswersArray}
           />
         </div>
-        {/* <ProgressBar durationInSeconds={localStorage.getItem("mapRevealTime")} onFinish={handleProgressBarFinish}  /> */}
-      </BaseContainer>
+        <ProgressBar durationInSeconds={localStorage.getItem("mapRevealTime")} onFinish={() => { }}  />
+      </div>
     );
   }
 };

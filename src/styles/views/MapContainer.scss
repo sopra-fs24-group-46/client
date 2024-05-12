@@ -2,10 +2,15 @@
 
 .map {
 
+    margin: 0;
+    padding: 0;
     &.container {
+        //make it background fullscreen 
         position: absolute;
-        height: 100%;
-        width: 100%;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
 
         z-index: 0; //Specifies that it is behind the question_container
 

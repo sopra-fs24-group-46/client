@@ -15,18 +15,14 @@ import {api} from "helpers/api";
 
 import "styles/views/Question.scss";
 import "styles/ui/Progressbar.scss";
+import { getGameView, submitAnswer } from "./GameApi";
+import "styles/views/GameViewContainer.scss";
 
 // the hooks file has some of the logic that is used in this file
 
 const Guessing = ({ setRoundState: setRoundState }) => {
-  const navigate = useNavigate();
   const gameId = localStorage.getItem("gameId");
-  const currentQuestionLocation = localStorage.getItem(
-    "currentQuestionLocation"
-  );
 
-  const [gameState, setGameState] = useState("");
-  const [roundStateL, setRoundStateL] = useState("");
   const [currentRound, setCurrentRound] = useState("");
   const [powerUpInUse, setPowerUpInUse] = useState(null);
 
@@ -35,44 +31,28 @@ const Guessing = ({ setRoundState: setRoundState }) => {
     10
   );
 
-  const fetchGameViewCallback = useCallback(
-    () => fetchGameView(gameId, setGameState, setRoundStateL, setCurrentRound),
-    [gameId]
-  );
-
   useEffect(() => {
-    const interval = setInterval(fetchGameViewCallback, 15000);
-    return () => clearInterval(interval);
-  }, [fetchGameViewCallback]);
-
-  useEffect(() => {
-    const fetchData = async () => {
+    
+    async function init() {
       try {
-        const response = await api.get(`game/${gameId}/getView`);
-        const data = response.data;
         const playerId = localStorage.getItem("playerId");
+        const data = await getGameView();
+        
+        setCurrentRound(data.currentRound);
         setPowerUpInUse(data.powerUps[playerId]);
 
-        if (data.roundState === "MAP_REVEAL") {
-          // navigate(
-          //   `/game/${gameId}/round/${localStorage.getItem("currentRound")}/mapReveal`
-          // );
-          setRoundState(data.roundState);
-        }
-        // setRoundState(newRoundState);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching game view:", error);
       }
-    };
+    }
 
-    const intervalId = setInterval(fetchData, 500);
+    init();
+    const intervalId = setInterval(() => submitAnswer(gameId), 500);
     return () => clearInterval(intervalId);
   }, []);
 
-  const handleFinish = useCallback(() => handleAnswerSubmit(gameId), [gameId]);
-
   return (
-    <BaseContainer>
+    <div className="game_view_container">
       <PowerUpOverlay powerUp={powerUpInUse} />
       <div className="map question_container">
         <div className="map text1">Round {currentRound}</div>
@@ -83,18 +63,11 @@ const Guessing = ({ setRoundState: setRoundState }) => {
           Select a location by clicking on the map.
         </div>
       </div>
-      <div className="map container">
-        <MapBoxComponent
-          currentQuestionLocation={currentQuestionLocation}
-          reveal={0}
-          guessesMapReveal={[]}
-        />
-      </div>
       <ProgressBar
         durationInSeconds={guessingTimer - 2}
-        onFinish={handleFinish}
+        onFinish={() => { }}
       />
-    </BaseContainer>
+    </div>
   );
 };
 

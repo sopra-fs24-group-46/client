@@ -15,6 +15,7 @@ import Lobby from "../../views/Lobby";
 import Rules from "../../views/Rules";
 import ComponentDev from "../../views/ComponentDev";
 import GameView from "../../game/GameView";
+import EndView from "../../views/EndView";
 
 /**
  * Main router of your application.
@@ -61,6 +62,8 @@ const AppRouter = () => {
         <Route path="/game/create" element={<SetGame />} />
 
         <Route path="/lobby/:gameId" element={<Lobby />} />
+
+        <Route path="/game/ended" element={<EndView />} />
 
         {/*this should be moved into game router*/}
 

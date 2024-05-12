@@ -11,51 +11,123 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { api } from "helpers/api";
 
 import { Button } from "components/ui/Button";
 
 import "styles/views/MapContainer.scss";
-import MapBoxComponent from "components/ui/MapBoxComponent";
+import MapBoxComponent from "components/ui/MapBoxComponentMemo";
 
 import RoundStart from "components/game/RoundStart";
 import Guessing from "components/game/Guessing";
 import MapReveal from "components/game/MapReveal";
 import LeaderBoard from "components/game/LeaderBoard";
 import BaseContainer from "components/ui/BaseContainer";
+import { getGameState, getSettings, getGameView, storeSettings} from "./GameApi";
 
 const GameView = () => {
+  const [gameState, setGameState] = useState("PLAYING");
   const [roundState, setRoundState] = useState("QUESTION");
+  const [roundStateProgress, setRoundStateProgress] = useState(0); //0 to 100
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    //this is executed every 500ms
+    const updateGameState = async () => {
+      try {
+        const gameState = await getGameState();
+        console.log(gameState);
+        setRoundState(gameState.roundState);
+        setRoundStateProgress(100* (gameState.timeTillNextPhaseInMillis / phaseTimeInMillis(gameState.roundState)));
+        
+
+        if (gameState.gameState !== "PLAYING") {
+          navigate("../game/ended");
+        }
+      } catch (error) {
+        
+      }
+    }
+
+    //this is executed once
+    const init = async () => {
+      const settings = await getSettings();
+      storeSettings(settings);
+    }
+
+    init();
+    const intervalId = setInterval(updateGameState, 500);
+
+    return () => clearInterval(intervalId);
+  }, []);
   return (
     <BaseContainer>
       <NavigateButtons roundState = {roundState} setRoundState={ setRoundState} />
-      {/* <div className="map container">
+      
+      
+      <GameViewChild state={roundState} setState={setRoundState} />
+      
+      <div className="map container">
         <MapBoxComponent
           currentQuestionLocation={null}
           reveal={0}
           guessesMapReveal={[]}
         />
-      </div> */}
-      {GameViewChild(roundState, setRoundState)}
+      </div>
     </BaseContainer>
   );
 };
 
 //these are the different round states.
-const GameViewChild = (state: string, setState: any) => {
-  if (state === "QUESTION") {
-    return <RoundStart setRoundState={setState} />;
-  }
-  if (state === "GUESSING") {
-    return <Guessing setRoundState={setState} />;
-  }
-  if (state === "MAP_REVEAL") {
-    return <MapReveal setRoundState={setState} />;
-  }
-  if (state === "LEADERBOARD") {
-    return <LeaderBoard setRoundState={setState} />;
+const GameViewChild = ({state, setState}) => {
+  switch (state) {
+    case "QUESTION":
+      return <RoundStart setRoundState={setState} />;
+    case "GUESSING":
+      return <Guessing setRoundState={setState} />;
+    case "MAP_REVEAL":
+      return <MapReveal setRoundState={setState} />;
+    case "LEADERBOARD":
+      return <LeaderBoard setRoundState={setState} />;
+    default:
+      return null;
   }
 };
+GameViewChild.propTypes = {
+  state: PropTypes.string.isRequired,
+  setState: PropTypes.func.isRequired,
+};
+
+const phaseTimeInMillis = (state: string) => {
+  if (state === "QUESTION") {
+    const questionTime = parseInt(localStorage.getItem("questionTime"), 10);
+    if (isNaN(questionTime) || questionTime < 0) {
+      return 30000;
+    }
+    return questionTime * 1000;
+  }
+  if (state === "GUESSING") {
+    const guessingTime = parseInt(localStorage.getItem("guessingTime"), 10);
+    if (isNaN(guessingTime) || guessingTime < 0) {
+      return 30000;
+    }
+    return guessingTime * 1000;
+  }
+  if (state === "MAP_REVEAL") {
+    const mapRevealTime = parseInt(localStorage.getItem("mapRevealTime"), 10);
+    if (isNaN(mapRevealTime) || mapRevealTime < 0) {
+      return 20000;
+    }
+    return mapRevealTime * 1000;
+  }
+  if (state === "LEADERBOARD") {
+    const leaderboardTime = parseInt(localStorage.getItem("leaderBoardTime"), 10);
+    if (isNaN(leaderboardTime) || leaderboardTime < 0) {
+      return 20000;
+    }
+    return leaderboardTime * 1000;
+  }
+}
 
 const NavigateButtons = ({roundState, setRoundState }) => (
   <div>
