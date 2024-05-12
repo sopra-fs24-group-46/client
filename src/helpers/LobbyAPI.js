@@ -1,7 +1,6 @@
 import { api } from "helpers/api";
 import axios from "axios";
-import { navigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { navigate, useNavigate } from "react-router-dom";
 
 
 const joinGame = async (token, gameId, loggedInUser, navigateCallback) => {

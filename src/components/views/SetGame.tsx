@@ -149,7 +149,8 @@ const SetGame = () => {
           <MultiSelection 
             label = "Locations" 
             options = {["ALPINE_MOUNTAIN", "MOUNTAIN","MAIN_HILL", "HILL", "LAKE"]} 
-            onChange = {setLocationTypes}/>
+            onChange = {setLocationTypes}
+          />
           <div className="set-game button_container">
             <Button onClick={createGame}>Create Game</Button> {/* Add the Create Game button */}
             <Button onClick={() => goBacktoProfile()}>Go Back</Button>
