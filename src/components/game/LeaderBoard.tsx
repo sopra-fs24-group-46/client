@@ -24,7 +24,14 @@ const LeaderBoard = () => {
     
     async function init() {
       try {
-        const data = await getGameView();
+        const playerId = localStorage.getItem("playerId");
+        const gameId = localStorage.getItem("gameId");
+
+        const devData = JSON.parse(localStorage.getItem("devGameView"));
+        const data = (gameId !== null && playerId !== null) ?
+          await getGameView() :
+          devData;
+
         setGameInfo(data);
 
       } catch (error) {

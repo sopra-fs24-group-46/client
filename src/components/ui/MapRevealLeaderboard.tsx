@@ -8,7 +8,7 @@ import {LeaderBoardPowerUp} from "components/ui/PowerUp";
 
 
 
-export const MapRevealLeaderboard = () => {
+export const MapRevealLeaderboard = props => {
 
     const [dataArray, setDataArray] = useState([]);
 
@@ -17,10 +17,11 @@ export const MapRevealLeaderboard = () => {
         async function getGameView() {
             try {
                 
-                const gameId = localStorage.getItem("gameId");
-                //const response = await api.get(`/game/developer/getView/game1_6_Round1Ended`);
-                const response = await api.get(`/game/${gameId}/getView`);
-                const gameView = response.data;
+                // const gameId = localStorage.getItem("gameId");
+                // //const response = await api.get(`/game/developer/getView/game1_6_Round1Ended`);
+                // const response = await api.get(`/game/${gameId}/getView`);
+                // const gameView = response.data;
+                const gameView = JSON.parse(props.dataJsonString); //this is hack for the moment. todo refactor following lines out of this component
                 console.log(gameView.players);
 
                 const keys_playerIds = Object.keys(gameView.answers);
@@ -52,7 +53,7 @@ export const MapRevealLeaderboard = () => {
 
 
 
-    }, []);
+    }, [props.dataJsonString]);
 
     console.log(dataArray);
 
@@ -102,6 +103,10 @@ export const MapRevealLeaderboard = () => {
     );
 
 };
+
+MapRevealLeaderboard.propTypes = {
+    dataJsonString: PropTypes.string,
+}
 
 
 

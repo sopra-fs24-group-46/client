@@ -23,7 +23,7 @@ import Guessing from "components/game/Guessing";
 import MapReveal from "components/game/MapReveal";
 import LeaderBoard from "components/game/LeaderBoard";
 import BaseContainer from "components/ui/BaseContainer";
-import { getGameState, getSettings, getGameView, storeSettings} from "./GameApi";
+import { getGameState, getSettings, getGameView, storeSettings, storeDevGameViewJson} from "./GameApi";
 
 const GameView = () => {
   const [answers, setAnswers] = useState([]);
@@ -58,7 +58,11 @@ const GameView = () => {
           setRunFlag(false);
         }
         if (gameState.gameState !== "PLAYING") {
-          navigate("../game/ended");
+          const gameId = localStorage.getItem("gameId");
+          const playerId = localStorage.getItem("playerId");
+          if (gameId !== null && playerId !== null) {//only navigate if in game mode
+            navigate("../game/ended");
+          }
         }
       } catch (error) {
         
@@ -88,7 +92,11 @@ const GameView = () => {
   }, []);
   return (
     <BaseContainer>
-      <NavigateButtons roundState = {roundState} setRoundState={ setRoundState} />
+      {
+      (localStorage.getItem("playerId") === null || localStorage.getItem("gameId") === null) ?
+          (<NavigateButtons roundState={roundState} setRoundState={setRoundState} goToEndView={() => navigate("../game/ended")} />)
+          : null
+      }
       
       
       <GameViewChild state={roundState} setAnswers={setAnswers} />
@@ -155,19 +163,21 @@ const phaseTimeInMillis = (state: string) => {
   }
 }
 
-const NavigateButtons = ({roundState, setRoundState }) => (
+const NavigateButtons = ({roundState, setRoundState, goToEndView }) => (
   <div>
     <Button
       style={{ position: "absolute", top: "10px", left: "10px", zIndex: 1 }}
       onClick={() => {
+        storeDevGameViewJson("QUESTION");
         setRoundState("QUESTION");
       }}
     >
-      RoundStart
+      RoundStart 
     </Button>
     <Button
       style={{ position: "absolute", top: "40px", left: "10px", zIndex: 1 }}
       onClick={() => {
+        storeDevGameViewJson("GUESSING");
         setRoundState("GUESSING");
       }}
     >
@@ -176,6 +186,7 @@ const NavigateButtons = ({roundState, setRoundState }) => (
     <Button
       style={{ position: "absolute", top: "70px", left: "10px", zIndex: 1 }}
       onClick={() => {
+        storeDevGameViewJson("MAP_REVEAL");
         setRoundState("MAP_REVEAL");
       }}
     >
@@ -184,19 +195,36 @@ const NavigateButtons = ({roundState, setRoundState }) => (
     <Button
       style={{ position: "absolute", top: "100px", left: "10px", zIndex: 1 }}
       onClick={() => {
+        storeDevGameViewJson("LEADERBOARD");
         setRoundState("LEADERBOARD");
       }}
     >
       LeaderBoard
     </Button>
+    <Button
+      style={{ position: "absolute", top: "160px", left: "10px", zIndex: 1 }}
+      onClick={() => {
+        storeDevGameViewJson("ENDED");
+        goToEndView();
+      }}
+    >
+      Navigate EndView
+    </Button>
     <div style ={{ position: "absolute", top: "130px", left: "10px", zIndex: 1, backgroundColor: "orange" }}>
       {roundState ?? "null"}
+      {
+        // read local storage devGameView pares it to json and read json.roundState
+        localStorage.getItem("devGameView")
+          ? JSON.parse(localStorage.getItem("devGameView")).roundState
+          : "no json"
+      }
     </div>
   </div>
 );
 
 NavigateButtons.propTypes = {
   setRoundState: PropTypes.func,
+  goToEndView: PropTypes.func,
   roundState: PropTypes.string,
 };
 

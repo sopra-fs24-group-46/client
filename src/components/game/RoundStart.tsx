@@ -23,7 +23,14 @@ const RoundStart = () => {
     async function init() {
       try {
         const playerId = localStorage.getItem("playerId");
-        const data = await getGameView();
+        const gameId = localStorage.getItem("gameId");
+
+        const devData = JSON.parse(localStorage.getItem("devGameView"));
+        const data = (gameId !== null && playerId !== null) ?
+          await getGameView() :
+          devData;
+          
+          
 
         setGameInfo(data);
         setCurrentRound(data.currentRound);

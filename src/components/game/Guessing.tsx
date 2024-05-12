@@ -25,6 +25,7 @@ const Guessing = () => {
 
   const [currentRound, setCurrentRound] = useState("");
   const [powerUpInUse, setPowerUpInUse] = useState(null);
+  const [currentLocationName, setCurrentLocationName] = useState(null);
 
   const guessingTimer = parseInt(
     localStorage.getItem("guessingTime") || "0",
@@ -36,9 +37,15 @@ const Guessing = () => {
     async function init() {
       try {
         const playerId = localStorage.getItem("playerId");
-        const data = await getGameView();
+        const gameId = localStorage.getItem("gameId");
+
+        const devData = JSON.parse(localStorage.getItem("devGameView"));
+        const data = (gameId !== null && playerId !== null) ?
+          await getGameView() :
+          devData;
         
         setCurrentRound(data.currentRound);
+        setCurrentLocationName(data.currentQuestion.location_name);
         setPowerUpInUse(data.powerUps[playerId]);
 
       } catch (error) {
@@ -57,7 +64,7 @@ const Guessing = () => {
       <div className="map question_container">
         <div className="map text1">Round {currentRound}</div>
         <div className="map text2">
-          Find mountain: {localStorage.getItem("currentLocationName")}
+          Find mountain: {currentLocationName}
         </div>
         <div className="map text3">
           Select a location by clicking on the map.

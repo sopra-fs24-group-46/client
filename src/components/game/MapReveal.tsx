@@ -1,13 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; // Import PropTypes
-import { useNavigate } from "react-router-dom";
-import { api } from "helpers/api";
-import BaseContainer from "components/ui/BaseContainer";
 import ProgressBar from "components/ui/ProgressBar";
 import MapBoxComponent from "../ui/MapBoxComponent";
 import "styles/views/Question.scss";
 import "styles/ui/Progressbar.scss";
-import { getDomain } from "helpers/getDomain";
 import { PowerUpOverlay } from "components/ui/PowerUp";
 import { MapRevealLeaderboard } from "components/ui/MapRevealLeaderboard";
 import "styles/views/GameViewContainer.scss";
@@ -17,29 +13,36 @@ const MapReveal = ({ setAnswers }) => {
   const [powerUpInUse, setPowerUpInUse] = useState(null);
   const [currentQuestionLocation, setCurrentQuestionLocation] = useState(null);
   const [playerAnswersArray, setPlayerAnswersArray] = useState([]);
+  const [dataJsonString, setDataJsonString] = useState(null);
 
   useEffect(() => {
     async function init() {
       try {
         const playerId = localStorage.getItem("playerId");
-        const gameView = await getGameView();
-        
-        setPowerUpInUse(gameView.powerUps[playerId]);
-        setCurrentQuestionLocation(gameView.currentQuestion.location);
+        const gameId = localStorage.getItem("gameId");
 
-        //not really used at the moment---------------
-        const answerKeys = Object.keys(gameView.answers);
+        const devData = JSON.parse(localStorage.getItem("devGameView"));
+        const data = (gameId !== null && playerId !== null) ?
+          await getGameView() :
+          devData;
+        
+        setDataJsonString(JSON.stringify(data));
+        setPowerUpInUse(data.powerUps[playerId]);
+        setCurrentQuestionLocation(data.currentQuestion.location);
+
+        const answerKeys = Object.keys(data.answers);
         const playerAnswersArray = answerKeys.map((playerId, index) => {
           return {
             playerId: playerId,
-            answer: gameView.answers[playerId],
+            answer: data.answers[playerId],
             colourNumber: index + 1,
           };
         });
         setPlayerAnswersArray(playerAnswersArray);
         console.log(playerAnswersArray);
+        
+        //setting answers in gameView. these are passed to mapBoxComponent
         setAnswers(playerAnswersArray);
-        //--------------------------------------------
 
       } catch (error) {
         console.error("Error fetching game view:", error);
@@ -53,7 +56,7 @@ const MapReveal = ({ setAnswers }) => {
   if (playerAnswersArray) {
     return (
       <div className="game_view_container">
-        <MapRevealLeaderboard /> {/* Fetches the data inside again, could be passed as props */}
+        <MapRevealLeaderboard dataJsonString={dataJsonString} /> {/* Fetches the data inside again, could be passed as props */}
         <PowerUpOverlay powerUpInUse={powerUpInUse} />
 
         {/* <div className="map question_container">
