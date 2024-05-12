@@ -65,6 +65,7 @@ const MapReveal = ({ setAnswers }) => {
                     <div className="map text3">Select a location by clicking on the map.</div>
                 </div> */}
 
+                {/* todo: map here Should be removed in near future */}
         <div className="map container">
           <MapBoxComponent
             currentQuestionLocation={currentQuestionLocation}

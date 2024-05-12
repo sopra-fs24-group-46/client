@@ -49,7 +49,7 @@ const RoundStart = () => {
   let content = <Spinner />;
   if (gameInfo) {
     content = (
-      <div>
+      <div  style={{zIndex: 1}}>
         <PowerUpOverlay powerUp={powerUpInUse} />
         <h1 className="header title1">
           Round {currentRound}
