@@ -33,7 +33,7 @@
                 "next": "export"
             }
         ],
-        "react/jsx-closing-bracket-location": ["error", "line-aligned"]
+        "react/jsx-closing-bracket-location": ["warn", "line-aligned"]
     },
     "ignorePatterns": ["node_modules", "build", "dist", "public"]
 }
