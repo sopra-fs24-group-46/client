@@ -166,7 +166,7 @@ const phaseTimeInMillis = (state: string) => {
 const NavigateButtons = ({roundState, setRoundState, goToEndView }) => (
   <div>
     <Button
-      style={{ position: "absolute", top: "10px", left: "10px", zIndex: 1 }}
+      style={{ position: "absolute", top: "10px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("QUESTION");
         setRoundState("QUESTION");
@@ -175,7 +175,7 @@ const NavigateButtons = ({roundState, setRoundState, goToEndView }) => (
       RoundStart 
     </Button>
     <Button
-      style={{ position: "absolute", top: "40px", left: "10px", zIndex: 1 }}
+      style={{ position: "absolute", top: "40px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("GUESSING");
         setRoundState("GUESSING");
@@ -184,7 +184,7 @@ const NavigateButtons = ({roundState, setRoundState, goToEndView }) => (
       Guessing
     </Button>
     <Button
-      style={{ position: "absolute", top: "70px", left: "10px", zIndex: 1 }}
+      style={{ position: "absolute", top: "70px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("MAP_REVEAL");
         setRoundState("MAP_REVEAL");
@@ -193,7 +193,7 @@ const NavigateButtons = ({roundState, setRoundState, goToEndView }) => (
       MapReveal
     </Button>
     <Button
-      style={{ position: "absolute", top: "100px", left: "10px", zIndex: 1 }}
+      style={{ position: "absolute", top: "100px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("LEADERBOARD");
         setRoundState("LEADERBOARD");
@@ -202,7 +202,7 @@ const NavigateButtons = ({roundState, setRoundState, goToEndView }) => (
       LeaderBoard
     </Button>
     <Button
-      style={{ position: "absolute", top: "160px", left: "10px", zIndex: 1 }}
+      style={{ position: "absolute", top: "160px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("ENDED");
         goToEndView();
@@ -210,7 +210,7 @@ const NavigateButtons = ({roundState, setRoundState, goToEndView }) => (
     >
       Navigate EndView
     </Button>
-    <div style ={{ position: "absolute", top: "130px", left: "10px", zIndex: 1, backgroundColor: "orange" }}>
+    <div style ={{ position: "absolute", top: "130px", left: "10px", zIndex: 9, backgroundColor: "orange" }}>
       {roundState ?? "null"}
       {
         // read local storage devGameView pares it to json and read json.roundState
