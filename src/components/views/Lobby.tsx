@@ -96,17 +96,27 @@ const Lobby = () => {
   };
 
   const handleLeaveLobby = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      localStorage.removeItem("gameId");
-      localStorage.removeItem("playerId");
+    // Show a confirmation dialog
+    const confirmed = window.confirm("Are you sure you want to leave the lobby?");
 
-      navigate("/profile");
+    // Check if the user confirmed
+    if (confirmed) {
+      // User confirmed, proceed with leaving the lobby
+      const token = localStorage.getItem("token");
+      if (token) {
+        localStorage.removeItem("gameId");
+        localStorage.removeItem("playerId");
+
+        navigate("/profile");
+      } else {
+        localStorage.removeItem("gameId");
+        localStorage.removeItem("playerId");
+
+        navigate("/home");
+      }
     } else {
-      localStorage.removeItem("gameId");
-      localStorage.removeItem("playerId");
-
-      navigate("/home");
+      // User canceled, do nothing or provide feedback
+      console.log("User canceled leaving the lobby.");
     }
   };
 
