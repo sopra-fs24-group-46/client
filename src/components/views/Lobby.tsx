@@ -101,7 +101,7 @@ const Lobby = () => {
 
     // Check if the user confirmed
     if (confirmed) {
-      // User confirmed, proceed with leaving the lobby
+      // User confirmed, leaving the lobby
       const token = localStorage.getItem("token");
       if (token) {
         localStorage.removeItem("gameId");
