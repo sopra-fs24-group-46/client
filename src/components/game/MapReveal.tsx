@@ -61,13 +61,13 @@ const MapReveal = ({ setAnswers }) => {
                 </div> */}
 
                 {/* todo: map here Should be removed in near future */}
-        <div className="map container">
+        {/* <div className="map container">
           <MapBoxComponent
             currentQuestionLocation={currentQuestionLocation}
             reveal={1}
             guessesMapReveal={playerAnswersArray}
           />
-        </div>
+        </div> */}
         {/* <ProgressBar durationInSeconds={localStorage.getItem("mapRevealTime")} onFinish={() => { }}  /> */}
       </div>
     );
