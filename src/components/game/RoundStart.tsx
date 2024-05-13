@@ -22,15 +22,9 @@ const RoundStart = () => {
   useEffect(() => {
     async function init() {
       try {
-        const playerId = localStorage.getItem("playerId");
-        const gameId = localStorage.getItem("gameId");
 
-        const devData = JSON.parse(localStorage.getItem("devGameView"));
-        const data = (gameId !== null && playerId !== null) ?
-          await getGameView() :
-          devData;
-          
-          
+        const playerId = localStorage.getItem("playerId");
+        const data = await getGameView();
 
         setGameInfo(data);
         setCurrentRound(data.currentRound);
@@ -64,10 +58,10 @@ const RoundStart = () => {
             disabledList={usedPowerUps}
             disableAll={powerUpInUse !== null}
           />
-          <ProgressBar
+          {/* <ProgressBar
             durationInSeconds={4}
             onFinish={() => { }}
-          />
+          /> */}
         </div>
       </div>
     );
@@ -76,8 +70,5 @@ const RoundStart = () => {
   return <div className="game_view_container">{content}</div>;
 };
 
-RoundStart.propTypes = {
-  setRoundState: PropTypes.func.isRequired,
-};
 
 export default RoundStart;

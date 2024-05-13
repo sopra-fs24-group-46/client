@@ -21,13 +21,7 @@ const EndView = () => {
     
     async function init() {
       try {
-        const playerId = localStorage.getItem("playerId");
-        const gameId = localStorage.getItem("gameId");
-
-        const devData = JSON.parse(localStorage.getItem("devGameView"));
-        const data = (gameId !== null && playerId !== null) ?
-          await getGameView() :
-          devData;
+        const data = await getGameView();
 
         setGameInfo(data);
 

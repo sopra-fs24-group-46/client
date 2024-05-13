@@ -19,12 +19,7 @@ const MapReveal = ({ setAnswers }) => {
     async function init() {
       try {
         const playerId = localStorage.getItem("playerId");
-        const gameId = localStorage.getItem("gameId");
-
-        const devData = JSON.parse(localStorage.getItem("devGameView"));
-        const data = (gameId !== null && playerId !== null) ?
-          await getGameView() :
-          devData;
+        const data = await getGameView();
         
         setDataJsonString(JSON.stringify(data));
         setPowerUpInUse(data.powerUps[playerId]);
@@ -73,7 +68,7 @@ const MapReveal = ({ setAnswers }) => {
             guessesMapReveal={playerAnswersArray}
           />
         </div>
-        <ProgressBar durationInSeconds={localStorage.getItem("mapRevealTime")} onFinish={() => { }}  />
+        {/* <ProgressBar durationInSeconds={localStorage.getItem("mapRevealTime")} onFinish={() => { }}  /> */}
       </div>
     );
   }

@@ -37,12 +37,7 @@ const Guessing = () => {
     async function init() {
       try {
         const playerId = localStorage.getItem("playerId");
-        const gameId = localStorage.getItem("gameId");
-
-        const devData = JSON.parse(localStorage.getItem("devGameView"));
-        const data = (gameId !== null && playerId !== null) ?
-          await getGameView() :
-          devData;
+        const data = await getGameView();
         
         setCurrentRound(data.currentRound);
         setCurrentLocationName(data.currentQuestion.location_name);
@@ -70,15 +65,12 @@ const Guessing = () => {
           Select a location by clicking on the map.
         </div>
       </div>
-      <ProgressBar
+      {/* <ProgressBar
         durationInSeconds={guessingTimer - 2}
         onFinish={() => { }}
-      />
+      /> */}
     </div>
   );
 };
 
-Guessing.propTypes = {
-  setRoundState: PropTypes.func.isRequired,
-};
 export default Guessing;

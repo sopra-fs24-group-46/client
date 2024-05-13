@@ -24,13 +24,7 @@ const LeaderBoard = () => {
     
     async function init() {
       try {
-        const playerId = localStorage.getItem("playerId");
-        const gameId = localStorage.getItem("gameId");
-
-        const devData = JSON.parse(localStorage.getItem("devGameView"));
-        const data = (gameId !== null && playerId !== null) ?
-          await getGameView() :
-          devData;
+        const data = await getGameView();
 
         setGameInfo(data);
 
@@ -87,17 +81,13 @@ const LeaderBoard = () => {
             </div>
           </div>
 
-        <ProgressBar
+        {/* <ProgressBar
           durationInSeconds={localStorage.getItem("mapRevealTime")}
           onFinish={() => {}}
-        />
+        /> */}
       </div>
     );
   }
-};
-
-LeaderBoard.propTypes = {
-  setRoundState: PropTypes.func.isRequired,
 };
 
 export default LeaderBoard;
