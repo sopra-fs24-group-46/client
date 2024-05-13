@@ -64,7 +64,7 @@ const GameView = () => {
     
     //this is executed once
     const init = async () => {
-      const settings = (gameId ?? false) ? await getSettings() : {questionTime: 1, guessingTime: 2, mapRevealTime: 4, leaderBoardTime: 4};
+      const settings = (gameId ?? false) ? await getSettings() : null;
       storeSettings(settings);
       updateGameState(); //load immediately and then every 500ms
     }

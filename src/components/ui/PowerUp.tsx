@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "../../styles/ui/PowerUp.scss";
-import { usePowerUp } from "helpers/api";
 import { TimesTwoLogo, JokerLogo, ShieldLogo } from "components/ui/Logos";
 
 export const PowerUpButton = (props) => (
@@ -30,33 +29,36 @@ PowerUp.propTypes = {
   powerUp: PropTypes.string,
 };
 
+
+
 export const PowerUpBar = (props) => (
   <div className="powerup container">
     <PowerUpButton
-      inUse={props.inUseList.includes("JOKER")}
+      inUse={props.powerUpInUse === ("JOKER")}
       disabled={props.disabledList.includes("JOKER") || props.disableAll}
       powerUp="JOKER"
-      onClick={() => usePowerUp("JOKER")}
+      onClick={() => props.setPowerUpInUse("JOKER")}
     />
     <PowerUpButton
-      inUse={props.inUseList.includes("SHIELD")}
+      inUse={props.powerUpInUse === ("SHIELD")}
       disabled={props.disabledList.includes("SHIELD") || props.disableAll}
       powerUp="SHIELD"
-      onClick={() => usePowerUp("SHIELD")}
+      onClick={() => props.setPowerUpInUse("SHIELD")}
     />
     <PowerUpButton
-      inUse={props.inUseList.includes("X2")}
+      inUse={props.powerUpInUse === ("X2")}
       disabled={props.disabledList.includes("X2") || props.disableAll}
       powerUp="X2"
-      onClick={() => usePowerUp("X2")}
+      onClick={() => props.setPowerUpInUse("X2")}
     />
   </div>
 );
 
 PowerUpBar.propTypes = {
-  inUseList: PropTypes.array,
+  powerUpInUse: PropTypes.array,
   disabledList: PropTypes.array,
   disableAll: PropTypes.bool,
+  setPowerUpInUse: PropTypes.func,
 };
 
 export const PowerUpOverlay = (props) =>

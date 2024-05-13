@@ -8,6 +8,7 @@ import { PowerUpBar, PowerUpOverlay } from "components/ui/PowerUp";
 import PropTypes from "prop-types";
 import { getGameView } from "./GameApi";
 import "styles/views/GameViewContainer.scss";
+import { usePowerUp } from "helpers/api";
 
 const RoundStart = () => {
 
@@ -29,7 +30,6 @@ const RoundStart = () => {
         setGameInfo(data);
         setCurrentRound(data.currentRound);
         setCurrentLocationName(data.currentQuestion.location_name);
-        setPowerUpInUse(data.powerUps[playerId] ?? null);
         setUsedPowerUps(data.usedPowerUps[playerId] ?? []);
 
       } catch (error) {
@@ -39,6 +39,12 @@ const RoundStart = () => {
 
     init();
   }, []);
+  
+  useEffect(() => {
+    if (powerUpInUse) {
+      usePowerUp(powerUpInUse);
+    }
+  }, [powerUpInUse]);
 
   let content = <Spinner />;
   if (gameInfo) {
@@ -54,9 +60,10 @@ const RoundStart = () => {
             <div>{currentLocationName}</div>
           </div>
           <PowerUpBar
-            inUseList={[powerUpInUse]}
+            powerUpInUse={powerUpInUse}
             disabledList={usedPowerUps}
             disableAll={powerUpInUse !== null}
+            setPowerUpInUse={setPowerUpInUse}
           />
           {/* <ProgressBar
             durationInSeconds={4}
