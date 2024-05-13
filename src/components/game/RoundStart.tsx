@@ -9,12 +9,13 @@ import PropTypes from "prop-types";
 import { getGameView } from "./GameApi";
 import "styles/views/GameViewContainer.scss";
 import { usePowerUp } from "helpers/api";
+import "styles/views/FancyBackground.scss";
 
 const RoundStart = () => {
 
   // State variables for game data
   const [gameInfo, setGameInfo] = useState(null);
-  const [currentRound, setCurrentRound] = useState(null);
+  const [currentRound, setCurrentRound] = useState(0);
   const [currentLocationName, setCurrentLocationName] = useState(null);
   const [powerUpInUse, setPowerUpInUse] = useState(null);
   const [usedPowerUps, setUsedPowerUps] = useState([]);
@@ -49,7 +50,12 @@ const RoundStart = () => {
   let content = <Spinner />;
   if (gameInfo) {
     content = (
-      <div  style={{zIndex: 1}}>
+            <div>{currentLocationName}</div>
+    );
+  }
+
+  return <div className="game_view_container" >
+      <div  style={{zIndex: 2}}>
         <PowerUpOverlay powerUp={powerUpInUse} />
         <h1 className="header title1">
           Round {currentRound}
@@ -57,7 +63,7 @@ const RoundStart = () => {
         <div className="round container">
           <div className="round text_container">
             <div>Try to find this Mountain:</div>
-            <div>{currentLocationName}</div>
+            {content}
           </div>
           <PowerUpBar
             powerUpInUse={powerUpInUse}
@@ -71,10 +77,21 @@ const RoundStart = () => {
           /> */}
         </div>
       </div>
-    );
-  }
-
-  return <div className="game_view_container">{content}</div>;
+        <div className="area" >
+          <ul className="circles">
+                  <li></li>
+                  <li><div className="centering">{':O'}</div></li>
+                  <li><div className="centering">{':)'}</div></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+          </ul>
+        </div >
+  </div>;
 };
 
 
