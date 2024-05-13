@@ -42,6 +42,7 @@ const EndView = () => {
 
 
 
+
   const handleProfileRedirect = () => {
     // Remove specified variables from localStorage
     localStorage.removeItem("currentRound");
@@ -71,9 +72,7 @@ const EndView = () => {
                 />
 
 
-                <button className="primary-button" onClick={handleProfileRedirect}>
-                    Go to Profile
-                </button>
+
 
             </div>
         );
