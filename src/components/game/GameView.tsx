@@ -32,13 +32,10 @@ const GameView = () => {
   const [currentQuestionLocation, setCurrentQuestionLocation] = useState(null);
   const [mapReveal, setMapReveal] = useState(0);
 
-  //internallogic
-  const [runFlag, setRunFlag] = useState(false);
-  const [everySecondFlag, setEverySecondFlag] = useState(true);
-  
   //gamestate
   const [roundState, setRoundState] = useState("QUESTION");
-  const [roundStateProgress, setRoundStateProgress] = useState(0); //0 to 100
+  const [remainingTimeInMillis, setRemainingTimeInMillis] = useState(2);
+  const [restartTimer, setRestartTimer] = useState(false);
   
   const gameId = localStorage.getItem("gameId");
   const navigate = useNavigate();
@@ -48,13 +45,12 @@ const GameView = () => {
     const updateGameState = async () => {
       try {
         const gameState = (gameId ?? false) ? await getGameState(): null;
-        console.log(gameState);
         //check if gameState is defined
         if (gameState ?? false) {
+          console.log(gameState);
           setRoundState(gameState.roundState);
-          setRoundStateProgress(100 * (gameState.timeTillNextPhaseInMillis / phaseTimeInMillis(gameState.roundState)));
+          setRemainingTimeInMillis(gameState.timeTillNextPhaseInMillis);
         }
-
 
         //check if gamesState is defined before checking gamesState.gameState
         if ((gameState ?? false) && gameState.gameState !== "PLAYING") {
@@ -68,8 +64,9 @@ const GameView = () => {
     
     //this is executed once
     const init = async () => {
-      const settings = (gameId ?? false) ? await getSettings() : {questionTime: 1, guessingTime: 2, mapRevealTime: 3, leaderBoardTime: 4};
+      const settings = (gameId ?? false) ? await getSettings() : {questionTime: 1, guessingTime: 2, mapRevealTime: 4, leaderBoardTime: 4};
       storeSettings(settings);
+      updateGameState(); //load immediately and then every 500ms
     }
 
     init();
@@ -90,6 +87,8 @@ const GameView = () => {
 
   useEffect (() => {
     //on new round
+    console.log("roundState: " + roundState);
+    setRestartTimer(true);
     if (roundState === "QUESTION") {
       executeOnNewRound();
     }
@@ -102,6 +101,10 @@ const GameView = () => {
     }
 
   }, [roundState]);
+  
+  useEffect (() => {
+    console.log(answers);
+  }, [answers]);
 
 
   return (
@@ -112,7 +115,7 @@ const GameView = () => {
             roundState={roundState}
             setRoundState={setRoundState}
             goToEndView={() => navigate("../game/ended")}
-            setTimerProgress={setRoundStateProgress}
+            setTimerProgress={setRemainingTimeInMillis}
           />)
           : null
       }
@@ -130,9 +133,11 @@ const GameView = () => {
       </div>
       
       <ProgressBar
-        progress={roundStateProgress}
-        durationInSeconds={phaseTimeInMillis(roundState) / 1000}
+        remainingTimeInSeconds={Math.ceil((remainingTimeInMillis / 1000))}
+        durationInSeconds={phaseTimeInSeconds(roundState)}
         onFinish={() => { }}
+        restartTimer={restartTimer}
+        setRestartTimer={setRestartTimer}
       />
     </BaseContainer>
   );
@@ -158,36 +163,18 @@ GameViewChild.propTypes = {
   setAnswers: PropTypes.func.isRequired,
 };
 
-const phaseTimeInMillis = (state: string) => {
-  if (state === "QUESTION") {
-    const questionTime = parseInt(localStorage.getItem("questionTime"), 10);
-    if (isNaN(questionTime) || questionTime < 0) {
-      return 30000;
-    }
-    return questionTime * 1000;
-  }
-  if (state === "GUESSING") {
-    const guessingTime = parseInt(localStorage.getItem("guessingTime"), 10);
-    if (isNaN(guessingTime) || guessingTime < 0) {
-      return 30000;
-    }
-    return guessingTime * 1000;
-  }
-  if (state === "MAP_REVEAL") {
-    const mapRevealTime = parseInt(localStorage.getItem("mapRevealTime"), 10);
-    if (isNaN(mapRevealTime) || mapRevealTime < 0) {
-      return 20000;
-    }
-    return mapRevealTime * 1000;
-  }
-  if (state === "LEADERBOARD") {
-    const leaderboardTime = parseInt(localStorage.getItem("leaderBoardTime"), 10);
-    if (isNaN(leaderboardTime) || leaderboardTime < 0) {
-      return 20000;
-    }
-    return leaderboardTime * 1000;
+const phaseTimeInSeconds = (phase) => {
+  switch (phase) {
+    case "QUESTION":
+      return localStorage.getItem("questionTime") ?? 1;
+    case "GUESSING":
+      return localStorage.getItem("guessingTime") ?? 2;
+    case "MAP_REVEAL":
+      return localStorage.getItem("mapRevealTime") ?? 4;
+    case "LEADERBOARD":
+      return localStorage.getItem("leaderBoardTime") ?? 4;
+    default:
+      return 0;
   }
 }
-
-
 export default GameView;

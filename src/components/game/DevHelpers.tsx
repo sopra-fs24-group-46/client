@@ -47,7 +47,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       onClick={() => {
         storeDevGameViewJson("QUESTION");
         setRoundState("QUESTION");
-        setTimerProgress(100);
+        setTimerProgress(1000);
       }}
     >
       RoundStart 
@@ -57,7 +57,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       onClick={() => {
         storeDevGameViewJson("GUESSING");
         setRoundState("GUESSING");
-        setTimerProgress(50);
+        setTimerProgress(1000);
       }}
     >
       Guessing
@@ -67,7 +67,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       onClick={() => {
         storeDevGameViewJson("MAP_REVEAL");
         setRoundState("MAP_REVEAL");
-        setTimerProgress(100);
+        setTimerProgress(4000);
       }}
     >
       MapReveal
@@ -77,7 +77,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       onClick={() => {
         storeDevGameViewJson("LEADERBOARD");
         setRoundState("LEADERBOARD");
-        setTimerProgress(100);
+        setTimerProgress(4000);
       }}
     >
       LeaderBoard
