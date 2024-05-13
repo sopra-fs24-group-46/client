@@ -54,7 +54,7 @@ const GameView = () => {
 
         //check if gamesState is defined before checking gamesState.gameState
         if ((gameState ?? false) && gameState.gameState !== "PLAYING") {
-          navigate("../game/ended");
+          navigate("/game/ended");
         }
         
       } catch (error) {
@@ -114,7 +114,7 @@ const GameView = () => {
           (<NavigateButtons
             roundState={roundState}
             setRoundState={setRoundState}
-            goToEndView={() => navigate("../game/ended")}
+            goToEndView={() => navigate("/game/ended")}
             setTimerProgress={setRemainingTimeInMillis}
           />)
           : null
