@@ -121,6 +121,7 @@ const SetGame = () => {
       <div className="set-game container">
           <h2>Game Settings</h2>
           <div className="set-game inputs">
+            
             <FormField
               label="Max number of players"
               type ="number"
