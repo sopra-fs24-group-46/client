@@ -8,10 +8,10 @@ interface ProgressBarProps {
 }
 
 //Function will present a Progress bar with included timer which runs down and activates Funktion passed in "onFinish"
-const ProgressBar: React.FC<ProgressBarProps> = ({ durationInSeconds, onFinish, ...props }) => {
-  const [progress, setProgress] = useState(props.progress ?? 100);
+const ProgressBar: React.FC<ProgressBarProps> = ({ durationInSeconds, onFinish, restartTimer, setRestartTimer, ...props }) => {
+  const [progress, setProgress] = useState((props.remainingTimeInSeconds ?? false) ? props.remainingTimeInSeconds/durationInSeconds*100 : 100);
   const [shouldAnimate, setShouldAnimate] = useState(false);
-  const [remainingTimeInSeconds, setRemainingTimeInSeconds] = useState((props.progress ?? false) ? durationInSeconds * (props.progress / 100) : durationInSeconds);
+  const [remainingTimeInSeconds, setRemainingTimeInSeconds] = useState(props.remainingTimeInSeconds ?? durationInSeconds);
   
   const startTimer = () => {
     const onFinishTimeout = setTimeout(() => {
@@ -21,11 +21,11 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ durationInSeconds, onFinish, 
       clearTimeout(onFinishTimeout);
     }
   }
-  
-  const onProgressChange = (progress: number) => {
+
+  const setProgressBarPosition = (remainingTime: number) => {
     setShouldAnimate(false);
-    setProgress(progress);
-    setRemainingTimeInSeconds(durationInSeconds * (progress / 100));
+    setProgress(remainingTime/durationInSeconds*100);
+    setRemainingTimeInSeconds(remainingTime);
     startAnimation();
   }
   
@@ -33,7 +33,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ durationInSeconds, onFinish, 
     const startAnimationTimeout = setTimeout(() => {
       setShouldAnimate(true);
       setProgress(0);
-    }, 50);
+    }, 100);
     return () => {
       clearTimeout(startAnimationTimeout);
     }
@@ -45,11 +45,21 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ durationInSeconds, onFinish, 
   }, []);
 
   useEffect(() => {
-    if ((props.progress ?? false)) {
-      onProgressChange(props.progress);
-      console.log("prgchanged: ",props.progress);
+    if ((props.remainingTimeInSeconds ?? false)) {
+      setProgressBarPosition(props.remainingTimeInSeconds);
+      console.log("prgchanged: ",props.remainingTimeInSeconds);
+    } else {
+      setProgressBarPosition(durationInSeconds);
+      console.log("durationInSeconds changed");
     }
-  }, [durationInSeconds]);
+  }, [durationInSeconds, props.remainingTimeInSeconds]);
+
+  useEffect(() => {
+    if (restartTimer) {
+      setProgressBarPosition(durationInSeconds);
+      setRestartTimer(false);
+    }
+  }, [restartTimer]);
   
   const smoothSteps = (amount: number, lag: boolean) => {
     const points = [0];
@@ -96,6 +106,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ durationInSeconds, onFinish, 
 ProgressBar.propTypes = {
   durationInSeconds: PropTypes.number.isRequired,
   onFinish: PropTypes.func.isRequired,
-  progress: PropTypes.number,
+  remainingTimeInSeconds: PropTypes.number,
+  restartTimer: PropTypes.bool,
+  setRestartTimer: PropTypes.func,
 }
 export default ProgressBar;
