@@ -155,7 +155,7 @@ const GameViewChild = ({state, setAnswers}) => {
     case "LEADERBOARD":
       return <LeaderBoard  />;
     default:
-      return null;
+      return <RoundStart  />;
   }
 };
 GameViewChild.propTypes = {

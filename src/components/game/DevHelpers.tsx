@@ -56,7 +56,7 @@ export const storeDevGameViewJson = async (gameState: string) => {
 export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTimerProgress }) => (
   <div>
     <Button
-      style={{ position: "absolute", top: "10px", left: "10px", zIndex: 9 }}
+      style={{backgroundColor: "lightblue", position: "absolute", top: "10px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("QUESTION");
         setRoundState("QUESTION");
@@ -66,7 +66,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       RoundStart 
     </Button>
     <Button
-      style={{ position: "absolute", top: "40px", left: "10px", zIndex: 9 }}
+      style={{ backgroundColor: "lightblue", position: "absolute", top: "40px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("GUESSING");
         setRoundState("GUESSING");
@@ -76,7 +76,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       Guessing
     </Button>
     <Button
-      style={{ position: "absolute", top: "70px", left: "10px", zIndex: 9 }}
+      style={{backgroundColor: "lightblue", position: "absolute", top: "70px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("MAP_REVEAL");
         setRoundState("MAP_REVEAL");
@@ -86,7 +86,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       MapReveal
     </Button>
     <Button
-      style={{ position: "absolute", top: "100px", left: "10px", zIndex: 9 }}
+      style={{backgroundColor: "lightblue", position: "absolute", top: "100px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("LEADERBOARD");
         setRoundState("LEADERBOARD");
@@ -96,7 +96,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       LeaderBoard
     </Button>
     <Button
-      style={{ position: "absolute", top: "160px", left: "10px", zIndex: 9 }}
+      style={{backgroundColor: "lightblue", position: "absolute", top: "160px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("ENDED");
         goToEndView();
