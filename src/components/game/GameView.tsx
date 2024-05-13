@@ -11,9 +11,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { api } from "helpers/api";
 
-import { Button } from "components/ui/Button";
 
 import "styles/views/MapContainer.scss";
 import MapBoxComponent from "components/ui/MapBoxComponentMemo";
@@ -23,78 +21,98 @@ import Guessing from "components/game/Guessing";
 import MapReveal from "components/game/MapReveal";
 import LeaderBoard from "components/game/LeaderBoard";
 import BaseContainer from "components/ui/BaseContainer";
-import { getGameState, getSettings, getGameView, storeSettings, storeDevGameViewJson} from "./GameApi";
+import { getGameState, getSettings, getGameView, storeSettings} from "./GameApi";
+import {NavigateButtons} from "components/game/DevHelpers"
+import ProgressBar from "components/ui/ProgressBar";
+
 
 const GameView = () => {
+  //mapbox
   const [answers, setAnswers] = useState([]);
   const [currentQuestionLocation, setCurrentQuestionLocation] = useState(null);
-  const [mapReveal, setMapReveal] = useState(false);
+  const [mapReveal, setMapReveal] = useState(0);
+
+  //internallogic
   const [runFlag, setRunFlag] = useState(false);
+  const [everySecondFlag, setEverySecondFlag] = useState(true);
+  
+  //gamestate
   const [roundState, setRoundState] = useState("QUESTION");
   const [roundStateProgress, setRoundStateProgress] = useState(0); //0 to 100
+  
+  const gameId = localStorage.getItem("gameId");
   const navigate = useNavigate();
 
   useEffect(() => {
     //this is executed every 500ms
     const updateGameState = async () => {
       try {
-        const gameState = await getGameState();
+        const gameState = (gameId ?? false) ? await getGameState(): null;
         console.log(gameState);
-        setRoundState(gameState.roundState);
-        setRoundStateProgress(100 * (gameState.timeTillNextPhaseInMillis / phaseTimeInMillis(gameState.roundState)));
-        
+        //check if gameState is defined
+        if (gameState ?? false) {
+          setRoundState(gameState.roundState);
+          setRoundStateProgress(100 * (gameState.timeTillNextPhaseInMillis / phaseTimeInMillis(gameState.roundState)));
+        }
 
-        if (gameState.roundState === "MAP_REVEAL") {
-          setMapReveal(1);
-        } else{
-          setMapReveal(0);
+
+        //check if gamesState is defined before checking gamesState.gameState
+        if ((gameState ?? false) && gameState.gameState !== "PLAYING") {
+          navigate("../game/ended");
         }
-        if (gameState.roundState === "QUESTION") {
-          if (runFlag === false) {
-            executeOnNewRound();
-            setRunFlag(true);
-          }
-        } else {
-          setRunFlag(false);
-        }
-        if (gameState.gameState !== "PLAYING") {
-          const gameId = localStorage.getItem("gameId");
-          const playerId = localStorage.getItem("playerId");
-          if (gameId !== null && playerId !== null) {//only navigate if in game mode
-            navigate("../game/ended");
-          }
-        }
-      } catch (error) {
         
+      } catch (error) {
+        console.log("Error fetching game state:", error);
       }
     }
     
-    const executeOnNewRound = async () => {
-      try {
-        const gameView = await getGameView();
-        setCurrentQuestionLocation(gameView.currentQuestion.location);
-        console.log(gameView.currentQuestion.location);
-      } catch (error) {
-        console.error("Error fetching game view:", error);
-      }
-    }
-
     //this is executed once
     const init = async () => {
-      const settings = await getSettings();
+      const settings = (gameId ?? false) ? await getSettings() : {questionTime: 1, guessingTime: 2, mapRevealTime: 3, leaderBoardTime: 4};
       storeSettings(settings);
     }
 
     init();
-    const intervalId = setInterval(updateGameState, 500);
+    const intervalId = setInterval(updateGameState , 500);
 
-    return () => clearInterval(intervalId);
+    return () => { clearInterval(intervalId); }
   }, []);
+
+  const executeOnNewRound = async () => {
+    try {
+      const gameView = await getGameView();
+      setCurrentQuestionLocation(gameView.currentQuestion.location);
+      console.log(gameView.currentQuestion.location);
+    } catch (error) {
+      console.error("Error fetching game view:", error);
+    }
+  }
+
+  useEffect (() => {
+    //on new round
+    if (roundState === "QUESTION") {
+      executeOnNewRound();
+    }
+
+    //updating map
+    if (roundState === "MAP_REVEAL") {
+      setMapReveal(1);
+    } else{
+      setMapReveal(0);
+    }
+
+  }, [roundState]);
+
   return (
     <BaseContainer>
       {
       (localStorage.getItem("playerId") === null || localStorage.getItem("gameId") === null) ?
-          (<NavigateButtons roundState={roundState} setRoundState={setRoundState} goToEndView={() => navigate("../game/ended")} />)
+          (<NavigateButtons
+            roundState={roundState}
+            setRoundState={setRoundState}
+            goToEndView={() => navigate("../game/ended")}
+            setTimerProgress={setRoundStateProgress}
+          />)
           : null
       }
       
@@ -108,6 +126,12 @@ const GameView = () => {
           guessesMapReveal={answers ?? []}
         />
       </div>
+      
+      <ProgressBar
+        progress={roundStateProgress}
+        durationInSeconds={phaseTimeInMillis(roundState) / 1000}
+        onFinish={() => { }}
+      />
     </BaseContainer>
   );
 };
@@ -163,69 +187,5 @@ const phaseTimeInMillis = (state: string) => {
   }
 }
 
-const NavigateButtons = ({roundState, setRoundState, goToEndView }) => (
-  <div>
-    <Button
-      style={{ position: "absolute", top: "10px", left: "10px", zIndex: 9 }}
-      onClick={() => {
-        storeDevGameViewJson("QUESTION");
-        setRoundState("QUESTION");
-      }}
-    >
-      RoundStart 
-    </Button>
-    <Button
-      style={{ position: "absolute", top: "40px", left: "10px", zIndex: 9 }}
-      onClick={() => {
-        storeDevGameViewJson("GUESSING");
-        setRoundState("GUESSING");
-      }}
-    >
-      Guessing
-    </Button>
-    <Button
-      style={{ position: "absolute", top: "70px", left: "10px", zIndex: 9 }}
-      onClick={() => {
-        storeDevGameViewJson("MAP_REVEAL");
-        setRoundState("MAP_REVEAL");
-      }}
-    >
-      MapReveal
-    </Button>
-    <Button
-      style={{ position: "absolute", top: "100px", left: "10px", zIndex: 9 }}
-      onClick={() => {
-        storeDevGameViewJson("LEADERBOARD");
-        setRoundState("LEADERBOARD");
-      }}
-    >
-      LeaderBoard
-    </Button>
-    <Button
-      style={{ position: "absolute", top: "160px", left: "10px", zIndex: 9 }}
-      onClick={() => {
-        storeDevGameViewJson("ENDED");
-        goToEndView();
-      }}
-    >
-      Navigate EndView
-    </Button>
-    <div style ={{ position: "absolute", top: "130px", left: "10px", zIndex: 9, backgroundColor: "orange" }}>
-      {roundState ?? "null"}
-      {
-        // read local storage devGameView pares it to json and read json.roundState
-        localStorage.getItem("devGameView")
-          ? JSON.parse(localStorage.getItem("devGameView")).roundState
-          : "no json"
-      }
-    </div>
-  </div>
-);
-
-NavigateButtons.propTypes = {
-  setRoundState: PropTypes.func,
-  goToEndView: PropTypes.func,
-  roundState: PropTypes.string,
-};
 
 export default GameView;

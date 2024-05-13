@@ -8,9 +8,10 @@ import {
 } from "components/ui/PowerUp";
 import { FinalLeaderboard } from "components/ui/LeaderboardComp";
 import { api } from "helpers/api";
+import ProgressBar from "components/ui/ProgressBar";
 
 const ComponentDev = () => {
-  const [maxPlayers, setMaxPlayers] = useState(4);
+  const [maxPlayers, setMaxPlayers] = useState(50);
 
   return (
     <BaseContainer>
@@ -31,6 +32,7 @@ const ComponentDev = () => {
         <LeaderBoardPowerUp powerUp="JOKER" />
         <LeaderBoardPowerUpCollection powerUpList={["JOKER", "SHIELD"]} />
         {/* <FinalLeaderboard scores={[{score: 69, distance: 0}, {score: 0, distance: 0}]} currentRound={1}/> */}
+        <ProgressBar durationInSeconds={5} onFinish={() => {}} progress={maxPlayers} />
       </div>
     </BaseContainer>
   );
