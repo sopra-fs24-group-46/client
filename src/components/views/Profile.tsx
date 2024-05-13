@@ -104,7 +104,9 @@ const Profile = () => {
   const joinGameHandler = async () => {
     try {
       const token = localStorage.getItem("token");
+
       await joinGame(token, gameId, loggedInUser);
+      localStorage.setItem("gameId", gameId);
       navigate(`/lobby/${gameId}`);
     } catch (error) {
       console.error("Error joining game:", error);
