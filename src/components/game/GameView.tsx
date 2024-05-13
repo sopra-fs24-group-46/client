@@ -103,6 +103,7 @@ const GameView = () => {
 
   }, [roundState]);
 
+
   return (
     <BaseContainer>
       {
@@ -121,6 +122,7 @@ const GameView = () => {
       
       <div className="map container">
         <MapBoxComponent
+          roundState={roundState}
           currentQuestionLocation={currentQuestionLocation ?? null}
           reveal={mapReveal ?? 0}
           guessesMapReveal={answers ?? []}
