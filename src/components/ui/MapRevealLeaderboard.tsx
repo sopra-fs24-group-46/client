@@ -93,7 +93,8 @@ export const MapRevealLeaderboard = props => {
                             <td>{playerData.displayName}</td>
                             <td>{(playerData.data.distance / 1000).toFixed(2)} Km</td>
                             <td>+ {playerData.data.score}</td>
-                            <td><LeaderBoardPowerUp powerUp = {playerData.data.powerUp}/></td>
+                            <td><div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
+                                <LeaderBoardPowerUp powerUp={playerData.data.powerUp} /></div></td>
                         
                         </tr>
                     ))}

@@ -22,7 +22,20 @@ export const storeDevGameViewJson = async (gameState: string) => {
       break;
     case "MAP_REVEAL":
       localStorage.setItem("devGameView",
-        '{"gameState":"PLAYING","roundState":"MAP_REVEAL","currentRound":1,"host":{"playerId":"player_id_0_3449","displayName":"host_player_name"},"players":[{"playerId":"player_id_0_3449","displayName":"host_player_name"},{"playerId":"player_id_1_5c6e","displayName":"player2"},{"playerId":"player_id_2_c25f","displayName":"player3"},{"playerId":"player_id_4_d030","displayName":"player4"}],"currentQuestion":{"location_name":"Matterhorn","location":{"x":7.658612,"y":45.976413}},"answers":{"player_id_0_3449":{"location":{"x":8.250084624227233,"y":46.54412836462309}},"player_id_1_5c6e":{"location":{"x":8.250084624227233,"y":46.54412836462309}},"player_id_2_c25f":null,"player_id_4_d030":null},"currentScores":{"player_id_0_3449":{"score":24,"distance":77798.38542944145},"player_id_1_5c6e":{"score":12,"distance":77798.38542944145},"player_id_2_c25f":{"score":0,"distance":null},"player_id_4_d030":{"score":0,"distance":null}},"cumulativeScores":{"player_id_0_3449":{"score":24,"distance":77798.38542944145},"player_id_1_5c6e":{"score":12,"distance":77798.38542944145},"player_id_2_c25f":{"score":0,"distance":0.0},"player_id_4_d030":{"score":0,"distance":0.0}},"powerUps":{"player_id_0_3449":"X2","player_id_1_5c6e":null,"player_id_2_c25f":null,"player_id_4_d030":null},"usedPowerUps":{"player_id_0_3449":["X2"],"player_id_1_5c6e":[],"player_id_3_2f38":[],"player_id_2_c25f":[],"player_id_4_d030":[]},"questions":[{"location_name":"Matterhorn","location":{"x":7.658612,"y":45.976413}},{"location_name":"Breithorn","location":{"x":7.747732,"y":45.941012}},{"location_name":"Stockhorn","location":{"x":7.837862,"y":45.985624}},{"location_name":"Dufourspitze","location":{"x":7.866757,"y":45.936924}}],"histories":{"player_id_0_3449":{"rounds":[{"roundNumber":1,"powerUp":"X2","question":{"location_name":"Matterhorn","location":{"x":7.658612,"y":45.976413}},"answer":{"location":{"x":8.250084624227233,"y":46.54412836462309}},"score":{"score":24,"distance":77798.38542944145}}]},"player_id_1_5c6e":{"rounds":[{"roundNumber":1,"powerUp":null,"question":{"location_name":"Matterhorn","location":{"x":7.658612,"y":45.976413}},"answer":{"location":{"x":8.250084624227233,"y":46.54412836462309}},"score":{"score":12,"distance":77798.38542944145}}]},"player_id_2_c25f":{"rounds":[{"roundNumber":1,"powerUp":null,"question":{"location_name":"Matterhorn","location":{"x":7.658612,"y":45.976413}},"answer":null,"score":{"score":0,"distance":null}}]},"player_id_4_d030":{"rounds":[{"roundNumber":1,"powerUp":null,"question":{"location_name":"Matterhorn","location":{"x":7.658612,"y":45.976413}},"answer":null,"score":{"score":0,"distance":null}}]}},"roundStartTime":1715509854162,"playersIds":["player_id_0_3449","player_id_1_5c6e","player_id_2_c25f","player_id_4_d030"]}'
+        `{ "gameState": "PLAYING", "roundState": "MAP_REVEAL", "currentRound": 1, "host": { "playerId": "player_id_0_3449", "displayName": "host_player_name" }, 
+        "players": [{ "playerId": "player_id_0_3449", "displayName": "host_player_name" }, { "playerId": "player_id_1_5c6e", "displayName": "player2" }, { "playerId": "player_id_2_c25f", "displayName": "player3" }, { "playerId": "player_id_4_d030", "displayName": "player4" }], 
+        "currentQuestion": { "location_name": "Matterhorn", "location": { "x": 7.658612, "y": 45.976413 } }, 
+        "answers": { 
+          "player_id_0_3449": { "location": { "x": 8.750084624227233, "y": 46.74412836462309 } }, 
+          "player_id_1_5c6e": { "location": { "x": 8.250084624227233, "y": 46.54412836462309 } }, 
+          "player_id_2_c25f": { "location": { "x": 8.150084624227233, "y": 46.04412836462309 } }, 
+          "player_id_4_d030": null }, 
+        "currentScores": { 
+          "player_id_0_3449": { "score": 24, "distance": 77800.38542944145 }, 
+          "player_id_1_5c6e": { "score": 12, "distance": 77798.38542944145 }, 
+          "player_id_2_c25f": { "score": 1337, "distance": 80003.12342 }, 
+          "player_id_4_d030": { "score": 0, "distance": null } }, 
+        "cumulativeScores": { "player_id_0_3449": { "score": 24, "distance": 77798.38542944145 }, "player_id_1_5c6e": { "score": 12, "distance": 77798.38542944145 }, "player_id_2_c25f": { "score": 0, "distance": 0.0 }, "player_id_4_d030": { "score": 0, "distance": 0.0 } }, "powerUps": { "player_id_0_3449": "X2", "player_id_1_5c6e": null, "player_id_2_c25f": null, "player_id_4_d030": null }, "usedPowerUps": { "player_id_0_3449": ["X2"], "player_id_1_5c6e": [], "player_id_3_2f38": [], "player_id_2_c25f": [], "player_id_4_d030": [] }, "questions": [{ "location_name": "Matterhorn", "location": { "x": 7.658612, "y": 45.976413 } }, { "location_name": "Breithorn", "location": { "x": 7.747732, "y": 45.941012 } }, { "location_name": "Stockhorn", "location": { "x": 7.837862, "y": 45.985624 } }, { "location_name": "Dufourspitze", "location": { "x": 7.866757, "y": 45.936924 } }], "histories": { "player_id_0_3449": { "rounds": [{ "roundNumber": 1, "powerUp": "X2", "question": { "location_name": "Matterhorn", "location": { "x": 7.658612, "y": 45.976413 } }, "answer": { "location": { "x": 8.250084624227233, "y": 46.54412836462309 } }, "score": { "score": 24, "distance": 77798.38542944145 } }] }, "player_id_1_5c6e": { "rounds": [{ "roundNumber": 1, "powerUp": null, "question": { "location_name": "Matterhorn", "location": { "x": 7.658612, "y": 45.976413 } }, "answer": { "location": { "x": 8.250084624227233, "y": 46.54412836462309 } }, "score": { "score": 12, "distance": 77798.38542944145 } }] }, "player_id_2_c25f": { "rounds": [{ "roundNumber": 1, "powerUp": null, "question": { "location_name": "Matterhorn", "location": { "x": 7.658612, "y": 45.976413 } }, "answer": null, "score": { "score": 0, "distance": null } }] }, "player_id_4_d030": { "rounds": [{ "roundNumber": 1, "powerUp": null, "question": { "location_name": "Matterhorn", "location": { "x": 7.658612, "y": 45.976413 } }, "answer": null, "score": { "score": 0, "distance": null } }] } }, "roundStartTime": 1715509854162, "playersIds": ["player_id_0_3449", "player_id_1_5c6e", "player_id_2_c25f", "player_id_4_d030"] }`
       );
       break;
     case "LEADERBOARD":
@@ -43,7 +56,7 @@ export const storeDevGameViewJson = async (gameState: string) => {
 export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTimerProgress }) => (
   <div>
     <Button
-      style={{ position: "absolute", top: "10px", left: "10px", zIndex: 9 }}
+      style={{backgroundColor: "lightblue", position: "absolute", top: "10px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("QUESTION");
         setRoundState("QUESTION");
@@ -53,7 +66,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       RoundStart 
     </Button>
     <Button
-      style={{ position: "absolute", top: "40px", left: "10px", zIndex: 9 }}
+      style={{ backgroundColor: "lightblue", position: "absolute", top: "40px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("GUESSING");
         setRoundState("GUESSING");
@@ -63,7 +76,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       Guessing
     </Button>
     <Button
-      style={{ position: "absolute", top: "70px", left: "10px", zIndex: 9 }}
+      style={{backgroundColor: "lightblue", position: "absolute", top: "70px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("MAP_REVEAL");
         setRoundState("MAP_REVEAL");
@@ -73,7 +86,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       MapReveal
     </Button>
     <Button
-      style={{ position: "absolute", top: "100px", left: "10px", zIndex: 9 }}
+      style={{backgroundColor: "lightblue", position: "absolute", top: "100px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("LEADERBOARD");
         setRoundState("LEADERBOARD");
@@ -83,7 +96,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       LeaderBoard
     </Button>
     <Button
-      style={{ position: "absolute", top: "160px", left: "10px", zIndex: 9 }}
+      style={{backgroundColor: "lightblue", position: "absolute", top: "160px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("ENDED");
         goToEndView();
