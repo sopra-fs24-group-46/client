@@ -1,28 +1,25 @@
 import { api } from "helpers/api";
 import axios from "axios";
-import { navigate, useNavigate } from "react-router-dom";
 
 
-const joinGame = async (token, gameId, loggedInUser, navigateCallback) => {
+const joinGame = async (token, gameId, loggedInUser) => {
   try {
-    if (!token || !gameId) {
-      alert("No Game Pin provided!");
-    } else {
-      const requestBody = {
-        displayName: loggedInUser.username,
-      };
+    const requestBody = {
+      displayName: loggedInUser.username,
+    };
 
-      const response = await api.post(`/game/${gameId}/join`, requestBody);
-      const navigate = useNavigate();
-
-      localStorage.setItem("gameId", gameId);
-      localStorage.setItem("playerId", response.data);
-      console.log('Joining game response:', response.data);
-      navigateCallback();    }
+    const response = await api.post(`/game/${gameId}/join`, requestBody);
+    localStorage.setItem("gameId", gameId);
+    localStorage.setItem("playerId", response.data);
+    console.log('Joining game response:', response.data);
   } catch (error) {
-    console.error("Error joining game:", error);
-    alert("Game not found!");
+    if (error.response && error.response.status === 404) {
+      throw new Error("Game not found!");
+    } else {
+      throw new Error("Error joining game: " + error.message);
+    }
   }
 };
+
 
 export { joinGame };

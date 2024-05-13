@@ -104,15 +104,25 @@ const Profile = () => {
   const joinGameHandler = async () => {
     try {
       const token = localStorage.getItem("token");
-
+      if (!gameId) {
+        throw new Error("No Game Pin provided!");
+      }
+  
       await joinGame(token, gameId, loggedInUser);
       localStorage.setItem("gameId", gameId);
       navigate(`/lobby/${gameId}`);
     } catch (error) {
-      console.error("Error joining game:", error);
-      alert(error.message);
+      if (error.message === "No Game Pin provided!") {
+        console.error("No Game Pin provided!");
+        alert("No Game Pin provided!");
+      } else {
+        console.error("Error joining game:", error);
+        alert(error.message);
+      }
     }
   };
+  
+  
 
   const editPassword = () => {
     navigate("/edit");
