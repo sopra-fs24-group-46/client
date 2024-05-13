@@ -32,7 +32,7 @@ const AppRouter = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/game" element={<GameGuard />}>
-          <Route path="*" element={<GameRouter />} />
+          <Route path="/game" element={<GameView />} />
         </Route>
 
         <Route path="/login/*" element={<LoginGuard />}>

@@ -40,8 +40,7 @@ const Lobby = () => {
 
         if (gameState === "PLAYING") {
           console.log("NOW PLAYING");
-          // navigate(`/game/${gameId}/round/1`);
-          navigate("/gameDev")
+          navigate("/game")
         }
       } catch (error) {
         console.error("Error fetching data:", error);
