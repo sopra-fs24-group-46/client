@@ -71,8 +71,8 @@ export const submitAnswer = async (gameId) => {
 
   try {
       const response = await api.post(`game/${gameId}/guess`, requestBody);
-      console.log(response);
+      console.log("Guess: "+requestBody+" submitted. response: ", response);
   } catch (error) {
-      console.log(`Error Details: ${handleError(error)}`);
+      console.log(`Submitting guess failed: ${handleError(error)}`);
   }
 };
