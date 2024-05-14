@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { api } from "helpers/api";
+import { api, handleError } from "helpers/api";
 
 import "styles/views/SetGame.scss";
 import { Button } from "components/ui/Button"; // Import the Button component
@@ -9,6 +9,8 @@ import "styles/views/Header.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import {FormField} from "components/ui/FormField";
 import {MultiSelection} from "components/ui/MultiSelection";
+import ValidatedTextInput from "components/ui/ValidatedTextInput";
+import SelectRegion from "components/ui/SelectRegion";
 
 
 
@@ -49,6 +51,9 @@ const SetGame = () => {
   const [rounds, setRounds] = useState(4);
   const [guessingTime, setGuessingTime] = useState(15);
   const [locationTypes, setLocationTypes] = useState([]);
+  const [region, setRegion] = useState(null);
+  const [regionType, setRegionType] = useState(null);
+  const [names, setNames] = useState(null);
   const host = localStorage.getItem("id");
 
   const navigate = useNavigate();
@@ -82,7 +87,10 @@ const SetGame = () => {
         maxPlayers: maxPlayersInt,
         rounds: roundsInt,
         guessingTime: guessingTimeInt,
-        locationTypes: locationTypes
+        locationTypes: locationTypes,
+        region: region,
+        regionType: regionType,
+        names: names,
       };
 
       // Send a PUT request to the backend
@@ -98,7 +106,7 @@ const SetGame = () => {
       navigate(`/lobby/${localStorage.getItem("gameId")}`);
     } catch (error) {
       // Handle errors
-      console.error("Error creating game:", error);
+      console.error("Error creating game:", handleError(error));
     }
   };
 
@@ -109,6 +117,11 @@ const SetGame = () => {
     <Link to="/profile">Go Back</Link>
 
   };
+  
+  const isFormValid = () => {
+    if (region !== null && region !== "" && regionType === null) return false;
+    return true;
+  }
 
   return (
     <BaseContainer>
@@ -152,8 +165,9 @@ const SetGame = () => {
             options = {["ALPINE_MOUNTAIN", "MOUNTAIN","MAIN_HILL", "HILL", "LAKE"]} 
             onChange = {setLocationTypes}
           />
+          <SelectRegion region={region} setRegion={setRegion} regionType={regionType} setRegionType={setRegionType} dropDownMaxHeight={"40vh"} />
           <div className="set-game button_container">
-            <Button onClick={createGame}>Create Game</Button> {/* Add the Create Game button */}
+            <Button onClick={createGame} disabled={!isFormValid()}>Create Game</Button> {/* Add the Create Game button */}
             <Button onClick={() => goBacktoProfile()}>Go Back</Button>
           </div>
       </div>
@@ -163,5 +177,6 @@ const SetGame = () => {
 
   );
 };
+
 
 export default SetGame;

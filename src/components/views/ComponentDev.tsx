@@ -10,6 +10,8 @@ import { FinalLeaderboard } from "components/ui/LeaderboardComp";
 import { api } from "helpers/api";
 import ProgressBar from "components/ui/ProgressBar";
 import { Button } from "components/ui/Button";
+import ValidatedTextInput from "components/ui/ValidatedTextInput";
+import Dropdown from "components/ui/DropDown";
 
 const ComponentDev = () => {
   const [maxPlayers, setMaxPlayers] = useState(2);
@@ -23,7 +25,7 @@ const ComponentDev = () => {
           onChange={() => {}}
           label="test"
         />
-        <Button onClick={() => setRestartTimer(true)}>test</Button>
+        {/* <Button onClick={() => setRestartTimer(true)}>test</Button> */}
         <FormField
           label="Max number of players"
           type="number"
@@ -32,15 +34,16 @@ const ComponentDev = () => {
           onChange={setMaxPlayers}
           style={{ width: "50px" }}
         />
-        <LeaderBoardPowerUp powerUp="JOKER" />
-        <LeaderBoardPowerUpCollection powerUpList={["JOKER", "SHIELD"]} />
+        <ValidatedTextInput validStrings={["test", "something else"]} label="test" onValidString={() => {}} />
+        {/* <LeaderBoardPowerUp powerUp="JOKER" />
+        <LeaderBoardPowerUpCollection powerUpList={["JOKER", "SHIELD"]} /> */}
         {/* <FinalLeaderboard scores={[{score: 69, distance: 0}, {score: 0, distance: 0}]} currentRound={1}/> */}
-        <ProgressBar
+        {/* <ProgressBar
           durationInSeconds={5}
           onFinish={() => { }}
           remainingTimeInSeconds={maxPlayers}
           restartTimer={restartTimer}
-          setRestartTimer={setRestartTimer} />
+          setRestartTimer={setRestartTimer} /> */}
       </div>
     </BaseContainer>
   );
