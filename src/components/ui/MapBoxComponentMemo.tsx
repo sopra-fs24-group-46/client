@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import mapboxgl from "mapbox-gl";
 import { LineLayer } from "deck.gl";
 
-const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesMapReveal }) => {
+const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocation, guessesMapReveal }) => {
 
   const mapboxAccessToken = "pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w";
 
@@ -39,6 +39,14 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
     if (map.getLayer('lineLayer')) {
       map.removeLayer('lineLayer');
       map.removeSource('lineLayer');
+    };
+  };
+
+  const removeCircle = () => {
+
+    if (map.getLayer('polygon')) {
+      map.removeLayer('polygon');
+      map.removeSource('polygon');
     };
   };
 
@@ -116,6 +124,75 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
     }
   };
 
+  var createGeoJSONCircle = function(center, radiusInKm, points) {
+    if(!points) points = 64;
+
+    var coords = {
+        latitude: center[1],
+        longitude: center[0]
+    };
+
+    var km = radiusInKm;
+
+    var ret = [];
+    var distanceX = km/(111.320*Math.cos(coords.latitude*Math.PI/180));
+    var distanceY = km/110.574;
+
+    var theta, x, y;
+    for(var i=0; i<points; i++) {
+        theta = (i/points)*(2*Math.PI);
+        x = distanceX*Math.cos(theta);
+        y = distanceY*Math.sin(theta);
+
+        ret.push([coords.longitude+x, coords.latitude+y]);
+    }
+    ret.push(ret[0]);
+
+    return {
+        "type": "geojson",
+        "data": {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [ret]
+                }
+            }]
+        }
+    };
+  };
+
+  const createCircle = (x,y, radiusInKm) => {
+
+    var center = [x,y];
+
+    const randomVariable_1 = Math.floor(Math.random() * 2); // Generate either 0 or 1
+    const randomVariable_2 = Math.floor(Math.random() * 2);
+
+    if(randomVariable_1 === 1) {
+      center[randomVariable_2] += 0.05;
+    } else {
+      center[randomVariable_2] -= 0.05;
+    }
+
+    console.log(center);
+
+    map.addSource("polygon", createGeoJSONCircle(center, radiusInKm, 64));
+
+    map.addLayer({
+      "id": "polygon",
+      "type": "fill",
+      "source": "polygon",
+      "layout": {},
+      "paint": {
+          "fill-color": "red",
+          "fill-opacity": 0.5
+      }
+    });
+
+  };
+
 
   useEffect(() => {
 
@@ -164,6 +241,21 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
       removeCurrentLocationMarker();
       removeGuessMarkers();
       removeLines();
+      removeCircle();
+
+      if (roundState === "GUESSING") {
+
+        if(jokerData && jokerData.joker) {
+
+            console.log(jokerData);
+
+            createCircle(jokerData.center[0], jokerData.center[1], 10);
+    
+
+        }
+
+        
+      }
 
 
       if (roundState === "MAP_REVEAL") {
@@ -192,11 +284,18 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
           //Create the lines to correct location
           createLineLayers(guessesMapReveal);
 
+
+
+          
+
+
+
+
         }
       }
     }
 
-  }, [guessesMapReveal, roundState])
+  }, [guessesMapReveal, roundState, jokerData])
 
 
   return <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />;
@@ -207,6 +306,10 @@ MapBoxComponent.displayName = 'MapBoxComponent';
 MapBoxComponent.propTypes = {
 
   roundState: PropTypes.string,
+  jokerData: PropTypes.shape({
+    joker: PropTypes.bool.isRequired,
+    center: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+  }).isRequired,
   reveal: PropTypes.number.isRequired,
   currentQuestionLocation: PropTypes.string.isRequired,
   guessesMapReveal: PropTypes.arrayOf(PropTypes.shape({

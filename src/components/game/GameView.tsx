@@ -29,6 +29,7 @@ import ProgressBar from "components/ui/ProgressBar";
 const GameView = () => {
   //mapbox
   const [answers, setAnswers] = useState([]);
+  const [jokerData, setJokerData] = useState([]);
   const [currentQuestionLocation, setCurrentQuestionLocation] = useState(null);
   const [mapReveal, setMapReveal] = useState(0);
 
@@ -121,11 +122,12 @@ const GameView = () => {
       }
       
       
-      <GameViewChild state={roundState} setAnswers={setAnswers} />
+      <GameViewChild state={roundState} setAnswers={setAnswers} setJokerData={setJokerData} />
       
       <div className="map container">
         <MapBoxComponent
           roundState={roundState}
+          jokerData={jokerData}
           currentQuestionLocation={currentQuestionLocation ?? null}
           reveal={mapReveal ?? 0}
           guessesMapReveal={answers ?? []}
@@ -144,12 +146,12 @@ const GameView = () => {
 };
 
 //these are the different round states.
-const GameViewChild = ({state, setAnswers}) => {
+const GameViewChild = ({state, setAnswers, setJokerData}) => {
   switch (state) {
     case "QUESTION":
       return <RoundStart  />;
     case "GUESSING":
-      return <Guessing  />;
+      return <Guessing  setJokerData={setJokerData}/>;
     case "MAP_REVEAL":
       return <MapReveal setAnswers={setAnswers} />;
     case "LEADERBOARD":
@@ -161,6 +163,7 @@ const GameViewChild = ({state, setAnswers}) => {
 GameViewChild.propTypes = {
   state: PropTypes.string.isRequired,
   setAnswers: PropTypes.func.isRequired,
+  setJokerData: PropTypes.func.isRequired,
 };
 
 const phaseTimeInSeconds = (phase) => {
