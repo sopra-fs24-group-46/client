@@ -20,7 +20,7 @@ import "styles/views/GameViewContainer.scss";
 
 // the hooks file has some of the logic that is used in this file
 
-const Guessing = () => {
+const Guessing = ({ setJokerData }) => {
   const gameId = localStorage.getItem("gameId");
 
   const [currentRound, setCurrentRound] = useState("");
@@ -42,6 +42,12 @@ const Guessing = () => {
         setCurrentRound(data.currentRound);
         setCurrentLocationName(data.currentQuestion.location_name);
         setPowerUpInUse(data.powerUps[playerId]);
+
+
+        const jokerInUse = (data.powerUps[playerId]) === "JOKER" ? true : false;
+        const jokerData = {joker: jokerInUse, center: [data.currentQuestion.location.x, data.currentQuestion.location.y]}
+        setJokerData(jokerData);
+        console.log(jokerData);
 
       } catch (error) {
         console.error("Error fetching game view:", error);
@@ -71,6 +77,10 @@ const Guessing = () => {
       /> */}
     </div>
   );
+};
+
+Guessing.propTypes = {
+  setJokerData: PropTypes.func.isRequired,
 };
 
 export default Guessing;
