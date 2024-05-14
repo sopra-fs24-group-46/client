@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from "prop-types";
 import "../../styles/ui/MultiSelection.scss";
+import Dropdown from './DropDown';
 
 export const MultiSelection = ({ options, onChange, label}) => {
   const [selectedWords, setSelectedWords] = useState([]);
@@ -44,11 +45,12 @@ export const MultiSelection = ({ options, onChange, label}) => {
 
   return (
   //ref is needed for detection in drop down closing
-    <div ref= {ref} className="multi-selection" >
-      <div className="field" >
-      <button className = "button" onClick={toggleDropdown}>
-        {label}:
-      </button>
+  
+    <div ref = {ref} className="multi-selection" >
+      
+        <button className = "button" onClick={toggleDropdown}>
+          {label}:
+        </button>
         {selectedWords.map((word, index) => (
           <div key={index} className="selected-word">
             {word}
@@ -57,18 +59,20 @@ export const MultiSelection = ({ options, onChange, label}) => {
             </span>
           </div>
         ))}
-      </div>
-      {isOpen && options.filter((option) => !selectedWords.includes(option)).length > 0 && (
+      
+      {/* {isOpen && options.filter((option) => !selectedWords.includes(option)).length > 0 && (
         <div className="dropdown" >
-          {options.filter((option) => !selectedWords.includes(option))
-            .map((option, index) => (
+        {options.filter((option) => !selectedWords.includes(option))
+          .map((option, index) => (
             <div key={index} className="option" onClick={() => handleWordSelect(option)}>
-              {option}
+            {option}
             </div>
           ))}
-        </div>
-      )}
+          </div>
+        )} */}
+    <Dropdown hide={!isOpen} elements={options.filter((option) => !selectedWords.includes(option))} onClick={handleWordSelect} />
     </div>
+  
   );
 };
 
