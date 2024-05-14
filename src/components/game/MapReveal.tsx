@@ -25,13 +25,15 @@ const MapReveal = ({ setAnswers }) => {
         setPowerUpInUse(data.powerUps[playerId]);
         setCurrentQuestionLocation(data.currentQuestion.location);
 
+        console.log(data.answers);
+
         const answerKeys = Object.keys(data.answers);
         const playerAnswersArray = answerKeys.map((playerId, index) => {
           return {
             playerId: playerId,
             guess_x: data.answers[playerId].location.x,
             guess_y: data.answers[playerId].location.y,
-            colourNumber: index + 1,
+            colorNumber: index + 1,
           };
         });
         setPlayerAnswersArray(playerAnswersArray);

@@ -2,15 +2,20 @@
 import React, { useEffect, useRef, useState, memo} from "react";
 import PropTypes from "prop-types";
 import mapboxgl from "mapbox-gl";
+import { LineLayer } from "deck.gl";
 
 const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesMapReveal }) => {
 
   const mapboxAccessToken = "pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w";
 
+  
+  const mapContainer = useRef(null);
+  const clickMarker = useRef(null);
+  const currentLocationMarker = useRef(null);
+
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
-  const clickMarker = useRef(null);
-  const mapContainer = useRef(null);
+
 
 
   //Functions
@@ -19,6 +24,21 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
 
     if (clickMarker.current) {
       clickMarker.current.remove();
+    };
+  };
+
+  const removeCurrentLocationMarker = () => {
+
+    if (currentLocationMarker.current) {
+      currentLocationMarker.current.remove();
+    };
+  };
+
+  const removeLines = () => {
+
+    if (map.getLayer('lineLayer')) {
+      map.removeLayer('lineLayer');
+      map.removeSource('lineLayer');
     };
   };
 
@@ -32,7 +52,54 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
     };
   };
 
-  const getColor = (number) => {
+  const createFeature = (x, y) => {
+
+    const lineFeature = {
+      "type": "Feature",
+      "geometry": {
+          "type": "LineString",
+          "coordinates": [[x, y], [currentQuestionLocation.x, currentQuestionLocation.y]]}
+    };
+
+    return lineFeature;
+  };
+
+  const createLineLayers = (data) => {
+
+    var featureArray = [];
+
+    data.forEach(item => {
+
+      if (item.guess_x && item.guess_y) {
+
+        const feature = createFeature(item.guess_x, item.guess_y);
+        featureArray.push(feature);
+      }
+    });
+
+    map.addLayer({
+      "id": "lineLayer",
+      "type": "line",
+      "source": {
+          "type": "geojson",
+          "data": {
+              "type": "FeatureCollection",
+              "features": featureArray
+          }
+      },
+      "layout": {
+          "line-join": "round",
+          "line-cap": "round"
+      },
+      "paint": {
+          "line-color": "#333399",
+          "line-width": 3,
+          "line-dasharray": [4, 2]
+      }
+    });
+  };
+
+  const getColor = (number) => {  
     switch (number) {
         case 1:
             return 'orange';
@@ -47,7 +114,8 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
         default:
             return 'gray'; // Fallback-Farbe, wenn keine spezifische Farbe angegeben ist
     }
-};
+  };
+
 
   useEffect(() => {
 
@@ -66,7 +134,6 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
     });
 
 
-    //initializedMap.on('click', handleMapClick);
     map.on("click", (e) => {
 
       removeClickMarker();
@@ -92,132 +159,44 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
 
     if (map) {
 
+      //Removing all markers and lines from the map
       removeClickMarker();
+      removeCurrentLocationMarker();
       removeGuessMarkers();
-
+      removeLines();
 
 
       if (roundState === "MAP_REVEAL") {
-        if(guessesMapReveal) {
 
-          console.log(guessesMapReveal);
+        if(guessesMapReveal && currentQuestionLocation) {
 
-          const testArray = [{x:7.5, y:46.8},{x:7.9, y:47.1}];
+          //Create marker for current question location
+          const newMarker = new mapboxgl.Marker({color: 'red'})
+          .setLngLat([currentQuestionLocation.x, currentQuestionLocation.y])
+          .addTo(map);
+  
+          currentLocationMarker.current = newMarker;
 
-          // Accumulate all markers
+          //Array for testing without BE data
+          const testArray = [{colorNumber: 1, guess_x:7.5, guess_y:46.8},{colorNumber: 2, guess_x:7.9, guess_y:46.1}, {colorNumber: 3, guess_x:8.1, guess_y:45.2}];
+
+          //Create the markers for players guesses
           const newMarkers = guessesMapReveal.map(item => {
-            return new mapboxgl.Marker({color: getColor(item.colourNumber)})
+            return new mapboxgl.Marker({color: getColor(item.colorNumber)})
                 .setLngLat([item.guess_x, item.guess_y])
                 .addTo(map);
           });
   
           setMarkers(newMarkers);
 
+          //Create the lines to correct location
+          createLineLayers(guessesMapReveal);
+
         }
       }
     }
 
   }, [guessesMapReveal, roundState])
-
-
-
-  // useEffect(() => {
-
-  //   mapboxgl.accessToken = mapboxAccessToken;
-  //   console.log(guessesMapReveal);
-
-  //   const map = new mapboxgl.Map({
-  //     container: mapContainer.current,
-  //     style: "mapbox://styles/mapbox/streets-v11",
-  //     center: [8.2275, 46.8182],
-  //     zoom: 7,
-  //   });
-
-  //   let currentQuestionMarker = null;
-  //   // Function to update the current question marker
-  //   const updateCurrentQuestionMarker = (location) => {
-  //     if (currentQuestionMarker) {
-  //       currentQuestionMarker.remove();
-  //     }
-
-
-  //     if (location) {
-  //       currentQuestionMarker = new mapboxgl.Marker({
-  //         color: "red", // or any other color you prefer
-  //       })
-  //           .setLngLat([location.x, location.y])
-  //           .addTo(map);
-  //     }
-  //   };
-
-
-  //   // Update the current question marker when the component mounts
-  //   updateCurrentQuestionMarker(currentQuestionLocation);
-  //   if (reveal === 1) {
-
-  //     /*
-  //       //TODO Always same colors should be choosen and playername should be displayed in popup and Text should not be white
-  //       */
-  //     guessesMapReveal.forEach(player => {
-  //       const { answer } = player;
-
-        
-  //       //TODO make Component
-  //       const getColorForNumber = (number) => {
-  //         switch (number) {
-  //             case 1:
-  //                 return 'orange';
-  //             case 2:
-  //                 return 'green';
-  //             case 3:
-  //                 return 'blue';
-  //             case 4:
-  //                 return 'pink';
-  //             default:
-  //                 return 'gray'; // Fallback-Farbe, wenn keine spezifische Farbe angegeben ist
-  //         }
-  //     };
-
-  //       if (answer) {
-  //         console.log(answer.colourNumber)
-  //         const markerColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
-
-  //         new mapboxgl.Marker({ color: getColorForNumber(player.colourNumber) })
-  //             .setLngLat([answer.location.x, answer.location.y])
-  //             .addTo(map);
-
-  //         // Create the popup and add it to the map
-  //         const popup = new mapboxgl.Popup({
-  //           closeButton: true,
-  //           closeOnClick: false,
-  //         })
-  //             .setLngLat([answer.location.x, answer.location.y])
-  //             .setHTML(`
-  //         <div style="background-color: #f4f4f4; color: #333; padding: 12px; border-radius: 8px;">
-  //           <h3 style="margin: 0; font-size: 13px; font-weight: bold; color: #007bff;">${player.playerId}</h3>
-  //           <p style="margin: 8px 0 0; font-size: 12px; color: #333;">Coordinates:</p>
-  //           <p style="margin: 0; font-size: 12px; color: #333;">[${answer.location.x.toFixed(6)}, ${answer.location.y.toFixed(6)}]</p>
-  //         </div>
-  //       `);
-
-  //         //popup.addTo(map);
-  //       }
-  //     });
-
-  //   }
-
-    
-
-
-
-
-  //   return () => {
-  //     if (currentQuestionMarker) {
-  //       currentQuestionMarker.remove();
-  //     }
-  //     map.remove();
-  //   };
-  // }, []);
 
 
   return <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />;
@@ -234,9 +213,8 @@ MapBoxComponent.propTypes = {
     playerId: PropTypes.string.isRequired,
     guess_x: PropTypes.number.isRequired,
     guess_y: PropTypes.number.isRequired,
-    colourName: PropTypes.number.isRequired,
+    colorNumber: PropTypes.number.isRequired,
   })),
-
 
 };
 
