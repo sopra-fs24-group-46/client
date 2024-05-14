@@ -25,4 +25,11 @@
   background-color: $accent;
   transition: all 0.3s ease;
   margin-top: 0.5vh;
+
+  &.selected {
+    background-color: $accentAlt;
+    &:hover {
+      transform: none;
+    }
+  }
 }
