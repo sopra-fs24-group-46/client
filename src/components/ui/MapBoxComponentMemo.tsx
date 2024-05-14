@@ -20,6 +20,7 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
 
   //Functions
 
+  //Removes current clickMarker if it exists on the map
   const removeClickMarker = () => {
 
     if (clickMarker.current) {
@@ -27,6 +28,7 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
     };
   };
 
+  //Removes currenLocationMarker if it exists on the map
   const removeCurrentLocationMarker = () => {
 
     if (currentLocationMarker.current) {
@@ -34,6 +36,7 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
     };
   };
 
+  //Removes layer and source of lines (guess - correctLocation) if they exist
   const removeLines = () => {
 
     if (map.getLayer('lineLayer')) {
@@ -42,6 +45,7 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
     };
   };
 
+  //Removes joker circle if it exists
   const removeCircle = () => {
 
     if (map.getLayer('polygon')) {
@@ -50,6 +54,7 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
     };
   };
 
+  //Removes guess markers of all players if they exist
   const removeGuessMarkers = () => {
 
     if (markers.length > 0) {
@@ -60,6 +65,7 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
     };
   };
 
+  //creates feature for a single line
   const createFeature = (x, y) => {
 
     const lineFeature = {
@@ -68,10 +74,10 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
           "type": "LineString",
           "coordinates": [[x, y], [currentQuestionLocation.x, currentQuestionLocation.y]]}
     };
-
     return lineFeature;
   };
 
+  //creates layer for lines and multiple features (multiple lines)
   const createLineLayers = (data) => {
 
     var featureArray = [];
@@ -107,6 +113,7 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
     });
   };
 
+  //Selects color which is fixed for every player
   const getColor = (number) => {  
     switch (number) {
         case 1:
@@ -120,10 +127,11 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
         case 5:
           return 'yellow';
         default:
-            return 'gray'; // Fallback-Farbe, wenn keine spezifische Farbe angegeben ist
+            return 'gray'; // Fallback-color
     }
   };
 
+  //Creates circle polygon as sourve for the joker circle
   var createGeoJSONCircle = function(center, radiusInKm, points) {
     if(!points) points = 64;
 
@@ -163,20 +171,19 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
     };
   };
 
+  //creates joker circle
   const createCircle = (x,y, radiusInKm) => {
 
     var center = [x,y];
 
     const randomVariable_1 = Math.floor(Math.random() * 2); // Generate either 0 or 1
-    const randomVariable_2 = Math.floor(Math.random() * 2);
+    const randomVariable_2 = Math.floor(Math.random() * 2); // Generate either 0 or 1
 
     if(randomVariable_1 === 1) {
       center[randomVariable_2] += 0.05;
     } else {
       center[randomVariable_2] -= 0.05;
     }
-
-    console.log(center);
 
     map.addSource("polygon", createGeoJSONCircle(center, radiusInKm, 64));
 
@@ -190,14 +197,13 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
           "fill-opacity": 0.5
       }
     });
-
   };
 
 
   useEffect(() => {
 
+    //Map gets loaded only when starting a game or refreshing the site
     mapboxgl.accessToken = mapboxAccessToken;
-
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v11",
@@ -210,15 +216,13 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
       map.setLayoutProperty('natural-point-label', 'visibility', 'none');
     });
 
-
+    //Visualize the current guessing position
     map.on("click", (e) => {
 
       removeClickMarker();
 
-
       localStorage.setItem("x", String(e.lngLat.lng));
       localStorage.setItem("y", String(e.lngLat.lat));
-
 
       const newMarker = new mapboxgl.Marker()
         .setLngLat([e.lngLat.lng, e.lngLat.lat])
@@ -236,7 +240,7 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
 
     if (map) {
 
-      //Removing all markers and lines from the map
+      //Removing all markers, lines and circle from the map
       removeClickMarker();
       removeCurrentLocationMarker();
       removeGuessMarkers();
@@ -250,11 +254,7 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
             console.log(jokerData);
 
             createCircle(jokerData.center[0], jokerData.center[1], 10);
-    
-
         }
-
-        
       }
 
 
@@ -284,16 +284,9 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
           //Create the lines to correct location
           createLineLayers(guessesMapReveal);
 
-
-
-          
-
-
-
-
-        }
-      }
-    }
+        };
+      };
+    };
 
   }, [guessesMapReveal, roundState, jokerData])
 
