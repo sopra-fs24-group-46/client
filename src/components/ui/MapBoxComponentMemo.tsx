@@ -3,36 +3,36 @@ import React, { useEffect, useRef, useState, memo} from "react";
 import PropTypes from "prop-types";
 import mapboxgl from "mapbox-gl";
 
-const areEqual = (prevProps, nextProps) => true;
-
 const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesMapReveal }) => {
 
-  const mapContainer = useRef(null);
   const mapboxAccessToken = "pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w";
 
   const [map, setMap] = useState(null);
-  // const [markers, setMarkers] = useState([]);
-
-  let clickMarker = null;
-
   const [markers, setMarkers] = useState([]);
-  
+  const clickMarker = useRef(null);
+  const mapContainer = useRef(null);
 
 
+  //Functions
 
-  let marker = null;
+  const removeClickMarker = () => {
 
-  const removeMarkers = () => {
-
-    if(markers) {
-      for (var i = markers.length - 1; i >= 0; i--) {
-      markers[i].remove();
-      };
-   }
+    if (clickMarker.current) {
+      clickMarker.current.remove();
+    };
   };
 
-  //TODO make Component
-  const getColorForNumber = (number) => {
+  const removeGuessMarkers = () => {
+
+    if (markers.length > 0) {
+      markers.forEach(marker => {
+        marker.remove();
+    });
+    setMarkers([]);
+    };
+  };
+
+  const getColor = (number) => {
     switch (number) {
         case 1:
             return 'orange';
@@ -42,6 +42,8 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
             return 'blue';
         case 4:
             return 'pink';
+        case 5:
+          return 'yellow';
         default:
             return 'gray'; // Fallback-Farbe, wenn keine spezifische Farbe angegeben ist
     }
@@ -66,16 +68,9 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
 
     //initializedMap.on('click', handleMapClick);
     map.on("click", (e) => {
- 
-      if (markers) {
-        removeMarkers();
-        console.log(markers);
 
-      }
+      removeClickMarker();
 
-      if (clickMarker) {
-        clickMarker.remove();
-      }
 
       localStorage.setItem("x", String(e.lngLat.lng));
       localStorage.setItem("y", String(e.lngLat.lat));
@@ -85,43 +80,45 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
         .setLngLat([e.lngLat.lng, e.lngLat.lat])
         .addTo(map);
 
-        clickMarker = newMarker;
+        clickMarker.current = newMarker;
     });
 
     setMap(map);
 
   }, [])
 
+
   useEffect(() => {
 
     if (map) {
 
-      removeMarkers();
+      removeClickMarker();
+      removeGuessMarkers();
+
+
 
       if (roundState === "MAP_REVEAL") {
+        if(guessesMapReveal) {
 
-        guessesMapReveal.forEach(player => {
-          const { answer } = player;
+          console.log(guessesMapReveal);
 
-          if (answer) {
+          const testArray = [{x:7.5, y:46.8},{x:7.9, y:47.1}];
 
-            const marker = new mapboxgl.Marker({ color: getColorForNumber(player.colourNumber) })
-              .setLngLat([answer.location.x, answer.location.y])
-              .addTo(map);
-
-              setMarkers([...markers,marker]);
-
-            
+          // Accumulate all markers
+          const newMarkers = guessesMapReveal.map(item => {
+            return new mapboxgl.Marker({color: getColor(item.colourNumber)})
+                .setLngLat([item.guess_x, item.guess_y])
+                .addTo(map);
+          });
   
-          }
-        
-        });
+          setMarkers(newMarkers);
 
+        }
       }
-      console.log(roundState);
     }
 
-  }, [roundState])
+  }, [guessesMapReveal, roundState])
+
 
 
   // useEffect(() => {
@@ -234,8 +231,9 @@ MapBoxComponent.propTypes = {
   reveal: PropTypes.number.isRequired,
   currentQuestionLocation: PropTypes.string.isRequired,
   guessesMapReveal: PropTypes.arrayOf(PropTypes.shape({
-    latitude: PropTypes.number.isRequired,
-    longitude: PropTypes.number.isRequired,
+    playerId: PropTypes.string.isRequired,
+    guess_x: PropTypes.number.isRequired,
+    guess_y: PropTypes.number.isRequired,
     colourName: PropTypes.number.isRequired,
   })),
 

@@ -47,7 +47,7 @@ const GameView = () => {
         const gameState = (gameId ?? false) ? await getGameState(): null;
         //check if gameState is defined
         if (gameState ?? false) {
-          console.log(gameState);
+          //console.log(gameState);
           setRoundState(gameState.roundState);
           setRemainingTimeInMillis(gameState.timeTillNextPhaseInMillis);
         }
@@ -103,7 +103,7 @@ const GameView = () => {
   }, [roundState]);
   
   useEffect (() => {
-    console.log(answers);
+    //console.log(answers);
   }, [answers]);
 
 

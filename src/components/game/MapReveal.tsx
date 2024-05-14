@@ -29,7 +29,8 @@ const MapReveal = ({ setAnswers }) => {
         const playerAnswersArray = answerKeys.map((playerId, index) => {
           return {
             playerId: playerId,
-            answer: data.answers[playerId],
+            guess_x: data.answers[playerId].location.x,
+            guess_y: data.answers[playerId].location.y,
             colourNumber: index + 1,
           };
         });
