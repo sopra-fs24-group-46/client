@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { api, handleError } from "helpers/api";
+import { api, handleError, shortError} from "helpers/api";
 
 import "styles/views/SetGame.scss";
 import { Button } from "components/ui/Button"; // Import the Button component
@@ -11,6 +11,7 @@ import {FormField} from "components/ui/FormField";
 import {MultiSelection} from "components/ui/MultiSelection";
 import ValidatedTextInput from "components/ui/ValidatedTextInput";
 import SelectRegion from "components/ui/SelectRegion";
+import ErrorBox from "components/ui/ErrorBox";
 
 
 
@@ -55,6 +56,7 @@ const SetGame = () => {
   const [regionType, setRegionType] = useState(null);
   const [names, setNames] = useState(null);
   const host = localStorage.getItem("id");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -94,18 +96,24 @@ const SetGame = () => {
       };
 
       // Send a PUT request to the backend
+      console.log(requestBody);
       const response = await api.put(`/game/${localStorage.getItem("gameId")}/updateSettings`, requestBody);
 
       console.log(requestBody.locationTypes);
       console.log('Lobby created' + response.data);
 
+      const credentials = {
+        id: id,
+        token: token,
+      }
       // Open the lobby first before starting the game
-      await api.post(`/game/${gameId}/openLobby`, requestBody);
+      await api.post(`/game/${gameId}/openLobby`, credentials);
 
       // Redirect to "/lobby" after successful creation
       navigate(`/lobby/${localStorage.getItem("gameId")}`);
     } catch (error) {
       // Handle errors
+      setErrorMessage(shortError(error));
       console.error("Error creating game:", handleError(error));
     }
   };
@@ -126,6 +134,7 @@ const SetGame = () => {
   return (
     <BaseContainer>
 
+      <ErrorBox message={errorMessage} onClose={() => setErrorMessage("")} />
       <div className="header container_title1">
         <h1 className="header title1">
           CREATE CUSTOM GAME

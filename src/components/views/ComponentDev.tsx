@@ -12,13 +12,16 @@ import ProgressBar from "components/ui/ProgressBar";
 import { Button } from "components/ui/Button";
 import ValidatedTextInput from "components/ui/ValidatedTextInput";
 import Dropdown from "components/ui/DropDown";
+import ErrorBox from "components/ui/ErrorBox";
 
 const ComponentDev = () => {
   const [maxPlayers, setMaxPlayers] = useState(2);
   const [restartTimer, setRestartTimer] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   return (
     <BaseContainer>
+      <ErrorBox message={errorMessage} onClose={() => {}} />
       <div className="login container">
         <MultiSelection
           options={["option 1", "option 2", "option 3", "option 4"]}
@@ -34,7 +37,7 @@ const ComponentDev = () => {
           onChange={setMaxPlayers}
           style={{ width: "50px" }}
         />
-        <ValidatedTextInput validStrings={["test", "something else"]} label="test" onValidString={() => {}} />
+        <ValidatedTextInput validStrings={["test", "something else"]} label="test" onValidString={setErrorMessage} />
         {/* <LeaderBoardPowerUp powerUp="JOKER" />
         <LeaderBoardPowerUpCollection powerUpList={["JOKER", "SHIELD"]} /> */}
         {/* <FinalLeaderboard scores={[{score: 69, distance: 0}, {score: 0, distance: 0}]} currentRound={1}/> */}
