@@ -55,7 +55,7 @@ export const MapRevealLeaderboard = props => {
 
     }, [props.dataJsonString]);
 
-    console.log(dataArray);
+    //console.log(dataArray);
 
     const getColorForNumber = (number) => {
         switch (number) {
@@ -67,6 +67,8 @@ export const MapRevealLeaderboard = props => {
                 return 'blue';
             case 4:
                 return 'pink';
+            case 5:
+                return 'yellow';
             default:
                 return 'gray'; // Fallback-Farbe, wenn keine spezifische Farbe angegeben ist
         }
