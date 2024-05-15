@@ -1,4 +1,4 @@
-import { api, handleError, shortError } from "helpers/api";
+import { api, shortError } from "helpers/api";
 
 export const getGameState = async (showError = console.log) => {
   try {
@@ -94,7 +94,7 @@ export const joinGame = async (gameId: string, name: string, navigate: any, show
     localStorage.setItem("playerId", response.data);
 
 
-    navigate(`/lobby/${gameId}`);
+    navigate(`/game/lobby/${gameId}`);
   } catch (error) {
     showError(shortError(error));
   }
