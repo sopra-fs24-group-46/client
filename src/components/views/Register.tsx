@@ -49,21 +49,10 @@ const SignUp = (props) => {
             localStorage.setItem("token", token);
             localStorage.setItem("id", id);
 
-            console.log("Response data:", response.data);
-
-            // Check if user data is present in the response
-            if (response.data.user) {
-                // Get the returned user data from the response body
-                const user = response.data.user;
-                // Store the user ID into local storage
-                localStorage.setItem("id", user.id);
-            }
-
             // Navigate to the desired route
             navigate("/profile");
         } catch (error) {
             showError('Something went wrong during the sign up: ' + shortError(error));
-            window.location.reload();
         }
     };
 
@@ -83,13 +72,13 @@ const SignUp = (props) => {
                         value={password || ""}
                         onChange={(n) => setPassword(n)}
                     />
-<div className="login password-hint" style={{ fontSize: '12px', marginBottom: '1px' }}>
+                    <div className="login password-hint" style={{ fontSize: '12px', marginBottom: '1px' }}>
                         Password should be at least 6 characters long.
                     </div>
                         <div className="login button-container" style={{ marginTop: '10px' }}>
                         <Button
                             disabled={!username || !password}
-                            width="100%"
+                            // width="100%"
                             onClick={() => {
                                 // Check if the password length is greater than 6
                                 if (password.length > 5) {
@@ -102,7 +91,7 @@ const SignUp = (props) => {
                             Sign Up
                         </Button>
                         <Button
-                            width="100%"
+                            // width="100%"
                             onClick={() => navigate(`/home`)}
                         >
                             Go back

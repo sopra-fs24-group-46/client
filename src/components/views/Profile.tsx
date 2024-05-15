@@ -138,7 +138,13 @@ const Profile = () => {
     async function fetchData() {
       const id = localStorage.getItem('id');
       const token = localStorage.getItem('token');
-      const user = await getUser(id, token, showError);
+      const user = await getUser(id, token, console.log);
+
+      if (!user) {//invalid token and or id
+        localStorage.removeItem('token');
+        localStorage.removeItem('id');
+      }
+
       console.log("Fetched User:", user);
       setLoggedInUser(user);
     }
