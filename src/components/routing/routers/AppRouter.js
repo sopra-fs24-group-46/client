@@ -49,7 +49,7 @@ const AppRouter = () => {
         {/* this are all views which are exclusively for clients with id and userName */}
         <Route path="/profile" element={<IsUserGuard />}>
           <Route path="/profile" element={<Profile />} />
-          <Route path="profile/edit" element={<Edit />} />
+          <Route path="/profile/edit" element={<Edit />} />
         </Route>
         <Route path="/game/create" element={<IsUserGuard />}>
           <Route path="/game/create" element={<SetGame />} /> 
