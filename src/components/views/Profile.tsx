@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { api, handleError, shortError } from "helpers/api";
+import { api, handleError, shortError, getUser} from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import { Button } from "components/ui/Button";
 import { useNavigate } from "react-router-dom";
@@ -136,19 +136,11 @@ const Profile = () => {
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        const response = await api.get(`/users`);
-        const users = response.data;
-        const userId = localStorage.getItem('id');
-        const user = users.find((user) => user.id === parseInt(userId));
-        if (!user) {
-          throw new Error('User not found');
-        }
-        setLoggedInUser(user);
-      } catch (error) {
-        showError('Something went wrong while fetching the user!' + shortError(error));
-        console.error('Details:', error);
-      }
+      const id = localStorage.getItem('id');
+      const token = localStorage.getItem('token');
+      const user = await getUser(id, token, showError);
+      console.log("Fetched User:", user);
+      setLoggedInUser(user);
     }
 
 
