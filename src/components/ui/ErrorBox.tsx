@@ -79,7 +79,9 @@ const ErrorBox: React.FC<ErrorBoxProps> = ({ message, onClose = () => {}, }) => 
           }}
           onClick={handleClose}
         >
-          <p>X</p>
+          <p>
+          &#10006;
+          </p>
         </button>
       </div>
     )

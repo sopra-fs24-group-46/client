@@ -14,6 +14,9 @@ export const MultiSelection = ({ options, onChange, label, defaultValue = [] }) 
       if (ref.current && !ref.current.contains(event.target)) {
         closeDropDown();
       }
+      if (ref.current && ref.current.contains(event.target)) {
+        openDropDown();
+      }
     };
 
     document.addEventListener('click', handleClick);
@@ -26,6 +29,10 @@ export const MultiSelection = ({ options, onChange, label, defaultValue = [] }) 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  
+  const openDropDown = () => {
+    setIsOpen(true);
+  }
 
   const closeDropDown = () => {
     setIsOpen(false);
