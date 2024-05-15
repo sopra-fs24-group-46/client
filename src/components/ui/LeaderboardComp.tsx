@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { api, handleError } from "helpers/api";
+import { api } from "helpers/api";
 
 import { useNavigate } from "react-router-dom";
 

@@ -8,6 +8,7 @@ export const api = axios.create({
 
 export const shortError = error => {
   //check if error is defined
+  handleError(error, console.error);
   if (!error || !error.response || !error.response.data) {
     return "No response data from Server. Did you start the server. \n" +error;
   }
@@ -15,7 +16,7 @@ export const shortError = error => {
   return `${error.response.data.message}`;
 }
 
-export const handleError = error => {
+export const handleError = (error, showError=alert) => {
   const response = error.response;
 
   // catch 4xx and 5xx status codes
@@ -36,7 +37,7 @@ export const handleError = error => {
     return info;
   } else {
     if (error.message.match(/Network Error/)) {
-      alert("The server cannot be reached.\nDid you start it?");
+      showError("The server cannot be reached.\nDid you start it?");
     }
 
     console.log("Something else happened.", error);
@@ -55,7 +56,7 @@ export const getAuthToken = () => {
   };
 }
 
-export const usePowerUp = async (powerUp) => {
+export const usePowerUp = async (powerUp, showError = alert) => {
   //Define current variables
   const gameId = localStorage.getItem("gameId");
   const playerId = localStorage.getItem("playerId");
@@ -73,7 +74,7 @@ export const usePowerUp = async (powerUp) => {
 
     //TODO Propper Error Handling
   } catch (error) {
-    console.log(`Error Details: ${handleError(error)}`);
+    showError(shortError(error));
   }   
 }
 

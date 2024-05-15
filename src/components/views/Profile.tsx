@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { api, handleError } from "helpers/api";
+import { api, handleError, shortError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import { Button } from "components/ui/Button";
 import { useNavigate } from "react-router-dom";
@@ -146,11 +146,8 @@ const Profile = () => {
         }
         setLoggedInUser(user);
       } catch (error) {
-        console.error(
-            `Something went wrong while fetching the user: \n${handleError(error)}`
-        );
+        showError('Something went wrong while fetching the user!' + shortError(error));
         console.error('Details:', error);
-        alert('Something went wrong while fetching the user! See the console for details.');
       }
     }
 

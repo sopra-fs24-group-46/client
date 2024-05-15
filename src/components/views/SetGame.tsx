@@ -74,11 +74,11 @@ const SetGame = () => {
 
       // Validation checks
       if (roundsInt <= 0) {
-        alert("Please enter a value greater than 0 for rounds.");
+        showError("Please enter a value greater than 0 for rounds.");
         return;
       }
       if (guessingTimeInt <= 1) {
-        alert("Please enter a guessing time greater than 1.");
+        showError("Please enter a guessing time greater than 1.");
         return;
       }
 
@@ -113,8 +113,7 @@ const SetGame = () => {
       navigate(`/game/lobby/${localStorage.getItem("gameId")}`);
     } catch (error) {
       // Handle errors
-      showError(shortError(error));
-      console.error("Error creating game:", handleError(error));
+      showError("Creating game failed: " + shortError(error));
     }
   };
 

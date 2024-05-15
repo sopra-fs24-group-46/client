@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { api, handleError } from "helpers/api";
+import { api, shortError} from "helpers/api";
 import User from "models/User";
 import { useNavigate } from "react-router-dom";
 import { Button } from "components/ui/Button";
@@ -7,6 +7,7 @@ import "styles/views/Login.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import Header from "components/views/Header";
 import PropTypes from "prop-types";
+import { useError } from "components/ui/ErrorContext";
 
 const FormField = (props) => {
     return (
@@ -32,6 +33,7 @@ FormField.propTypes = {
 
 const SignUp = (props) => {
     const navigate = useNavigate();
+    const { showError } = useError();
     const [password, setPassword] = useState<string>(null);
     const [username, setUsername] = useState<string>(null);
 
@@ -60,7 +62,7 @@ const SignUp = (props) => {
             // Navigate to the desired route
             navigate("/profile");
         } catch (error) {
-            alert(`Something went wrong during the sign up: \n${handleError(error)}`);
+            showError('Something went wrong during the sign up: ' + shortError(error));
             window.location.reload();
         }
     };
@@ -93,7 +95,7 @@ const SignUp = (props) => {
                                 if (password.length > 5) {
                                     doSignup();
                                 } else {
-                                    alert("Password should be longer than 5 characters.");
+                                    showError("Password should be longer than 6 characters.");
                                 }
                             }}
                         >
