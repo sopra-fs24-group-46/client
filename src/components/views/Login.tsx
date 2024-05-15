@@ -60,7 +60,8 @@ const Login = () => {
       }
     } catch (error) {
       alert(
-        `Something went wrong during the login: \n${handleError(error)}`
+        'Something went wrong during the login: Username or password incorrect'
+        // \n${handleError(error)}`
       );
     }
   };
