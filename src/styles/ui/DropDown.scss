@@ -1,0 +1,43 @@
+@import "../theme";
+
+.dropdownGlue{
+  position: absolute;
+  width: fit-content;
+  height: fit-content;
+}
+
+.dropdown {
+  //should be placed relative but not interfere with other elements
+    position: absolute;
+    top: auto;
+    left: auto;
+  background-color: $formFieldBackground;
+  border: none;
+  border-radius: $borderRadius;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 5px 0;
+  z-index: 1000;
+
+  overflow: auto;
+}
+
+.dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown ul li {
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: $borderRadius;
+}
+
+.dropdown ul li:hover {
+  background-color: $accent;
+  color: $text;
+}
+
+.hidden {
+  display: none;
+}

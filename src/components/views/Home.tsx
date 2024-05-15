@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "helpers/api";
 import { Button } from "components/ui/Button";
 import BaseContainer from "components/ui/BaseContainer";
 import Header from "components/views/Header";
+import { joinGame } from "components/game/GameApi";
+import { useError } from "components/ui/ErrorContext";
 
 
 const Home = () => {
   const navigate = useNavigate();
+  const { showError } = useError();
   const [gamePin, setGamePin] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [isGamePinEditable, setIsGamePinEditable] = useState(true);
@@ -23,51 +25,9 @@ const Home = () => {
   }, []);
 
 
-  const joinGame = async () => {
-
-    if (!playerName.trim()) {
-      alert("Please enter your name");
-      return;
-    }
-  
-    // Validation: Check if game pin is provided
-    if (!gamePin.trim()) {
-      alert("Please enter game pin");
-      return;
-    }
-  
-  
-    try {
-      // Construct the request body
-      const requestBody = {
-        displayName: playerName
-      };
-
-
-      const response = await api.post(`/game/${gamePin}/join`, requestBody);
-
-
-      // Handle response as needed, e.g., updating localStorage, navigating
-      console.log(response.data);
-      localStorage.setItem("gameId", gamePin);
-      localStorage.setItem("playerId", response.data);
-
-
-      navigate(`/lobby/${gamePin}`);
-    } catch (error) {
-      console.error("Error joining game:", error);
-      let errorMessage = "Error joining game. Please try again.";
-    
-      if (error.response && error.response.status === 400) {
-        errorMessage = "Error joining game. This username is already taken.";
-      } else if (error.response && error.response.status === 404) {
-        errorMessage = "Error joining game. Game not found.";
-      }
-    
-      alert(errorMessage);
-    }
-    
-  };
+  const inputIsValid = () => {
+    return playerName.length > 0 && gamePin.length > 0;
+  }
 
 
   const handleRegisterClick = () => {
@@ -105,7 +65,9 @@ const Home = () => {
               />
             </div>
             <div className="login button-container">
-              <Button width="100%" onClick={joinGame}>
+            <Button
+              disabled={!inputIsValid()}
+              width="100%" onClick={() => joinGame(gamePin, playerName, navigate, showError)}>
                 Join Game
               </Button>
             </div>

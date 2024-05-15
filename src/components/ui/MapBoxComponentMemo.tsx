@@ -2,37 +2,119 @@
 import React, { useEffect, useRef, useState, memo} from "react";
 import PropTypes from "prop-types";
 import mapboxgl from "mapbox-gl";
+import { LineLayer } from "deck.gl";
 
-const areEqual = (prevProps, nextProps) => true;
+const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocation, guessesMapReveal }) => {
 
-const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesMapReveal }) => {
-
-  const mapContainer = useRef(null);
   const mapboxAccessToken = "pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w";
 
-  const [map, setMap] = useState(null);
-  // const [markers, setMarkers] = useState([]);
-
-  let clickMarker = null;
-
-  const [markers, setMarkers] = useState([]);
   
+  const mapContainer = useRef(null);
+  const clickMarker = useRef(null);
+  const currentLocationMarker = useRef(null);
+
+  const [map, setMap] = useState(null);
+  const [markers, setMarkers] = useState([]);
 
 
 
-  let marker = null;
+  //Functions
 
-  const removeMarkers = () => {
+  //Removes current clickMarker if it exists on the map
+  const removeClickMarker = () => {
 
-    if(markers) {
-      for (var i = markers.length - 1; i >= 0; i--) {
-      markers[i].remove();
-      };
-   }
+    if (clickMarker.current) {
+      clickMarker.current.remove();
+    };
   };
 
-  //TODO make Component
-  const getColorForNumber = (number) => {
+  //Removes currenLocationMarker if it exists on the map
+  const removeCurrentLocationMarker = () => {
+
+    if (currentLocationMarker.current) {
+      currentLocationMarker.current.remove();
+    };
+  };
+
+  //Removes layer and source of lines (guess - correctLocation) if they exist
+  const removeLines = () => {
+
+    if (map.getLayer('lineLayer')) {
+      map.removeLayer('lineLayer');
+      map.removeSource('lineLayer');
+    };
+  };
+
+  //Removes joker circle if it exists
+  const removeCircle = () => {
+
+    if (map.getLayer('polygon')) {
+      map.removeLayer('polygon');
+      map.removeSource('polygon');
+    };
+  };
+
+  //Removes guess markers of all players if they exist
+  const removeGuessMarkers = () => {
+
+    if (markers.length > 0) {
+      markers.forEach(marker => {
+        marker.remove();
+    });
+    setMarkers([]);
+    };
+  };
+
+  //creates feature for a single line
+  const createFeature = (x, y) => {
+
+    const lineFeature = {
+      "type": "Feature",
+      "geometry": {
+          "type": "LineString",
+          "coordinates": [[x, y], [currentQuestionLocation.x, currentQuestionLocation.y]]}
+    };
+    return lineFeature;
+  };
+
+  //creates layer for lines and multiple features (multiple lines)
+  const createLineLayers = (data) => {
+
+    var featureArray = [];
+
+    data.forEach(item => {
+
+      if (item.guess_x && item.guess_y) {
+
+        const feature = createFeature(item.guess_x, item.guess_y);
+        featureArray.push(feature);
+      }
+    });
+
+    map.addLayer({
+      "id": "lineLayer",
+      "type": "line",
+      "source": {
+          "type": "geojson",
+          "data": {
+              "type": "FeatureCollection",
+              "features": featureArray
+          }
+      },
+      "layout": {
+          "line-join": "round",
+          "line-cap": "round"
+      },
+      "paint": {
+          "line-color": "#333399",
+          "line-width": 3,
+          "line-dasharray": [4, 2]
+      }
+    });
+  };
+
+  //Selects color which is fixed for every player
+  const getColor = (number) => {  
     switch (number) {
         case 1:
             return 'orange';
@@ -42,15 +124,86 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
             return 'blue';
         case 4:
             return 'pink';
+        case 5:
+          return 'yellow';
         default:
-            return 'gray'; // Fallback-Farbe, wenn keine spezifische Farbe angegeben ist
+            return 'gray'; // Fallback-color
     }
-};
+  };
+
+  //Creates circle polygon as sourve for the joker circle
+  var createGeoJSONCircle = function(center, radiusInKm, points) {
+    if(!points) points = 64;
+
+    var coords = {
+        latitude: center[1],
+        longitude: center[0]
+    };
+
+    var km = radiusInKm;
+
+    var ret = [];
+    var distanceX = km/(111.320*Math.cos(coords.latitude*Math.PI/180));
+    var distanceY = km/110.574;
+
+    var theta, x, y;
+    for(var i=0; i<points; i++) {
+        theta = (i/points)*(2*Math.PI);
+        x = distanceX*Math.cos(theta);
+        y = distanceY*Math.sin(theta);
+
+        ret.push([coords.longitude+x, coords.latitude+y]);
+    }
+    ret.push(ret[0]);
+
+    return {
+        "type": "geojson",
+        "data": {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [ret]
+                }
+            }]
+        }
+    };
+  };
+
+  //creates joker circle
+  const createCircle = (x,y, radiusInKm) => {
+
+    var center = [x,y];
+
+    const randomVariable_1 = Math.floor(Math.random() * 2); // Generate either 0 or 1
+    const randomVariable_2 = Math.floor(Math.random() * 2); // Generate either 0 or 1
+
+    if(randomVariable_1 === 1) {
+      center[randomVariable_2] += 0.05;
+    } else {
+      center[randomVariable_2] -= 0.05;
+    }
+
+    map.addSource("polygon", createGeoJSONCircle(center, radiusInKm, 64));
+
+    map.addLayer({
+      "id": "polygon",
+      "type": "fill",
+      "source": "polygon",
+      "layout": {},
+      "paint": {
+          "fill-color": "red",
+          "fill-opacity": 0.5
+      }
+    });
+  };
+
 
   useEffect(() => {
 
+    //Map gets loaded only when starting a game or refreshing the site
     mapboxgl.accessToken = mapboxAccessToken;
-
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v11",
@@ -63,164 +216,79 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
       map.setLayoutProperty('natural-point-label', 'visibility', 'none');
     });
 
-
-    //initializedMap.on('click', handleMapClick);
+    //Visualize the current guessing position
     map.on("click", (e) => {
- 
-      if (markers) {
-        removeMarkers();
-        console.log(markers);
 
-      }
-
-      if (clickMarker) {
-        clickMarker.remove();
-      }
+      removeClickMarker();
 
       localStorage.setItem("x", String(e.lngLat.lng));
       localStorage.setItem("y", String(e.lngLat.lat));
-
 
       const newMarker = new mapboxgl.Marker()
         .setLngLat([e.lngLat.lng, e.lngLat.lat])
         .addTo(map);
 
-        clickMarker = newMarker;
+        clickMarker.current = newMarker;
     });
 
     setMap(map);
 
   }, [])
 
+
   useEffect(() => {
 
     if (map) {
 
-      removeMarkers();
+      //Removing all markers, lines and circle from the map
+      removeClickMarker();
+      removeCurrentLocationMarker();
+      removeGuessMarkers();
+      removeLines();
+      removeCircle();
+
+      if (roundState === "GUESSING") {
+
+        if(jokerData && jokerData.joker) {
+
+            console.log(jokerData);
+
+            createCircle(jokerData.center[0], jokerData.center[1], 10);
+        }
+      }
+
 
       if (roundState === "MAP_REVEAL") {
 
-        guessesMapReveal.forEach(player => {
-          const { answer } = player;
+        if(guessesMapReveal && currentQuestionLocation) {
 
-          if (answer) {
-
-            const marker = new mapboxgl.Marker({ color: getColorForNumber(player.colourNumber) })
-              .setLngLat([answer.location.x, answer.location.y])
-              .addTo(map);
-
-              setMarkers([...markers,marker]);
-
-            
+          //Create marker for current question location
+          const newMarker = new mapboxgl.Marker({color: 'red'})
+          .setLngLat([currentQuestionLocation.x, currentQuestionLocation.y])
+          .addTo(map);
   
-          }
-        
-        });
+          currentLocationMarker.current = newMarker;
 
-      }
-      console.log(roundState);
-    }
+          //Array for testing without BE data
+          const testArray = [{colorNumber: 1, guess_x:7.5, guess_y:46.8},{colorNumber: 2, guess_x:7.9, guess_y:46.1}, {colorNumber: 3, guess_x:8.1, guess_y:45.2}];
 
-  }, [roundState])
+          //Create the markers for players guesses
+          const newMarkers = guessesMapReveal.map(item => {
+            return new mapboxgl.Marker({color: getColor(item.colorNumber)})
+                .setLngLat([item.guess_x, item.guess_y])
+                .addTo(map);
+          });
+  
+          setMarkers(newMarkers);
 
+          //Create the lines to correct location
+          createLineLayers(guessesMapReveal);
 
-  // useEffect(() => {
+        };
+      };
+    };
 
-  //   mapboxgl.accessToken = mapboxAccessToken;
-  //   console.log(guessesMapReveal);
-
-  //   const map = new mapboxgl.Map({
-  //     container: mapContainer.current,
-  //     style: "mapbox://styles/mapbox/streets-v11",
-  //     center: [8.2275, 46.8182],
-  //     zoom: 7,
-  //   });
-
-  //   let currentQuestionMarker = null;
-  //   // Function to update the current question marker
-  //   const updateCurrentQuestionMarker = (location) => {
-  //     if (currentQuestionMarker) {
-  //       currentQuestionMarker.remove();
-  //     }
-
-
-  //     if (location) {
-  //       currentQuestionMarker = new mapboxgl.Marker({
-  //         color: "red", // or any other color you prefer
-  //       })
-  //           .setLngLat([location.x, location.y])
-  //           .addTo(map);
-  //     }
-  //   };
-
-
-  //   // Update the current question marker when the component mounts
-  //   updateCurrentQuestionMarker(currentQuestionLocation);
-  //   if (reveal === 1) {
-
-  //     /*
-  //       //TODO Always same colors should be choosen and playername should be displayed in popup and Text should not be white
-  //       */
-  //     guessesMapReveal.forEach(player => {
-  //       const { answer } = player;
-
-        
-  //       //TODO make Component
-  //       const getColorForNumber = (number) => {
-  //         switch (number) {
-  //             case 1:
-  //                 return 'orange';
-  //             case 2:
-  //                 return 'green';
-  //             case 3:
-  //                 return 'blue';
-  //             case 4:
-  //                 return 'pink';
-  //             default:
-  //                 return 'gray'; // Fallback-Farbe, wenn keine spezifische Farbe angegeben ist
-  //         }
-  //     };
-
-  //       if (answer) {
-  //         console.log(answer.colourNumber)
-  //         const markerColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
-
-  //         new mapboxgl.Marker({ color: getColorForNumber(player.colourNumber) })
-  //             .setLngLat([answer.location.x, answer.location.y])
-  //             .addTo(map);
-
-  //         // Create the popup and add it to the map
-  //         const popup = new mapboxgl.Popup({
-  //           closeButton: true,
-  //           closeOnClick: false,
-  //         })
-  //             .setLngLat([answer.location.x, answer.location.y])
-  //             .setHTML(`
-  //         <div style="background-color: #f4f4f4; color: #333; padding: 12px; border-radius: 8px;">
-  //           <h3 style="margin: 0; font-size: 13px; font-weight: bold; color: #007bff;">${player.playerId}</h3>
-  //           <p style="margin: 8px 0 0; font-size: 12px; color: #333;">Coordinates:</p>
-  //           <p style="margin: 0; font-size: 12px; color: #333;">[${answer.location.x.toFixed(6)}, ${answer.location.y.toFixed(6)}]</p>
-  //         </div>
-  //       `);
-
-  //         //popup.addTo(map);
-  //       }
-  //     });
-
-  //   }
-
-    
-
-
-
-
-  //   return () => {
-  //     if (currentQuestionMarker) {
-  //       currentQuestionMarker.remove();
-  //     }
-  //     map.remove();
-  //   };
-  // }, []);
+  }, [guessesMapReveal, roundState, jokerData])
 
 
   return <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />;
@@ -231,14 +299,18 @@ MapBoxComponent.displayName = 'MapBoxComponent';
 MapBoxComponent.propTypes = {
 
   roundState: PropTypes.string,
+  jokerData: PropTypes.shape({
+    joker: PropTypes.bool.isRequired,
+    center: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+  }).isRequired,
   reveal: PropTypes.number.isRequired,
   currentQuestionLocation: PropTypes.string.isRequired,
   guessesMapReveal: PropTypes.arrayOf(PropTypes.shape({
-    latitude: PropTypes.number.isRequired,
-    longitude: PropTypes.number.isRequired,
-    colourName: PropTypes.number.isRequired,
+    playerId: PropTypes.string.isRequired,
+    guess_x: PropTypes.number.isRequired,
+    guess_y: PropTypes.number.isRequired,
+    colorNumber: PropTypes.number.isRequired,
   })),
-
 
 };
 
