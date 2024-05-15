@@ -168,9 +168,10 @@ const SetGame = () => {
             />
           </div>
           <MultiSelection 
-            label = "Locations" 
-            options = {["ALPINE_MOUNTAIN", "MOUNTAIN","MAIN_HILL", "HILL", "LAKE"]} 
-            onChange = {setLocationTypes}
+            label = "Types of locations" 
+            options = {locationNames} 
+            onChange = {(name) => setLocationTypes(fromNamesToLocationTypes(name))}
+            defaultValue={[locationNames[0]]}
           />
           <SelectRegion region={region} setRegion={setRegion} regionType={regionType} setRegionType={setRegionType} dropDownMaxHeight={"40vh"} />
           <div className="set-game button_container">
@@ -185,5 +186,13 @@ const SetGame = () => {
   );
 };
 
-
 export default SetGame;
+
+const locationNames = ["Alpine Peaks", "Mountains", "Main Hills", "Hills", "Lakes"];
+const locationTypes = ["ALPINE_MOUNTAIN", "MOUNTAIN", "MAIN_HILL", "HILL", "LAKE"];
+const fromNamesToLocationTypes = (names: string[]) => {
+  return names.map((name) => {
+    let index = locationNames.indexOf(name);
+    return locationTypes[index];
+  });
+}
