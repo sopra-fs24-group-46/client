@@ -13,11 +13,10 @@ const ErrorBox: React.FC<ErrorBoxProps> = ({ message, onClose = () => {}, }) => 
   
   const ref = useRef(null);
 
-  //close drop down when clicking outside the multi selection
     useEffect(() => {
     const handleClick = (event) => {
         if (ref.current && !ref.current.contains(event.target)) {
-            //   setShow(false);
+              // handleClose();
         } 
     };
 
@@ -28,7 +27,9 @@ const ErrorBox: React.FC<ErrorBoxProps> = ({ message, onClose = () => {}, }) => 
     };
   }, []);
     useEffect(() => {
-        setShow(message ? message.length > 4 : false);
+      if (message ? message.length > 0 : false) {
+          handleShow();
+        }
     }, [message]);
 
   const handleClose = () => {setShow(false), onClose();};

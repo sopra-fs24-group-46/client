@@ -13,15 +13,17 @@ import { Button } from "components/ui/Button";
 import ValidatedTextInput from "components/ui/ValidatedTextInput";
 import Dropdown from "components/ui/DropDown";
 import ErrorBox from "components/ui/ErrorBox";
+import { useError } from "components/ui/ErrorContext";
 
 const ComponentDev = () => {
   const [maxPlayers, setMaxPlayers] = useState(2);
   const [restartTimer, setRestartTimer] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const { showError } = useError();
 
   return (
     <BaseContainer>
-      <ErrorBox message={errorMessage} onClose={() => {}} />
+      {/* <ErrorBox message={errorMessage} onClose={() => {}} /> */}
       <div className="login container">
         <MultiSelection
           options={["option 1", "option 2", "option 3", "option 4"]}
@@ -29,6 +31,7 @@ const ComponentDev = () => {
           label="test"
         />
         {/* <Button onClick={() => setRestartTimer(true)}>test</Button> */}
+        <Button onClick={() => showError("test")}>test</Button>
         <FormField
           label="Max number of players"
           type="number"

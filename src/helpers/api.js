@@ -7,6 +7,11 @@ export const api = axios.create({
 });
 
 export const shortError = error => {
+  //check if error is defined
+  if (!error || !error.response || !error.response.data) {
+    return "No response data from Server. Did you start the server. \n" +error;
+  }
+
   return `status code: ${error.response.status}\nerror: ${error.response.data.error}\nerror message: ${error.response.data.message}`;
 }
 

@@ -11,7 +11,7 @@ import {FormField} from "components/ui/FormField";
 import {MultiSelection} from "components/ui/MultiSelection";
 import ValidatedTextInput from "components/ui/ValidatedTextInput";
 import SelectRegion from "components/ui/SelectRegion";
-import ErrorBox from "components/ui/ErrorBox";
+import { useError } from "components/ui/ErrorContext";
 
 
 
@@ -56,7 +56,7 @@ const SetGame = () => {
   const [regionType, setRegionType] = useState(null);
   const [names, setNames] = useState(null);
   const host = localStorage.getItem("id");
-  const [errorMessage, setErrorMessage] = useState("");
+  const { showError } = useError();
 
   const navigate = useNavigate();
 
@@ -113,7 +113,7 @@ const SetGame = () => {
       navigate(`/lobby/${localStorage.getItem("gameId")}`);
     } catch (error) {
       // Handle errors
-      setErrorMessage(shortError(error));
+      showError(shortError(error));
       console.error("Error creating game:", handleError(error));
     }
   };
@@ -134,7 +134,6 @@ const SetGame = () => {
   return (
     <BaseContainer>
 
-      <ErrorBox message={errorMessage} onClose={() => setErrorMessage("")} />
       <div className="header container_title1">
         <h1 className="header title1">
           CREATE CUSTOM GAME
