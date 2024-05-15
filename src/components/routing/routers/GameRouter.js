@@ -12,9 +12,9 @@ const GameRouter = () => {
     <div>
       <PowerUpOverlay powerUp="JOKER" />{" "}
       {/* This is here as a prove that it works. It is always displayed*/}
-      <div className="map container">
+      {/* <div className="map container">
         <MapBoxComponent reveal={0} guessesMapReveal={[]} />
-      </div>
+      </div> */}
       <Routes>
         <Route path="dev" element={<ComponentDev />} />{" "}
         {/*This is accessed with localhost:3000/game/dev  */}

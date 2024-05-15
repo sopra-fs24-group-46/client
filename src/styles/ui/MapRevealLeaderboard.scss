@@ -4,18 +4,71 @@
   &.container {
 
     align-self: flex-start;
-    margin-left: 5vw;
+    margin-left: 2vw;
 
-    height: 60vh;
-    width: 30vw;
-    margin-top: 5vh;
+    max-width: 50vw;
+    margin-top: 10vh;
     background-color: $background;
     border-radius: 0.75em;
     box-shadow: $dropShadow;
 
+    padding: 10px;
+
     z-index: 3;
+  }
+
+  &.text-container {
+    margin-bottom: 2vh;
+    font-weight: bold;
+  }
+
+  &.table-container {
+    border: 1px solid white;
+    max-height: 40vh;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    scrollbar-width: thin;
+
+  }
 
 
 
+  &.mapReveal-table {
+    width: 100%;
+    border-collapse: collapse;
+    
+    tbody {
+
+      tr{
+        height: 60px;
+      }
+    }
+
+    th {
+      
+      padding: 1rem;
+      text-align: left;
+    }
+
+    td {
+      padding-left: 1rem;
+
+    }
+}
+
+@media all and (max-width: 975px) {
+
+  &.container {
+
+    align-self: initial;
+    max-width: 90vw;
+    margin-top: 65vh;
+  }
+
+  &.table-container {
+
+    max-height: 20vh;
+  }
   }
 }

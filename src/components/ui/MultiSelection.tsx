@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import "../../styles/ui/MultiSelection.scss";
 import Dropdown from './DropDown';
 
-export const MultiSelection = ({ options, onChange, label}) => {
-  const [selectedWords, setSelectedWords] = useState([]);
+export const MultiSelection = ({ options, onChange, label, defaultValue = [] }) => {
+  const [selectedWords, setSelectedWords] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
@@ -13,6 +13,9 @@ export const MultiSelection = ({ options, onChange, label}) => {
     const handleClick = (event) => {
       if (ref.current && !ref.current.contains(event.target)) {
         closeDropDown();
+      }
+      if (ref.current && ref.current.contains(event.target)) {
+        openDropDown();
       }
     };
 
@@ -26,6 +29,10 @@ export const MultiSelection = ({ options, onChange, label}) => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  
+  const openDropDown = () => {
+    setIsOpen(true);
+  }
 
   const closeDropDown = () => {
     setIsOpen(false);
@@ -79,5 +86,6 @@ export const MultiSelection = ({ options, onChange, label}) => {
 MultiSelection.propTypes = {
   options: PropTypes.array,
   onChange: PropTypes.func,
-  label: PropTypes.string
+  label: PropTypes.string,
+  defaultValue: PropTypes.array
 }

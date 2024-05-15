@@ -10,9 +10,11 @@ import { getGameView } from "./GameApi";
 import "styles/views/GameViewContainer.scss";
 import { usePowerUp } from "helpers/api";
 import "styles/views/FancyBackground.scss";
+import { useError } from "components/ui/ErrorContext";
 
 const RoundStart = () => {
 
+  const { showError } = useError();
   // State variables for game data
   const [gameInfo, setGameInfo] = useState(null);
   const [currentRound, setCurrentRound] = useState(0);
@@ -43,7 +45,7 @@ const RoundStart = () => {
   
   useEffect(() => {
     if (powerUpInUse) {
-      usePowerUp(powerUpInUse);
+      usePowerUp(powerUpInUse, showError);
     }
   }, [powerUpInUse]);
 

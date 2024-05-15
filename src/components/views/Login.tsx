@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { api, handleError } from "helpers/api";
+import { api, shortError} from "helpers/api";
 import {useNavigate} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import Header from "components/views/Header";
 import PropTypes from "prop-types";
+import { useError } from "components/ui/ErrorContext";
 
 
 const FormField = (props) => {
@@ -32,6 +33,7 @@ FormField.propTypes = {
 
 const Login = () => {
   const navigate = useNavigate();
+  const { showError } = useError();
   const [password, setPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
 
@@ -56,11 +58,11 @@ const Login = () => {
         navigate("/profile");
       } else {
         // Handle the case where the token is not present in the response
-        alert("Token not found in the response");
+        throw new Error("Token not found in the response");
       }
     } catch (error) {
-      alert(
-        `Something went wrong during the login: \n${handleError(error)}`
+      showError(
+        shortError(error)
       );
     }
   };

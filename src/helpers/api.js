@@ -6,7 +6,17 @@ export const api = axios.create({
   headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
 });
 
-export const handleError = error => {
+export const shortError = error => {
+  //check if error is defined
+  handleError(error, console.error);
+  if (!error || !error.response || !error.response.data) {
+    return "No response data from Server. Did you start the server. \n" +error;
+  }
+
+  return `${error.response.data.message}`;
+}
+
+export const handleError = (error, showError=alert) => {
   const response = error.response;
 
   // catch 4xx and 5xx status codes
@@ -27,7 +37,7 @@ export const handleError = error => {
     return info;
   } else {
     if (error.message.match(/Network Error/)) {
-      alert("The server cannot be reached.\nDid you start it?");
+      showError("The server cannot be reached.\nDid you start it?");
     }
 
     console.log("Something else happened.", error);
@@ -46,27 +56,27 @@ export const getAuthToken = () => {
   };
 }
 
-export const usePowerUp = async (powerUp) => {
-    //Define current variables
-    const gameId = localStorage.getItem("gameId");
-    const playerId = localStorage.getItem("playerId");
+export const usePowerUp = async (powerUp, showError = alert) => {
+  //Define current variables
+  const gameId = localStorage.getItem("gameId");
+  const playerId = localStorage.getItem("playerId");
 
-    //Create requestBody
-    const requestBody = {
-      playerId: playerId,
-      powerUp: powerUp,
-    };
+  //Create requestBody
+  const requestBody = {
+    playerId: playerId,
+    powerUp: powerUp,
+  };
 
-    try {
+  try {
 
-      //Start game in the backend
-      const response = await api.post(`/game/${gameId}/powerup`, requestBody);
+    //Start game in the backend
+    const response = await api.post(`/game/${gameId}/powerup`, requestBody);
 
-      //TODO Propper Error Handling
-    } catch (error) {
-      console.log(`Error Details: ${handleError(error)}`);
-    }   
-  }
+    //TODO Propper Error Handling
+  } catch (error) {
+    showError(shortError(error));
+  }   
+}
 
 
 // used in the MapEndpoint
@@ -89,8 +99,8 @@ export const submitAnswer = async (gameId, playerId, coordinates) => {
   try {
 
     const response = await fetch(`${getDomain()}game/${gameId}/guess`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         gameId,
         playerId,

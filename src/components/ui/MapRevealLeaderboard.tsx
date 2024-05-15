@@ -77,31 +77,43 @@ export const MapRevealLeaderboard = props => {
 
     return (
         <div className="mapRevealLeaderboard container">
+            <div className="mapRevealLeaderboard text-container">
+                The <span style={{ color: 'red' }}>red</span> marker shows the location of Matterhorn
 
-            <table className="leaderboard table-leaderboard">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>Player</th>
-                    <th>Km off</th>
-                    <th>Points</th>
-                    <th>Powerup</th>
-                </tr>
-                </thead>
-                <tbody>
-                    {dataArray.map((playerData, index) => (
-                        <tr key={index}>
-                            <td style={{backgroundColor: getColorForNumber(playerData.data.colourNumber), width: '10px'}}></td>
-                            <td>{playerData.displayName}</td>
-                            <td>{(playerData.data.distance / 1000).toFixed(2)} Km</td>
-                            <td>+ {playerData.data.score}</td>
-                            <td><div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
-                                <LeaderBoardPowerUp powerUp={playerData.data.powerUp} /></div></td>
-                        
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            </div>
+
+            <div className="mapRevealLeaderboard table-container">
+                <table className="mapRevealLeaderboard mapReveal-table">
+                    <thead>
+                    <tr>
+                        <th>Color</th>
+                        <th>Player</th>
+                        <th>Km off</th>
+                        <th>Points</th>
+                        <th>Powerup</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {dataArray.map((playerData, index) => (
+                            <tr key={index}>
+                                <td><div style={{backgroundColor: getColorForNumber(playerData.data.colourNumber), width: '20px', height: '20px'}} ></div> </td>
+                                <td>{playerData.displayName}</td>
+                                <td>{(playerData.data.distance / 1000).toFixed(2)} Km</td>
+                                <td>+ {playerData.data.score}</td>
+                                <td><div>
+                                        {playerData.data.powerUp ? (
+                                            <LeaderBoardPowerUp powerUp={playerData.data.powerUp} />
+                                        ) : (
+                                            "None"
+                                        )}
+                                    </div>
+                                </td>
+                
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 

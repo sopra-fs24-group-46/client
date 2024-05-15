@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { api, handleError } from "helpers/api";
+import { api, handleError, shortError} from "helpers/api";
 
 import "styles/views/SetGame.scss";
 import { Button } from "components/ui/Button"; // Import the Button component
@@ -11,6 +11,7 @@ import {FormField} from "components/ui/FormField";
 import {MultiSelection} from "components/ui/MultiSelection";
 import ValidatedTextInput from "components/ui/ValidatedTextInput";
 import SelectRegion from "components/ui/SelectRegion";
+import { useError } from "components/ui/ErrorContext";
 
 
 
@@ -55,6 +56,7 @@ const SetGame = () => {
   const [regionType, setRegionType] = useState(null);
   const [names, setNames] = useState(null);
   const host = localStorage.getItem("id");
+  const { showError } = useError();
 
   const navigate = useNavigate();
 
@@ -72,11 +74,11 @@ const SetGame = () => {
 
       // Validation checks
       if (roundsInt <= 0) {
-        alert("Please enter a value greater than 0 for rounds.");
+        showError("Please enter a value greater than 0 for rounds.");
         return;
       }
       if (guessingTimeInt <= 1) {
-        alert("Please enter a guessing time greater than 1.");
+        showError("Please enter a guessing time greater than 1.");
         return;
       }
 
@@ -94,19 +96,24 @@ const SetGame = () => {
       };
 
       // Send a PUT request to the backend
+      console.log(requestBody);
       const response = await api.put(`/game/${localStorage.getItem("gameId")}/updateSettings`, requestBody);
 
       console.log(requestBody.locationTypes);
       console.log('Lobby created' + response.data);
 
+      const credentials = {
+        id: id,
+        token: token,
+      }
       // Open the lobby first before starting the game
-      await api.post(`/game/${gameId}/openLobby`, requestBody);
+      await api.post(`/game/${gameId}/openLobby`, credentials);
 
       // Redirect to "/lobby" after successful creation
-      navigate(`/lobby/${localStorage.getItem("gameId")}`);
+      navigate(`/game/lobby/${localStorage.getItem("gameId")}`);
     } catch (error) {
       // Handle errors
-      console.error("Error creating game:", handleError(error));
+      showError("Creating game failed: " + shortError(error));
     }
   };
 
@@ -161,9 +168,10 @@ const SetGame = () => {
             />
           </div>
           <MultiSelection 
-            label = "Locations" 
-            options = {["ALPINE_MOUNTAIN", "MOUNTAIN","MAIN_HILL", "HILL", "LAKE"]} 
-            onChange = {setLocationTypes}
+            label = "Types of locations" 
+            options = {locationNames} 
+            onChange = {(name) => setLocationTypes(fromNamesToLocationTypes(name))}
+            defaultValue={[locationNames[0]]}
           />
           <SelectRegion region={region} setRegion={setRegion} regionType={regionType} setRegionType={setRegionType} dropDownMaxHeight={"40vh"} />
           <div className="set-game button_container">
@@ -178,5 +186,13 @@ const SetGame = () => {
   );
 };
 
-
 export default SetGame;
+
+const locationNames = ["Alpine Peaks", "Mountains", "Main Hills", "Hills", "Lakes"];
+const locationTypes = ["ALPINE_MOUNTAIN", "MOUNTAIN", "MAIN_HILL", "HILL", "LAKE"];
+const fromNamesToLocationTypes = (names: string[]) => {
+  return names.map((name) => {
+    let index = locationNames.indexOf(name);
+    return locationTypes[index];
+  });
+}

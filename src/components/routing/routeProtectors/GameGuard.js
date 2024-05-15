@@ -12,12 +12,12 @@ import PropTypes from "prop-types";
  * @param props
  */
 export const GameGuard = () => {
-  if (localStorage.getItem("playerId")) {
+  if (localStorage.getItem("playerId") && localStorage.getItem("gameId")) {
     
     return <Outlet />;
   }
   
-  return <Navigate to="/home" replace />;
+  return <Navigate to="/game/create" replace />;
 };
 
 GameGuard.propTypes = {

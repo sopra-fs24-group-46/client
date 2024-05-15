@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import mapboxgl from "mapbox-gl";
 import { LineLayer } from "deck.gl";
 
-const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesMapReveal }) => {
+const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocation, guessesMapReveal }) => {
 
   const mapboxAccessToken = "pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w";
 
@@ -20,6 +20,7 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
 
   //Functions
 
+  //Removes current clickMarker if it exists on the map
   const removeClickMarker = () => {
 
     if (clickMarker.current) {
@@ -27,6 +28,7 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
     };
   };
 
+  //Removes currenLocationMarker if it exists on the map
   const removeCurrentLocationMarker = () => {
 
     if (currentLocationMarker.current) {
@@ -34,6 +36,7 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
     };
   };
 
+  //Removes layer and source of lines (guess - correctLocation) if they exist
   const removeLines = () => {
 
     if (map.getLayer('lineLayer')) {
@@ -42,6 +45,16 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
     };
   };
 
+  //Removes joker circle if it exists
+  const removeCircle = () => {
+
+    if (map.getLayer('polygon')) {
+      map.removeLayer('polygon');
+      map.removeSource('polygon');
+    };
+  };
+
+  //Removes guess markers of all players if they exist
   const removeGuessMarkers = () => {
 
     if (markers.length > 0) {
@@ -52,6 +65,7 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
     };
   };
 
+  //creates feature for a single line
   const createFeature = (x, y) => {
 
     const lineFeature = {
@@ -60,10 +74,10 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
           "type": "LineString",
           "coordinates": [[x, y], [currentQuestionLocation.x, currentQuestionLocation.y]]}
     };
-
     return lineFeature;
   };
 
+  //creates layer for lines and multiple features (multiple lines)
   const createLineLayers = (data) => {
 
     var featureArray = [];
@@ -99,6 +113,7 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
     });
   };
 
+  //Selects color which is fixed for every player
   const getColor = (number) => {  
     switch (number) {
         case 1:
@@ -112,15 +127,83 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
         case 5:
           return 'yellow';
         default:
-            return 'gray'; // Fallback-Farbe, wenn keine spezifische Farbe angegeben ist
+            return 'gray'; // Fallback-color
     }
+  };
+
+  //Creates circle polygon as sourve for the joker circle
+  var createGeoJSONCircle = function(center, radiusInKm, points) {
+    if(!points) points = 64;
+
+    var coords = {
+        latitude: center[1],
+        longitude: center[0]
+    };
+
+    var km = radiusInKm;
+
+    var ret = [];
+    var distanceX = km/(111.320*Math.cos(coords.latitude*Math.PI/180));
+    var distanceY = km/110.574;
+
+    var theta, x, y;
+    for(var i=0; i<points; i++) {
+        theta = (i/points)*(2*Math.PI);
+        x = distanceX*Math.cos(theta);
+        y = distanceY*Math.sin(theta);
+
+        ret.push([coords.longitude+x, coords.latitude+y]);
+    }
+    ret.push(ret[0]);
+
+    return {
+        "type": "geojson",
+        "data": {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [ret]
+                }
+            }]
+        }
+    };
+  };
+
+  //creates joker circle
+  const createCircle = (x,y, radiusInKm) => {
+
+    var center = [x,y];
+
+    const randomVariable_1 = Math.floor(Math.random() * 2); // Generate either 0 or 1
+    const randomVariable_2 = Math.floor(Math.random() * 2); // Generate either 0 or 1
+
+    if(randomVariable_1 === 1) {
+      center[randomVariable_2] += 0.05;
+    } else {
+      center[randomVariable_2] -= 0.05;
+    }
+
+    map.addSource("polygon", createGeoJSONCircle(center, radiusInKm, 64));
+
+    map.addLayer({
+      "id": "polygon",
+      "type": "fill",
+      "source": "polygon",
+      "layout": {},
+      "paint": {
+          "fill-color": "red",
+          "fill-opacity": 0.5
+      }
+    });
   };
 
 
   useEffect(() => {
 
+    //Map gets loaded only when starting a game or refreshing the site
     mapboxgl.accessToken = mapboxAccessToken;
-
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v11",
@@ -133,15 +216,13 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
       map.setLayoutProperty('natural-point-label', 'visibility', 'none');
     });
 
-
+    //Visualize the current guessing position
     map.on("click", (e) => {
 
       removeClickMarker();
 
-
       localStorage.setItem("x", String(e.lngLat.lng));
       localStorage.setItem("y", String(e.lngLat.lat));
-
 
       const newMarker = new mapboxgl.Marker()
         .setLngLat([e.lngLat.lng, e.lngLat.lat])
@@ -159,11 +240,22 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
 
     if (map) {
 
-      //Removing all markers and lines from the map
+      //Removing all markers, lines and circle from the map
       removeClickMarker();
       removeCurrentLocationMarker();
       removeGuessMarkers();
       removeLines();
+      removeCircle();
+
+      if (roundState === "GUESSING") {
+
+        if(jokerData && jokerData.joker) {
+
+            console.log(jokerData);
+
+            createCircle(jokerData.center[0], jokerData.center[1], 10);
+        }
+      }
 
 
       if (roundState === "MAP_REVEAL") {
@@ -192,11 +284,11 @@ const MapBoxComponent = ({ roundState, reveal, currentQuestionLocation, guessesM
           //Create the lines to correct location
           createLineLayers(guessesMapReveal);
 
-        }
-      }
-    }
+        };
+      };
+    };
 
-  }, [guessesMapReveal, roundState])
+  }, [guessesMapReveal, roundState, jokerData])
 
 
   return <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />;
@@ -207,6 +299,10 @@ MapBoxComponent.displayName = 'MapBoxComponent';
 MapBoxComponent.propTypes = {
 
   roundState: PropTypes.string,
+  jokerData: PropTypes.shape({
+    joker: PropTypes.bool.isRequired,
+    center: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+  }).isRequired,
   reveal: PropTypes.number.isRequired,
   currentQuestionLocation: PropTypes.string.isRequired,
   guessesMapReveal: PropTypes.arrayOf(PropTypes.shape({
