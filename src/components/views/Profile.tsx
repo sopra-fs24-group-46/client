@@ -121,11 +121,11 @@ const Profile = () => {
   
 
   const editPassword = () => {
-    navigate("/edit");
+    navigate("profile/edit");
   }
   const editUsername = () => {
     // Redirect to /game/create endpoint
-    navigate("/edit");
+    navigate("profile/edit");
   };
 
 

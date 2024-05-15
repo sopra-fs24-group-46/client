@@ -110,7 +110,7 @@ const SetGame = () => {
       await api.post(`/game/${gameId}/openLobby`, credentials);
 
       // Redirect to "/lobby" after successful creation
-      navigate(`/lobby/${localStorage.getItem("gameId")}`);
+      navigate(`/game/lobby/${localStorage.getItem("gameId")}`);
     } catch (error) {
       // Handle errors
       showError(shortError(error));

@@ -5,6 +5,9 @@ import GameRouter from "./GameRouter";
 import { LoginGuard } from "../routeProtectors/LoginGuard";
 import { HomeGuard } from "../routeProtectors/HomeGuard";
 import { RegisterGuard } from "../routeProtectors/RegisterGuard";
+import { IsNoUserGuard } from "../routeProtectors/IsNoUserGuard";
+import { IsUserGuard } from "../routeProtectors/IsUserGuard";
+import { PageNotFound } from "../../views/PageNotFound";
 import Home from "../../views/Home";
 import Login from "../../views/Login";
 import Register from "../../views/Register";
@@ -31,43 +34,45 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
+
+        {/* This are all views which are exclusively for clients without id and userName */}
+        <Route path="/register" element={<IsNoUserGuard />}>
+          <Route path="/register" element={<Register />} />
+        </Route>
+        <Route path="/login" element={<IsNoUserGuard />}>
+          <Route path="/login" element={<Login />} />
+        </Route>
+        <Route path="/home" element={<IsNoUserGuard />}>
+          <Route path="/home" element={<Home />} />
+        </Route>
+
+        {/* this are all views which are exclusively for clients with id and userName */}
+        <Route path="/profile" element={<IsUserGuard />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="profile/edit" element={<Edit />} />
+        </Route>
+        <Route path="/game/create" element={<IsUserGuard />}>
+          <Route path="/game/create" element={<SetGame />} /> 
+        </Route>
+
+       {/* This are all the view which are exclusively for clients with gameId and playerId  */}
         <Route path="/game" element={<GameGuard />}>
           <Route path="/game" element={<GameView />} />
+          <Route path="/game/ended" element={<EndView />} />
+          <Route path="/game/lobby/:gameId" element={<Lobby />} />
         </Route>
 
-        <Route path="/login/*" element={<LoginGuard />}>
-          <Route path="/login/*" element={<Login />} />
-        </Route>
+        {/* allway accesable */}
+        <Route path="/rules" element={<Rules />} />
 
-        <Route path="/register" element={<Register />} />
-
-        <Route path="/home" element={<HomeGuard />}>
-          <Route path="" element={<Home />} />
-        </Route>
-
-        <Route path="/register" element={<RegisterGuard />}>
-          <Route path="" element={<Register />} />
-        </Route>
-
-
+        {/* dev routs */}
         <Route path="/ComponentDev" element={<ComponentDev />} />
         <Route path="/GameDev" element={<GameView />} />
 
-        <Route path="/profile" element={<Profile />} />
-
-        <Route path="/rules" element={<Rules />} />
-
-        <Route path="/edit" element={<Edit />} />
-
-        <Route path="/game/create" element={<SetGame />} />
-
-        <Route path="/lobby/:gameId" element={<Lobby />} />
-
-        <Route path="/game/ended" element={<EndView />} />
-
-        {/*this should be moved into game router*/}
-
+        {/* Redirection to home when coming to website */}
         <Route path="/" element={<Navigate to="/home" replace />} />
+        {/* todo create catch all page */}
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
   );

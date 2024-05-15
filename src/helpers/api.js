@@ -12,7 +12,7 @@ export const shortError = error => {
     return "No response data from Server. Did you start the server. \n" +error;
   }
 
-  return `status code: ${error.response.status}\nerror: ${error.response.data.error}\nerror message: ${error.response.data.message}`;
+  return `${error.response.data.message}`;
 }
 
 export const handleError = error => {
