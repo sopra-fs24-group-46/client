@@ -9,7 +9,8 @@ import "styles/views/Game.scss";
 import "styles/views/Profile.scss";
 import "styles/views/Header.scss";
 import { User } from "types";
-import { joinGame } from "helpers/LobbyAPI"; 
+import { joinGame } from "components/game/GameApi";
+import { useError } from "components/ui/ErrorContext";
 
 
 const FormField = (props) => {
@@ -53,6 +54,7 @@ Player.propTypes = {
 
 const Profile = () => {
   const navigate = useNavigate();
+  const { showError } = useError();
   const [loggedInUser, setLoggedInUser] = useState<User>(null);
   const [gameId, setGameId] = useState<string>('');
 
@@ -107,17 +109,11 @@ const Profile = () => {
       if (!gameId) {
         throw new Error("No Game Pin provided!");
       }
-  
-      await joinGame(token, gameId, loggedInUser);
-      localStorage.setItem("gameId", gameId);
-      navigate(`/lobby/${gameId}`);
+      await joinGame(gameId, loggedInUser.username, navigate, showError)
     } catch (error) {
       if (error.message === "No Game Pin provided!") {
         console.error("No Game Pin provided!");
-        alert("No Game Pin provided!");
-      } else {
-        console.error("Error joining game:", error);
-        alert(error.message);
+        showError("No Game Pin provided!");
       }
     }
   };

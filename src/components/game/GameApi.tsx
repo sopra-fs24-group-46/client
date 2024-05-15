@@ -1,6 +1,6 @@
-import { api, handleError } from "helpers/api";
+import { api, handleError, shortError } from "helpers/api";
 
-export const getGameState = async () => {
+export const getGameState = async (showError = console.log) => {
   try {
     const gameId = localStorage.getItem("gameId");
     const response = await api.get(`game/${gameId}/getGameState`);
@@ -8,11 +8,11 @@ export const getGameState = async () => {
 
     return data;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    showError(shortError(error));
   }
 };
 
-export const getSettings = async () => {
+export const getSettings = async (showError = console.log) => {
   try {
     const gameId = localStorage.getItem("gameId");
     const response = await api.get(`game/${gameId}/settings`);
@@ -20,11 +20,11 @@ export const getSettings = async () => {
 
     return data;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    showError(shortError(error));
   }
 };
 
-export const getGameView = async () => {
+export const getGameView = async (showError = console.log) => {
   const playerId = localStorage.getItem("playerId");
   const gameId = localStorage.getItem("gameId");
 
@@ -40,22 +40,22 @@ export const getGameView = async () => {
 
     return data;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    showError(shortError(error));
   }
 };
 
-export const storeSettings = (settings: any) => {
+export const storeSettings = (settings: any, showError = console.log) => {
   try {
     localStorage.setItem("questionTime", settings.questionTime);
     localStorage.setItem("guessingTime", settings.guessingTime);
     localStorage.setItem("mapRevealTime", settings.mapRevealTime);
     localStorage.setItem("leaderBoardTime", settings.leaderBoardTime);
   } catch (error) {
-    console.error("Error storing settings:", error);
+    showError(error);
   }
 }
 
-export const submitAnswer = async (gameId) => {
+export const submitAnswer = async (gameId, showError = console.log) => {
   if (gameId === null) {
     return;
   }
@@ -73,6 +73,30 @@ export const submitAnswer = async (gameId) => {
       const response = await api.post(`game/${gameId}/guess`, requestBody);
       console.log("Guess: "+requestBody+" submitted. response: ", response);
   } catch (error) {
-      console.log(`Submitting guess failed: ${handleError(error)}`);
+      showError(shortError(error));
   }
 };
+
+export const joinGame = async (gameId: string, name: string, navigate: any, showError = console.log) => {
+  try {
+    // Construct the request body
+    const requestBody = {
+      displayName: name
+    };
+
+
+    const response = await api.post(`/game/${gameId}/join`, requestBody);
+
+
+    // Handle response as needed, e.g., updating localStorage, navigating
+    console.log(response.data);
+    localStorage.setItem("gameId", gameId);
+    localStorage.setItem("playerId", response.data);
+
+
+    navigate(`/lobby/${gameId}`);
+  } catch (error) {
+    showError(shortError(error));
+  }
+
+}
