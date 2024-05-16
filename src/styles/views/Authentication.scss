@@ -1,0 +1,50 @@
+@import "../theme";
+
+.authentication {
+
+  &.container {
+
+    margin-top: 2em;
+    background-color: $background;
+    border-radius: 0.75em;
+    box-shadow: $dropShadow;
+    
+    display: flex;
+    flex-direction: column; 
+  }
+
+  &.form {
+
+    margin-top: 4vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 300;
+    padding-left: 3em;
+    padding-right: 3em;
+    padding-bottom: 2em;
+    transition: opacity 0.5s ease, transform 0.5s ease;  
+  }
+
+  &.button-container {
+
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+  }
+
+  &.link-container {
+
+    margin-top: 1em;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &.password-hint {
+
+    @include small-text;
+
+    margin-bottom: 0.2em;
+  }
+}

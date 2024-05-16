@@ -1,0 +1,48 @@
+@import "../theme";
+
+.formfieldd {
+
+
+    &.field {
+
+        &.authentication {
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+        }
+    }
+
+    &.label {
+
+        &.authentication {
+
+            color: $textColor;
+            margin-bottom: 10px;
+            text-transform: lowercase;
+            font-weight: 300;
+
+        }
+
+
+    }
+
+    &.input {
+
+        &.authentication {
+
+            @include input-field;
+
+            height: 3em;
+            padding-left: 1em;
+            border: none;
+            border-radius: 0.75em;
+            margin-bottom: 1em;
+            background: transparentize(white, 0.85);
+
+        }
+
+
+    }
+}

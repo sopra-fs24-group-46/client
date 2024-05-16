@@ -9,28 +9,11 @@ import Header from "components/views/Header";
 import PropTypes from "prop-types";
 import { useError } from "components/ui/ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
+import {FormField} from "components/ui/FormFieldString";
 
-const FormField = (props) => {
-    return (
-        <div className="login field">
-            <label className="login label">{props.label}</label>
-            <input
-                type={props.type}
-                className="login input"
-                placeholder="enter here..."
-                value={props.value}
-                onChange={(e) => props.onChange(e.target.value)}
-            />
-        </div>
-    );
-};
-
-FormField.propTypes = {
-    type: PropTypes.string,
-    label: PropTypes.string,
-    value: PropTypes.string,
-    onChange: PropTypes.func,
-};
+//styling
+import "styles/views/Header.scss";
+import "styles/views/Authentication.scss";
 
 const SignUp = (props) => {
     const navigate = useNavigate();
@@ -56,51 +39,56 @@ const SignUp = (props) => {
         }
     };
 
-    return (
-        <BaseContainer>
-            <Header />
-            <div className="login container">
-                <div className="login form">
-                    <FormField
-                        label="Username"
-                        value={username || ""}
-                        onChange={(un) => setUsername(un)}
-                    />
-                    <FormField
-                        label="Password"
-                        type="password"
-                        value={password || ""}
-                        onChange={(n) => setPassword(n)}
-                    />
-                    <div className="login password-hint" style={{ fontSize: '12px', marginBottom: '1px' }}>
-                        Password should be at least 6 characters long.
-                    </div>
-                        <div className="login button-container" style={{ marginTop: '10px' }}>
-                        <Button
-                            disabled={!username || !password}
-                            // width="100%"
-                            onClick={() => {
-                                // Check if the password length is greater than 6
-                                if (password.length > 5) {
-                                    doSignup();
-                                } else {
-                                    showError("Password should be longer than 6 characters.");
-                                }
-                            }}
-                        >
-                            Sign Up
-                        </Button>
-                        <Button
-                            // width="100%"
-                            onClick={() => navigate(`/home`)}
-                        >
-                            Go back
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        </BaseContainer>
-    );
+  return (
+    <BaseContainer>
+      <h1 className="header authentication">Gwüsst</h1>
+      <div className="authentication container">
+          <div className="authentication form">
+              <FormField
+                className="authentication"
+                label="Username:"
+                type="text"
+                value={username || ""}
+                placeholder={"enter here..."}
+                onChange={(un) => setUsername(un)}
+              />
+              <FormField
+                className="authentication"
+                label="Password:"
+                type="password"
+                value={password || ""}
+                placeholder={"enter here..."}
+                onChange={(n) => setPassword(n)}
+              />
+              <div className="authentication password-hint">
+                password lenght {password ? `${password.length}/6` : '0/6'}
+              </div>
+                  <div className="login button-container" style={{ marginTop: '10px' }}>
+                  <Button
+                      disabled={!username || !password}
+                      width="100%"
+                      onClick={() => {
+                          // Check if the password length is greater than 6
+                          if (password.length > 5) {
+                              doSignup();
+                          } else {
+                              showError("Password should be longer than 6 characters.");
+                          }
+                      }}
+                  >
+                      Sign Up
+                  </Button>
+                  <Button
+                      width="100%"
+                      onClick={() => navigate(`/home`)}
+                  >
+                      Go back
+                  </Button>
+              </div>
+          </div>
+      </div>
+    </BaseContainer>
+  );
 };
 
 export default SignUp;

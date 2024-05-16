@@ -132,11 +132,7 @@ const SetGame = () => {
   return (
     <BaseContainer>
 
-      <div className="header container_title1">
-        <h1 className="header title1">
-          CREATE CUSTOM GAME
-        </h1>
-      </div>
+      <h1 className="header1 createGame">CREATE CUSTOM GAME</h1>
       <div className="set-game container">
           <h2>Game Settings</h2>
           <div className="set-game inputs">

@@ -201,7 +201,7 @@ const Lobby = () => {
   }
   return (
     <BaseContainer>
-      <h1 className="header title1">GAME LOBBY</h1>
+      <h1 className="header1 lobby">GAME LOBBY</h1>
       {content}
     </BaseContainer>
   );

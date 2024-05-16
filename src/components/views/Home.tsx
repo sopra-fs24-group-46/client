@@ -5,6 +5,11 @@ import BaseContainer from "components/ui/BaseContainer";
 import Header from "components/views/Header";
 import { joinGame } from "components/game/GameApi";
 import { useError } from "components/ui/ErrorContext";
+import {FormField} from "components/ui/FormFieldString";
+
+//styling
+import "styles/views/Header.scss";
+import "styles/views/Authentication.scss";
 
 
 const Home = () => {
@@ -41,56 +46,46 @@ const Home = () => {
 
 
   return (
-      <BaseContainer>
-        <Header />
-        <div className="login container">
-          <div className="login form">
-            <div className="login field">
-              <input
-                  className="login input"
-                  type="text"
-                  placeholder="Enter Player Name"
-                  value={playerName}
-                  onChange={(e) => setPlayerName(e.target.value)}
-              />
-            </div>
-            <div className="login field">
-              <input
-                  className="login input"
-                  type="text"
-                  placeholder="Enter Game Pin"
-                  value={gamePin}
-                  onChange={(e) => setGamePin(e.target.value)}
-                  disabled={!isGamePinEditable}
-              />
-            </div>
-            <div className="login button-container">
+    <BaseContainer>
+      <h1 className="header authentication">Gwüsst</h1>
+      <div className="authentication container">
+        <div className="authentication form">
+          <FormField
+            className="authentication"
+            type="text"
+            value={playerName}
+            placeholder={"Enter Player Name"}
+            onChange={(un: string) => setPlayerName(un)}
+          />
+          <FormField
+            className="authentication"
+            type="text"
+            value={gamePin}
+            placeholder={"Enter Game Pin"}
+            onChange={(un: string) => setGamePin(un)}
+            disabled={!isGamePinEditable}
+          />
+          <div className="authentication button-container">
             <Button
               disabled={!inputIsValid()}
-              width="100%" onClick={() => joinGame(gamePin, playerName, navigate, showError)}>
-                Join Game
-              </Button>
-            </div>
-            <div
-                className="login link-container"
-                style={{
-                  marginTop: "1em",
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-            >
-            <Button className="login switch-button primary-button" onClick={handleRegisterClick}>
+              className={"authentication"}
+              width="100%" 
+              onClick={() => joinGame(gamePin, playerName, navigate, showError)}>
+              Join Game
+            </Button>
+          </div>
+          <div className="authentication link-container">
+            <Button className="authentication link-button" onClick={handleRegisterClick}>
               Register here
             </Button>
-            <Button className="login switch-button primary-button" onClick={handleLoginClick}>
+            <Button className="authentication link-button" onClick={handleLoginClick}>
               Login
             </Button>
-            </div>
           </div>
         </div>
-      </BaseContainer>
+      </div>
+    </BaseContainer>
   );
 };
-
 
 export default Home;
