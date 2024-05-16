@@ -1,6 +1,39 @@
 @import "../theme";
 
+
 .header {
+
+  @include header1;
+
+  &.authentication {
+    margin-top: 18vh;
+  }
+
+}
+
+
+.header1 {
+
+  @include header1;
+
+  &.profile {
+    margin-top: 18vh;
+  }
+
+  &.createGame {
+    margin-top: 18vh;
+  }
+
+  &.lobby {
+    margin-top: 5vh;
+  }
+
+  
+}
+
+
+
+.header3 {
   &.container {
     @include center;
   }

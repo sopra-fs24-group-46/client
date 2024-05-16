@@ -15,6 +15,7 @@ $accentDark: #123597;
 $accentAlt: #ffc48d;
 $textColor: white;
 $background: #262632;
+$linkColor: white;
 
 /* some constants */
 
@@ -43,4 +44,22 @@ $borderRadius: 0.75em;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+
+@mixin header1 {
+  font-family: $fontDefault;
+  font-size: 6em;
+  font-weight: bold;
+}
+
+@mixin small-text {
+  font-family: $fontDefault;
+  font-size: 0.8em;
+}
+
+@mixin input-field {
+  font-family: $fontDefault;
+  font-size: 1em;
+  color: $textColor;
 }
