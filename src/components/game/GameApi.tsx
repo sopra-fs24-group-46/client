@@ -71,9 +71,7 @@ export const joinGame = async (gameId: string, name: string, navigate: any, show
       displayName: name
     };
 
-
     const response = await api.post(`/game/${gameId}/join`, requestBody);
-
 
     // Handle response as needed, e.g., updating localStorage, navigating
     console.log(response.data);
@@ -83,5 +81,19 @@ export const joinGame = async (gameId: string, name: string, navigate: any, show
   } catch (error) {
     showError(shortError(error));
   }
+}
 
+export const leaveGame = async ( showError = console.log) => {
+  const { gameId, playerId } = Storage.retrieveGameIdAndPlayerId();
+  try {
+
+    const requestBody = {
+      playerId: playerId
+    }
+
+    await api.put(`/game/${gameId}/leave`, requestBody);
+
+  } catch (error) {
+    showError(shortError(error));
+  }
 }
