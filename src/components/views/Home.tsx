@@ -72,7 +72,7 @@ const Home = () => {
               width="100%" 
               onClick={() => {
                 joinGame(gamePin, playerName, showError)
-                navigate("game/lobby/" + gamePin);
+                navigate("/game/lobby/" + gamePin);
               }}>
               Join Game
             </Button>
