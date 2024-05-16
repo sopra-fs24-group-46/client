@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FinalLeaderboard } from "components/ui/LeaderboardComp";
 import "styles/views/GameViewContainer.scss";
 
@@ -9,11 +8,9 @@ import "styles/views/Leaderboard.scss";
 //map container gets styled in here
 import "styles/views/Question.scss";
 import { getGameView } from "../game/GameApi";
-import { Storage } from "helpers/LocalStorageManagement";
 
 
 const EndView = () => {
-  const navigate = useNavigate();
 
   const [gameInfo, setGameInfo] = useState(null);
 
@@ -34,17 +31,6 @@ const EndView = () => {
     init();
   }, []);
 
-
-
-
-
-  const handleProfileRedirect = () => {
-    // Remove specified variables from localStorage
-    Storage.removeGameIdAndPlayerId();
-
-    // Redirect to profile page
-    navigate("/profile");
-  };
     if (gameInfo) {
         return (
             <div className="game_view_container">

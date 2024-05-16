@@ -17,9 +17,9 @@ export const FinalLeaderboard = ({ scores, currentRound }) => {
     // Check if there's a token in localStorage
     const { id, token } = Storage.retrieveUser();
 
+    Storage.removeGameIdAndPlayerId();
     if (token) {
       // Remove specified variables from localStorage
-      Storage.removeGameIdAndPlayerId();
 
       // Redirect to /profile
       navigate("/profile");
@@ -32,6 +32,7 @@ export const FinalLeaderboard = ({ scores, currentRound }) => {
   const createNewGame = async () => {
     try {
       const { id, token } = Storage.retrieveUser();
+      Storage.removeGameIdAndPlayerId();
 
       if (!token || !id) {
         throw new Error("Token or user id not found in localStorage");

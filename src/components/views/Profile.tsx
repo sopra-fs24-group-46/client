@@ -138,6 +138,7 @@ const Profile = () => {
 
       if (!user) {//invalid token and or id
         Storage.removeUser();
+        navigate("/home");
       }
 
       console.log("Fetched User:", user);

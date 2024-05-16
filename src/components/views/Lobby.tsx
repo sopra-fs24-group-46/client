@@ -95,7 +95,7 @@ const Lobby = () => {
     if (confirmed) {
       // User confirmed, leaving the lobby
       const {id , token} = Storage.retrieveUser();
-      Storage.retrieveGameIdAndPlayerId();
+      Storage.removeGameIdAndPlayerId();
       
       if (token) {
         navigate("/profile");

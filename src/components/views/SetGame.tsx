@@ -120,7 +120,6 @@ const SetGame = () => {
     Storage.removeGameIdAndPlayerId();
 
     navigate("/profile");
-    <Link to="/profile">Go Back</Link>
 
   };
   
