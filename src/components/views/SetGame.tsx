@@ -13,6 +13,7 @@ import ValidatedTextInput from "components/ui/ValidatedTextInput";
 import SelectRegion from "components/ui/SelectRegion";
 import { useError } from "components/ui/ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
+import { easy_names, medium_names } from "helpers/Constants";
 
 
 
@@ -57,6 +58,7 @@ const SetGame = () => {
   const [regionType, setRegionType] = useState(null);
   const [names, setNames] = useState(null);
   const { showError } = useError();
+  const [difficulty, setDifficulty] = useState("HARD");
 
   const navigate = useNavigate();
 
@@ -91,7 +93,7 @@ const SetGame = () => {
         locationTypes: locationTypes,
         region: region,
         regionType: regionType,
-        names: names,
+        locationNames: loadNamesForDifficulty(difficulty),
       };
 
       // Send a PUT request to the backend
@@ -168,6 +170,16 @@ const SetGame = () => {
             defaultValue={[locationNames[0]]}
           />
           <SelectRegion region={region} setRegion={setRegion} regionType={regionType} setRegionType={setRegionType} dropDownMaxHeight={"40vh"} />
+        <div>
+          <Button onClick={() => setDifficulty("EASY")}
+          className={difficulty === "EASY" ? "selected" : ""}> Easy</Button>
+          <Button onClick={() => setDifficulty("MEDIUM")}
+          className={difficulty === "MEDIUM" ? "selected" : ""}> Medium</Button>
+          <Button onClick={() => setDifficulty("HARD")}
+          className={difficulty === "HARD" ? "selected" : ""}> Hard</Button>
+          
+          
+          </div>
           <div className="set-game button_container">
             <Button onClick={createGame} disabled={!isFormValid()}>Create Game</Button> {/* Add the Create Game button */}
             <Button onClick={() => goBacktoProfile()}>Go Back</Button>
@@ -189,4 +201,15 @@ const fromNamesToLocationTypes = (names: string[]) => {
     let index = locationNames.indexOf(name);
     return locationTypes[index];
   });
+}
+
+const loadNamesForDifficulty = (difficulty: string) => {
+  switch (difficulty) {
+    case "EASY":
+      return easy_names;
+    case "MEDIUM":
+      return medium_names;
+    case "HARD":
+      return null;
+  }
 }
