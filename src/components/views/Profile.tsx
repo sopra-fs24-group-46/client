@@ -12,31 +12,7 @@ import { User } from "types";
 import { joinGame } from "components/game/GameApi";
 import { useError } from "components/ui/ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
-
-
-const FormField = (props) => {
-  return (
-      <div className="profile field">
-        <label className="profile label">{props.label}</label>
-        <input
-            type={props.type}
-            className="profile input"
-            placeholder={props.placeholder}
-            value={props.value}
-            onChange={(e) => props.onChange(e.target.value)}
-        />
-      </div>
-  );
-};
-
-
-FormField.propTypes = {
-  type: PropTypes.string,
-  label: PropTypes.string,
-  placeholder: PropTypes.string,
-  value: PropTypes.string,
-  onChange: PropTypes.func,
-};
+import { FormField } from "components/ui/FormFieldString";
 
 
 const Player = ({ user }: { user: User }) => (
@@ -156,41 +132,43 @@ const Profile = () => {
 
   if (loggedInUser && loggedInUser.username) {
     content = (
-        <div className="profile button-container">
-          <Button width="100%" onClick={() => logout()}>
-            Logout
-          </Button>
-          <Button width="100%" onClick={() => createCustomGame()}>
-            Create custom game
-          </Button>
-          <Button width="100%" onClick={() => editUsername()}>
-            Edit Username or password
-          </Button>
-          <Button width="100%" onClick={() => rules()}>
-            Game Rules
-          </Button>
-          <Button width="100%" onClick={() => joinGameHandler()}>
-            Join Game
-          </Button>
-          <FormField
-              label="Enter Game Pin"
-              placeholder="Enter game pin here..."
-              value={gameId}
-              onChange={(gameId) => setGameId(gameId)}
-          />
-        </div>
+      <div className="profile button-container">
+        <Button width="100%" onClick={() => logout()}>
+          Logout
+        </Button>
+        <Button width="100%" onClick={() => createCustomGame()}>
+          Create custom game
+        </Button>
+        <Button width="100%" onClick={() => editUsername()}>
+          Edit Username or password
+        </Button>
+        <Button width="100%" onClick={() => rules()}>
+          Game Rules
+        </Button>
+        <Button width="100%" onClick={() => joinGameHandler()}>
+          Join Game
+        </Button>
+        <FormField
+          className="profile"
+          type="text"
+          placeholder="Enter game pin to join a game..."
+          value={gameId}
+          onChange={(un: string) => setGameId(un)}
+        />
+      </div>
     );
   }
 
   return (
-      <BaseContainer>
+    <BaseContainer>
+      <div className="profile header-container">
         <h1 className="header1 profile">WELCOME, {loggedInUser && loggedInUser.username}!</h1>
-        <div className="profile container">
-          {content}
-        </div>
-      </BaseContainer>
+      </div>
+      <div className="profile container">
+        {content}
+      </div>
+    </BaseContainer>
   );
 };
-
 
 export default Profile;

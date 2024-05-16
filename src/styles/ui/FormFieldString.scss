@@ -5,13 +5,10 @@
 
     &.field {
 
-        &.authentication {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-
-        }
     }
 
     &.label {
@@ -25,24 +22,33 @@
 
         }
 
-
     }
 
     &.input {
 
+        @include input-field;
+
+        height: 3em;
+        padding-left: 1em;
+        border: none;
+        border-radius: $borderRadius;
+
         &.authentication {
 
-            @include input-field;
-
-            height: 3em;
-            padding-left: 1em;
-            border: none;
-            border-radius: 0.75em;
             margin-bottom: 1em;
             background: transparentize(white, 0.85);
 
         }
 
+        &.profile {
 
+            margin-top: 0.5em;
+            width: 100%;
+            background-color: rgba(60, 179, 113, 0.3);
+            border: 1px solid rgba(60, 179, 113, 0.5);
+            padding: 8px;
+            text-align: center;
+
+        }
     }
 }

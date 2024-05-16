@@ -19,12 +19,9 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    font-size: 16px;
-    font-weight: 300;
     padding-left: 3em;
     padding-right: 3em;
-    padding-bottom: 2em;
-    transition: opacity 0.5s ease, transform 0.5s ease;  
+    padding-bottom: 2em;  
   }
 
   &.button-container {

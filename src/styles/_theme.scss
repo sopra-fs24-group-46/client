@@ -13,9 +13,14 @@ $formFieldBackground: rgb(32, 97, 61);
 $formFieldBorder: 1px solid rgba(60, 179, 113, 0.5);
 $accentDark: #123597;
 $accentAlt: #ffc48d;
+
 $textColor: white;
-$background: #262632;
 $linkColor: white;
+$buttonTextColor: #262632;
+
+
+$background: #262632;
+
 
 /* some constants */
 
@@ -62,4 +67,17 @@ $borderRadius: 0.75em;
   font-family: $fontDefault;
   font-size: 1em;
   color: $textColor;
+}
+
+@mixin primary-button {
+
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  text-align: center;
+  height: 3.5em;
+  color: $buttonTextColor;
+  background-color: $accent;
+  opacity: 1;
+
 }
