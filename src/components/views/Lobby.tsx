@@ -9,6 +9,8 @@ import { Storage } from "helpers/LocalStorageManagement";
 import { getSettings } from "components/game/GameApi";
 import { useError } from "components/ui/ErrorContext";
 
+import "styles/views/Lobby.scss";
+
 const Lobby = () => {
   const { showError } = useError();
   const navigate = useNavigate();
