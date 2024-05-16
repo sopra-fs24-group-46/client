@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { api, handleError } from "helpers/api";
+import { api, handleError, getUser} from "helpers/api";
 import { useNavigate, useParams } from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
 import User from "models/User";
+import { useError } from "components/ui/ErrorContext";
+import { Storage } from "helpers/LocalStorageManagement";
 
 const Edit = () => {
   const navigate = useNavigate();
+  const { showError } = useError();
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<User | null>(null);
   const [initialUsername, setInitialUsername] = useState<string>('');
@@ -21,21 +24,10 @@ const Edit = () => {
     async function fetchData() {
       try {
         // Retrieve the user ID from localStorage
-        const storedUserId = localStorage.getItem('id');
-        if (!storedUserId) {
-          throw new Error('User ID not found in localStorage');
-        }
   
-        const response = await api.get<User[]>('/users');
-        const users = response.data;
-    
-        // Find the user with the stored user ID
-        const user = users.find(u => u.id === Number(storedUserId));
-  
-        if (!user) {
-          throw new Error('User not found');
-        }
-  
+        const {id, token} = Storage.retrieveUser();
+        const user = await getUser(id, token, showError);
+
         setUser(user);
         setUsername(user.username);
         setInitialUsername(user.username);
@@ -67,12 +59,14 @@ const Edit = () => {
         return;
       }
 
-      const storedUserId = localStorage.getItem('id');
+      const {id: storedUserId, token} = Storage.retrieveUser();
       if (!storedUserId) {
         throw new Error('User ID not found in localStorage');
       }
   
-      const requestBody = { id: storedUserId, username, password }; // Include user ID in the request body
+      const user = { id: storedUserId, username, password }; // Include user ID in the request body
+      const credentials = { id: storedUserId, token: token };
+      const requestBody = { user: user, credentialsDTO: credentials };
       await api.put(`/users/${storedUserId}`, requestBody); // Send PUT request to the correct endpoint with the updated username and user ID
       alert("Changes saved successfully!");
       navigate(`/profile`);

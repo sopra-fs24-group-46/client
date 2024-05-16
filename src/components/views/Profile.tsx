@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { api, handleError, shortError } from "helpers/api";
+import { api, handleError, shortError, getUser} from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import { Button } from "components/ui/Button";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ import "styles/views/Header.scss";
 import { User } from "types";
 import { joinGame } from "components/game/GameApi";
 import { useError } from "components/ui/ErrorContext";
+import { Storage } from "helpers/LocalStorageManagement";
 
 
 const FormField = (props) => {
@@ -60,16 +61,14 @@ const Profile = () => {
 
 
   const logout = (): void => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("id");
+    Storage.removeUser();
     navigate("/home");
   };
 
 
   const createCustomGame = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("id");
+      const {id, token} = Storage.retrieveUser();
 
 
       if (!token || !id) {
@@ -88,8 +87,7 @@ const Profile = () => {
 
 
       // Save gameId to localStorage
-      localStorage.setItem("gameId", gameId);
-      localStorage.setItem("playerId", playerId);
+      Storage.storeGameIdAndPlayerId(gameId, playerId);
 
 
       console.log('Game creation');
@@ -105,7 +103,6 @@ const Profile = () => {
   //TODO dont let user join if game is full
   const joinGameHandler = async () => {
     try {
-      const token = localStorage.getItem("token");
       if (!gameId) {
         throw new Error("No Game Pin provided!");
       }
@@ -121,11 +118,11 @@ const Profile = () => {
   
 
   const editPassword = () => {
-    navigate("profile/edit");
+    navigate("edit");
   }
   const editUsername = () => {
     // Redirect to /game/create endpoint
-    navigate("profile/edit");
+    navigate("edit");
   };
 
 
@@ -136,19 +133,15 @@ const Profile = () => {
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        const response = await api.get(`/users`);
-        const users = response.data;
-        const userId = localStorage.getItem('id');
-        const user = users.find((user) => user.id === parseInt(userId));
-        if (!user) {
-          throw new Error('User not found');
-        }
-        setLoggedInUser(user);
-      } catch (error) {
-        showError('Something went wrong while fetching the user!' + shortError(error));
-        console.error('Details:', error);
+      const {id, token} = Storage.retrieveUser();
+      const user = await getUser(id, token, console.log);
+
+      if (!user) {//invalid token and or id
+        Storage.removeUser();
       }
+
+      console.log("Fetched User:", user);
+      setLoggedInUser(user);
     }
 
 

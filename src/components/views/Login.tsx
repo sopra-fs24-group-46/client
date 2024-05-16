@@ -7,6 +7,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import Header from "components/views/Header";
 import PropTypes from "prop-types";
 import { useError } from "components/ui/ErrorContext";
+import { Storage } from "helpers/LocalStorageManagement";
 import {FormField} from "components/ui/FormFieldString";
 
 //styling
@@ -28,22 +29,9 @@ const Login = () => {
       const response = await api.post("/login", requestBody); 
   
       // Log the response data to inspect its structure
-      const userData = response.data;
-      localStorage.setItem("token", userData.token);
-      localStorage.setItem("id", userData.user.id);
-  
-      // Check if the token is present in the response data
-      if (response.data && response.data.token) {
-        // Store the token into the local storage
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("id", response.data.user.id);
-  
-        // Navigate to the profile page
-        navigate("/profile");
-      } else {
-        // Handle the case where the token is not present in the response
-        throw new Error("Token not found in the response");
-      }
+      const user = response.data.user;
+      Storage.storeUser(user.id, user.token);
+      navigate("/profile");
     } catch (error) {
       showError(
         shortError(error)

@@ -1,6 +1,7 @@
 import React from "react";
 import {Navigate, Outlet} from "react-router-dom";
 import PropTypes from "prop-types";
+import { Storage } from "helpers/LocalStorageManagement";
 
 /**
  * routeProtectors interfaces can tell the router whether or not it should allow navigation to a requested route.
@@ -12,7 +13,8 @@ import PropTypes from "prop-types";
  * @param props
  */
 export const GameGuard = () => {
-  if (localStorage.getItem("playerId") && localStorage.getItem("gameId")) {
+  const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
+  if (gameId && playerId) {
     
     return <Outlet />;
   }

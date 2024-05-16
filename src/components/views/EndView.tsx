@@ -9,6 +9,7 @@ import "styles/views/Leaderboard.scss";
 //map container gets styled in here
 import "styles/views/Question.scss";
 import { getGameView } from "../game/GameApi";
+import { Storage } from "helpers/LocalStorageManagement";
 
 
 const EndView = () => {
@@ -39,9 +40,10 @@ const EndView = () => {
 
   const handleProfileRedirect = () => {
     // Remove specified variables from localStorage
+    Storage.removeGameIdAndPlayerId();
+
     localStorage.removeItem("currentRound");
     localStorage.removeItem("mapbox.eventData");
-    localStorage.removeItem("gameId");
     localStorage.removeItem("currentLocationName");
     localStorage.removeItem("hasReloaded");
     localStorage.removeItem("y");

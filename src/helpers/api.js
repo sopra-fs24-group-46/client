@@ -58,8 +58,7 @@ export const getAuthToken = () => {
 
 export const usePowerUp = async (powerUp, showError = alert) => {
   //Define current variables
-  const gameId = localStorage.getItem("gameId");
-  const playerId = localStorage.getItem("playerId");
+  const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
 
   //Create requestBody
   const requestBody = {
@@ -79,42 +78,19 @@ export const usePowerUp = async (powerUp, showError = alert) => {
 }
 
 
-// used in the MapEndpoint
-// api.js
-export const fetchGameData = async (gameId) => {
-  try {
-    const response = await fetch(`${getDomain()}game/${gameId}/getView`);
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching game state:", error);
-    throw error;
-  }
-};
-
-export const submitAnswer = async (gameId, playerId, coordinates) => {
+export const getUser = async (id, token, showError=alert) => {
   try {
 
-    const response = await fetch(`${getDomain()}game/${gameId}/guess`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        gameId,
-        playerId,
-        x: coordinates.latitude,
-        y: coordinates.longitude,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+    const response = await api.get(`/users/${id}/${token}`);
+    const user = response.data;
+
+    if (!user) {
+      throw new Error("User not found");
     }
     
-    return await response.json();
+    return user;
   } catch (error) {
-    console.error("Error submitting answer:", error);
-    throw error;
+    showError("Something went wrong while fetching the user!" + shortError(error));
+    console.error("Details:", error);
   }
-};
+}

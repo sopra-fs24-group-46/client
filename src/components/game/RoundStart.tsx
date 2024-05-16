@@ -11,6 +11,7 @@ import "styles/views/GameViewContainer.scss";
 import { usePowerUp } from "helpers/api";
 import "styles/views/FancyBackground.scss";
 import { useError } from "components/ui/ErrorContext";
+import { Storage } from "helpers/LocalStorageManagement";
 
 const RoundStart = () => {
 
@@ -27,7 +28,7 @@ const RoundStart = () => {
     async function init() {
       try {
 
-        const playerId = localStorage.getItem("playerId");
+        const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
         const data = await getGameView();
 
         setGameInfo(data);

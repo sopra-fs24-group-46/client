@@ -10,6 +10,8 @@ export const MultiSelection = ({ options, onChange, label, defaultValue = [] }) 
 
   //close drop down when clicking outside the multi selection
   useEffect(() => {
+    onChange(defaultValue);
+
     const handleClick = (event) => {
       if (ref.current && !ref.current.contains(event.target)) {
         closeDropDown();

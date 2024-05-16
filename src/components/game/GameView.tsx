@@ -25,6 +25,7 @@ import { getGameState, getSettings, getGameView, storeSettings} from "./GameApi"
 import {NavigateButtons} from "components/game/DevHelpers"
 import ProgressBar from "components/ui/ProgressBar";
 import { useError } from "components/ui/ErrorContext";
+import { Storage } from "helpers/LocalStorageManagement";
 
 
 const GameView = () => {
@@ -39,8 +40,9 @@ const GameView = () => {
   const [roundState, setRoundState] = useState("QUESTION");
   const [remainingTimeInMillis, setRemainingTimeInMillis] = useState(2);
   const [restartTimer, setRestartTimer] = useState(false);
+  const [settings, setSettings] = useState({});
   
-  const gameId = localStorage.getItem("gameId");
+  const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,6 +70,7 @@ const GameView = () => {
     //this is executed once
     const init = async () => {
       const settings = (gameId ?? false) ? await getSettings(showError) : null;
+      setSettings(settings);
       storeSettings(settings);
       updateGameState(); //load immediately and then every 500ms
     }
@@ -113,7 +116,7 @@ const GameView = () => {
   return (
     <BaseContainer>
       {
-      (localStorage.getItem("playerId") === null || localStorage.getItem("gameId") === null) ?
+      (playerId === null || gameId === null) ?
           (<NavigateButtons
             roundState={roundState}
             setRoundState={setRoundState}

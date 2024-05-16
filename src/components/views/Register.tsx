@@ -8,6 +8,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import Header from "components/views/Header";
 import PropTypes from "prop-types";
 import { useError } from "components/ui/ErrorContext";
+import { Storage } from "helpers/LocalStorageManagement";
 import {FormField} from "components/ui/FormFieldString";
 
 //styling
@@ -29,24 +30,12 @@ const SignUp = (props) => {
             const token = response.data.token;
             const id = response.data.id;
 
-            localStorage.setItem("token", token);
-            localStorage.setItem("id", id);
-
-            console.log("Response data:", response.data);
-
-            // Check if user data is present in the response
-            if (response.data.user) {
-                // Get the returned user data from the response body
-                const user = response.data.user;
-                // Store the user ID into local storage
-                localStorage.setItem("id", user.id);
-            }
+            Storage.storeUser(id, token);
 
             // Navigate to the desired route
             navigate("/profile");
         } catch (error) {
             showError('Something went wrong during the sign up: ' + shortError(error));
-            window.location.reload();
         }
     };
 
