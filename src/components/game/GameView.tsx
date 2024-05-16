@@ -59,7 +59,15 @@ const GameView = () => {
 
         //check if gamesState is defined before checking gamesState.gameState
         if ((gameState ?? false) && gameState.gameState !== "PLAYING") {
-          navigate("/game/ended");
+          if ((gameState ?? false) && gameState.gameState === "ENDED") {
+            navigate("/game/ended");
+          }
+          if ((gameState ?? false) && gameState.gameState === "LOBBY") {
+            navigate("/game/lobby/easter_egg");
+          }
+          if ((gameState ?? false) && gameState.gameState === "SETUP") {
+            navigate("/game/create");
+          }
         }
       } catch (error) {
         console.log("Error fetching game state:", error);

@@ -15,6 +15,7 @@ import Rules from "../../views/Rules";
 import ComponentDev from "../../views/ComponentDev";
 import GameView from "../../game/GameView";
 import EndView from "../../views/EndView";
+import IsNotInGame_Guard from "../routeProtectors/IsNotInGame_Guard";
 
 /**
  * Main router of your application.
@@ -30,6 +31,17 @@ const AppRouter = () => {
     <BrowserRouter>
       <Routes>
 
+       {/* This are all the view which are exclusively for clients with gameId and playerId  */}
+        <Route path="/game" element={<GameGuard />}>
+          <Route path="/game/create" element={<IsUserGuard />}>
+            <Route path="/game/create" element={<SetGame />} /> 
+          </Route>
+          <Route path="/game" element={<GameView />} />
+          <Route path="/game/ended" element={<EndView />} />
+          <Route path="/game/lobby/:gameId" element={<Lobby />} />
+        </Route>
+      {/* Everything else is accessable without gameId and playerId */}
+        <Route path="/" element={<IsNotInGame_Guard />}>
         {/* This are all views which are exclusively for clients without id and userName */}
         <Route path="/register" element={<IsNoUserGuard />}>
           <Route path="/register" element={<Register />} />
@@ -46,16 +58,7 @@ const AppRouter = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/edit" element={<Edit />} />
         </Route>
-        <Route path="/game/create" element={<IsUserGuard />}>
-          <Route path="/game/create" element={<SetGame />} /> 
-        </Route>
 
-       {/* This are all the view which are exclusively for clients with gameId and playerId  */}
-        <Route path="/game" element={<GameGuard />}>
-          <Route path="/game" element={<GameView />} />
-          <Route path="/game/ended" element={<EndView />} />
-          <Route path="/game/lobby/:gameId" element={<Lobby />} />
-        </Route>
 
         {/* allway accesable */}
         <Route path="/rules" element={<Rules />} />
@@ -68,6 +71,7 @@ const AppRouter = () => {
         <Route path="/" element={<Navigate to="/home" replace />} />
         {/* todo create catch all page */}
         <Route path="*" element={<PageNotFound />} />
+      </Route>
       </Routes>
     </BrowserRouter>
   );
