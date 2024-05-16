@@ -1,8 +1,9 @@
+import { Storage } from "helpers/LocalStorageManagement";
 import { api, shortError } from "helpers/api";
 
 export const getGameState = async (showError = console.log) => {
   try {
-    const gameId = localStorage.getItem("gameId");
+    const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
     const response = await api.get(`game/${gameId}/getGameState`);
     const data = response.data;
 
@@ -14,7 +15,7 @@ export const getGameState = async (showError = console.log) => {
 
 export const getSettings = async (showError = console.log) => {
   try {
-    const gameId = localStorage.getItem("gameId");
+    const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
     const response = await api.get(`game/${gameId}/settings`);
     const data = response.data;
 
@@ -25,8 +26,7 @@ export const getSettings = async (showError = console.log) => {
 };
 
 export const getGameView = async (showError = console.log) => {
-  const playerId = localStorage.getItem("playerId");
-  const gameId = localStorage.getItem("gameId");
+  const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
 
   const devData = JSON.parse(localStorage.getItem("devGameView"));
   if (gameId === null || playerId === null) {//returning dev data if in dev mode
@@ -34,7 +34,7 @@ export const getGameView = async (showError = console.log) => {
   }
 
   try {
-    const gameId = localStorage.getItem("gameId");
+    const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
     const response = await api.get(`game/${gameId}/getView`);
     const data = response.data;
 
@@ -44,59 +44,55 @@ export const getGameView = async (showError = console.log) => {
   }
 };
 
-export const storeSettings = (settings: any, showError = console.log) => {
-  try {
-    localStorage.setItem("questionTime", settings.questionTime);
-    localStorage.setItem("guessingTime", settings.guessingTime);
-    localStorage.setItem("mapRevealTime", settings.mapRevealTime);
-    localStorage.setItem("leaderBoardTime", settings.leaderBoardTime);
-  } catch (error) {
-    showError(error);
-  }
-}
-
-export const submitAnswer = async (gameId, showError = console.log) => {
-  if (gameId === null) {
+export const submitAnswer = async (answer: {x: string, y: string} ,showError = console.log) => {
+  const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
+  if (gameId === null || answer === null) {
     return;
   }
-  const playerId = localStorage.getItem("playerId");
-  const x = parseFloat(localStorage.getItem("x") || "0");
-  const y = parseFloat(localStorage.getItem("y") || "0");
 
   const requestBody = {
       playerId,
-      x,
-      y
+      x: answer.x,
+      y: answer.y
   };
 
   try {
       const response = await api.post(`game/${gameId}/guess`, requestBody);
-      console.log("Guess: "+requestBody+" submitted. response: ", response);
+      console.log("Guess: "+requestBody.x+","+requestBody.y+" submitted. response: ", response);
   } catch (error) {
       showError(shortError(error));
   }
 };
 
-export const joinGame = async (gameId: string, name: string, navigate: any, showError = console.log) => {
+export const joinGame = async (gameId: string, name: string, showError = console.log) => {
   try {
     // Construct the request body
     const requestBody = {
       displayName: name
     };
 
-
     const response = await api.post(`/game/${gameId}/join`, requestBody);
-
 
     // Handle response as needed, e.g., updating localStorage, navigating
     console.log(response.data);
-    localStorage.setItem("gameId", gameId);
-    localStorage.setItem("playerId", response.data);
+    Storage.storeGameIdAndPlayerId(gameId, response.data);
 
-
-    navigate(`/game/lobby/${gameId}`);
   } catch (error) {
     showError(shortError(error));
   }
+}
 
+export const leaveGame = async ( showError = console.log) => {
+  const { gameId, playerId } = Storage.retrieveGameIdAndPlayerId();
+  try {
+
+    const requestBody = {
+      playerId: playerId
+    }
+
+    await api.put(`/game/${gameId}/leave`, requestBody);
+
+  } catch (error) {
+    showError(shortError(error));
+  }
 }

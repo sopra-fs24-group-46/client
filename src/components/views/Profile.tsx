@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { api, handleError, shortError } from "helpers/api";
+import { api, handleError, shortError, getUser} from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import { Button } from "components/ui/Button";
 import { useNavigate } from "react-router-dom";
@@ -11,31 +11,8 @@ import "styles/views/Header.scss";
 import { User } from "types";
 import { joinGame } from "components/game/GameApi";
 import { useError } from "components/ui/ErrorContext";
-
-
-const FormField = (props) => {
-  return (
-      <div className="profile field">
-        <label className="profile label">{props.label}</label>
-        <input
-            type={props.type}
-            className="profile input"
-            placeholder={props.placeholder}
-            value={props.value}
-            onChange={(e) => props.onChange(e.target.value)}
-        />
-      </div>
-  );
-};
-
-
-FormField.propTypes = {
-  type: PropTypes.string,
-  label: PropTypes.string,
-  placeholder: PropTypes.string,
-  value: PropTypes.string,
-  onChange: PropTypes.func,
-};
+import { Storage } from "helpers/LocalStorageManagement";
+import { FormField } from "components/ui/FormFieldString";
 
 
 const Player = ({ user }: { user: User }) => (
@@ -60,16 +37,14 @@ const Profile = () => {
 
 
   const logout = (): void => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("id");
+    Storage.removeUser();
     navigate("/home");
   };
 
 
   const createCustomGame = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("id");
+      const {id, token} = Storage.retrieveUser();
 
 
       if (!token || !id) {
@@ -88,8 +63,7 @@ const Profile = () => {
 
 
       // Save gameId to localStorage
-      localStorage.setItem("gameId", gameId);
-      localStorage.setItem("playerId", playerId);
+      Storage.storeGameIdAndPlayerId(gameId, playerId);
 
 
       console.log('Game creation');
@@ -105,11 +79,11 @@ const Profile = () => {
   //TODO dont let user join if game is full
   const joinGameHandler = async () => {
     try {
-      const token = localStorage.getItem("token");
       if (!gameId) {
         throw new Error("No Game Pin provided!");
       }
-      await joinGame(gameId, loggedInUser.username, navigate, showError)
+      await joinGame(gameId, loggedInUser.username, showError)
+      navigate("/game/lobby" + gameId);
     } catch (error) {
       if (error.message === "No Game Pin provided!") {
         console.error("No Game Pin provided!");
@@ -121,11 +95,11 @@ const Profile = () => {
   
 
   const editPassword = () => {
-    navigate("profile/edit");
+    navigate("edit");
   }
   const editUsername = () => {
     // Redirect to /game/create endpoint
-    navigate("profile/edit");
+    navigate("edit");
   };
 
 
@@ -136,19 +110,16 @@ const Profile = () => {
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        const response = await api.get(`/users`);
-        const users = response.data;
-        const userId = localStorage.getItem('id');
-        const user = users.find((user) => user.id === parseInt(userId));
-        if (!user) {
-          throw new Error('User not found');
-        }
-        setLoggedInUser(user);
-      } catch (error) {
-        showError('Something went wrong while fetching the user!' + shortError(error));
-        console.error('Details:', error);
+      const {id, token} = Storage.retrieveUser();
+      const user = await getUser(id, token, console.log);
+
+      if (!user) {//invalid token and or id
+        Storage.removeUser();
+        navigate("/home");
       }
+
+      console.log("Fetched User:", user);
+      setLoggedInUser(user);
     }
 
 
@@ -161,41 +132,43 @@ const Profile = () => {
 
   if (loggedInUser && loggedInUser.username) {
     content = (
-        <div className="profile button-container">
-          <Button width="100%" onClick={() => logout()}>
-            Logout
-          </Button>
-          <Button width="100%" onClick={() => createCustomGame()}>
-            Create custom game
-          </Button>
-          <Button width="100%" onClick={() => editUsername()}>
-            Edit Username or password
-          </Button>
-          <Button width="100%" onClick={() => rules()}>
-            Game Rules
-          </Button>
-          <Button width="100%" onClick={() => joinGameHandler()}>
-            Join Game
-          </Button>
-          <FormField
-              label="Enter Game Pin"
-              placeholder="Enter game pin here..."
-              value={gameId}
-              onChange={(gameId) => setGameId(gameId)}
-          />
-        </div>
+      <div className="profile button-container">
+        <Button width="100%" onClick={() => logout()}>
+          Logout
+        </Button>
+        <Button width="100%" onClick={() => createCustomGame()}>
+          Create custom game
+        </Button>
+        <Button width="100%" onClick={() => editUsername()}>
+          Edit Username or password
+        </Button>
+        <Button width="100%" onClick={() => rules()}>
+          Game Rules
+        </Button>
+        <Button width="100%" onClick={() => joinGameHandler()}>
+          Join Game
+        </Button>
+        <FormField
+          className="profile"
+          type="text"
+          placeholder="Enter game pin to join a game..."
+          value={gameId}
+          onChange={(un: string) => setGameId(un)}
+        />
+      </div>
     );
   }
 
   return (
-      <BaseContainer>
-        <h1 className="header title1">Welcome, {loggedInUser && loggedInUser.username}!</h1>
-        <div className="profile container">
-          {content}
-        </div>
-      </BaseContainer>
+    <BaseContainer>
+      <div className="profile header-container">
+        <h1 className="header1 profile">WELCOME, {loggedInUser && loggedInUser.username}!</h1>
+      </div>
+      <div className="profile container">
+        {content}
+      </div>
+    </BaseContainer>
   );
 };
-
 
 export default Profile;

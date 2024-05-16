@@ -1,29 +1,26 @@
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; // Import PropTypes
-import ProgressBar from "components/ui/ProgressBar";
-import MapBoxComponent from "../ui/MapBoxComponent";
 import "styles/views/Question.scss";
 import "styles/ui/Progressbar.scss";
 import { PowerUpOverlay } from "components/ui/PowerUp";
 import { MapRevealLeaderboard } from "components/ui/MapRevealLeaderboard";
 import "styles/views/GameViewContainer.scss";
 import { getGameView } from "./GameApi";
+import { Storage } from "helpers/LocalStorageManagement";
 
 const MapReveal = ({ setAnswers }) => {
   const [powerUpInUse, setPowerUpInUse] = useState(null);
-  const [currentQuestionLocation, setCurrentQuestionLocation] = useState(null);
   const [playerAnswersArray, setPlayerAnswersArray] = useState([]);
   const [dataJsonString, setDataJsonString] = useState(null);
 
   useEffect(() => {
     async function init() {
       try {
-        const playerId = localStorage.getItem("playerId");
+        const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
         const data = await getGameView();
         
         setDataJsonString(JSON.stringify(data));
         setPowerUpInUse(data.powerUps[playerId]);
-        setCurrentQuestionLocation(data.currentQuestion.location);
 
         console.log(data.answers);
 
@@ -56,22 +53,6 @@ const MapReveal = ({ setAnswers }) => {
       <div className="game_view_container">
         <MapRevealLeaderboard dataJsonString={dataJsonString} /> {/* Fetches the data inside again, could be passed as props */}
         <PowerUpOverlay powerUpInUse={powerUpInUse} />
-
-        {/* <div className="map question_container">
-                    <div className="map text1">Round {localStorage.getItem("currentRound")}</div>
-                    <div className="map text2">Find mountain: {localStorage.getItem("currentLocationName")}</div>
-                    <div className="map text3">Select a location by clicking on the map.</div>
-                </div> */}
-
-                {/* todo: map here Should be removed in near future */}
-        {/* <div className="map container">
-          <MapBoxComponent
-            currentQuestionLocation={currentQuestionLocation}
-            reveal={1}
-            guessesMapReveal={playerAnswersArray}
-          />
-        </div> */}
-        {/* <ProgressBar durationInSeconds={localStorage.getItem("mapRevealTime")} onFinish={() => { }}  /> */}
       </div>
     );
   }

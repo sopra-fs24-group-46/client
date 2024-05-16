@@ -1,42 +1,28 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import BaseContainer from "components/ui/BaseContainer";
-import ProgressBar from "components/ui/ProgressBar";
-import MapBoxComponent from "components/ui/MapBoxComponent";
 import { PowerUpOverlay } from "components/ui/PowerUp";
-import { getDomain } from "helpers/getDomain";
-import {
-  fetchGameView,
-  handleAnswerSubmit,
-  fetchGameData,
-} from "../views/hooks";
 import PropTypes from "prop-types";
-import {api} from "helpers/api";
 
 import "styles/views/Question.scss";
 import "styles/ui/Progressbar.scss";
-import { getGameView, submitAnswer } from "./GameApi";
+import { getGameView } from "./GameApi";
 import "styles/views/GameViewContainer.scss";
+import { Storage } from "helpers/LocalStorageManagement";
+import { useError } from "components/ui/ErrorContext";
 
 // the hooks file has some of the logic that is used in this file
 
 const Guessing = ({ setJokerData }) => {
-  const gameId = localStorage.getItem("gameId");
+  const {showError} = useError();
 
   const [currentRound, setCurrentRound] = useState("");
   const [powerUpInUse, setPowerUpInUse] = useState(null);
   const [currentLocationName, setCurrentLocationName] = useState(null);
 
-  const guessingTimer = parseInt(
-    localStorage.getItem("guessingTime") || "0",
-    10
-  );
-
   useEffect(() => {
     
     async function init() {
       try {
-        const playerId = localStorage.getItem("playerId");
+        const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
         const data = await getGameView();
         
         setCurrentRound(data.currentRound);
@@ -55,8 +41,6 @@ const Guessing = ({ setJokerData }) => {
     }
 
     init();
-    const intervalId = setInterval(() => submitAnswer(gameId), 500);
-    return () => clearInterval(intervalId);
   }, []);
 
   return (
@@ -71,10 +55,6 @@ const Guessing = ({ setJokerData }) => {
           Select a location by clicking on the map.
         </div>
       </div>
-      {/* <ProgressBar
-        durationInSeconds={guessingTimer - 2}
-        onFinish={() => { }}
-      /> */}
     </div>
   );
 };

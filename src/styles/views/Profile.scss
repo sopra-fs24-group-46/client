@@ -2,44 +2,28 @@
 
 .profile {
 
+    &.header-container {
+        @include center;
+
+    }
+
     &.container {
-        height: 45vh;
-        font-weight: 300;
-        padding-left: 37px;
-        padding-right: 37px;
-        border-radius: 0.75em;
+
+        margin-top: 2em;
         background-color: $background;
-        transition: opacity 0.5s ease, transform 0.5s ease;
+        border-radius: 0.75em;
         box-shadow: $dropShadow;
+
         @include center;
     }
+
     &.button-container {
-        height: 20vh;
 
-
+        margin-top: 4vh;
+        padding-left: 3em;
+        padding-right: 3em;
+        padding-bottom: 2em;
     }
-    .field {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 10px;
-    }
-
-    .label {
-        display: none;
-
-    }
-
-    .input {
-
-        width: 100%;
-        background-color: rgba(60, 179, 113, 0.3);
-        border: 1px solid rgba(60, 179, 113, 0.5);
-        border-radius: 5px;
-        padding: 8px;
-        text-align: center;
-    }
-
 }
 
 

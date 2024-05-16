@@ -14,6 +14,7 @@ import ValidatedTextInput from "components/ui/ValidatedTextInput";
 import Dropdown from "components/ui/DropDown";
 import ErrorBox from "components/ui/ErrorBox";
 import { useError } from "components/ui/ErrorContext";
+import RedirectToGame from "components/ui/RedirectToGame";
 
 const ComponentDev = () => {
   const [maxPlayers, setMaxPlayers] = useState(2);
@@ -24,12 +25,13 @@ const ComponentDev = () => {
   return (
     <BaseContainer>
       {/* <ErrorBox message={errorMessage} onClose={() => {}} /> */}
+        <RedirectToGame />
       <div className="login container">
-        <MultiSelection
+        {/* <MultiSelection
           options={["option 1", "option 2", "option 3", "option 4"]}
           onChange={() => {}}
           label="test"
-        />
+        /> */}
         {/* <Button onClick={() => setRestartTimer(true)}>test</Button> */}
         <Button onClick={() => showError("test")}>test</Button>
         <FormField

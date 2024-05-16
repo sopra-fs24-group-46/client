@@ -1,6 +1,21 @@
 @import "../theme";
 
 .primary-button {
+
+  //Visuals
+  @include primary-button;
+  border: none;
+  border-radius: $borderRadius;
+
+  //Positioning
+  padding: 1vh;
+  margin-bottom: 0.5vh;
+
+  //Interaction
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5vh;
+
   &:hover {
     transform: translateY(-2px);
   }
@@ -11,20 +26,19 @@
       transform: none;
     }
   }
-  padding: 6px;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 13px;
-  text-align: center;
-  height: 35px;
-  border: none;
-  border-radius: $borderRadius;
-  cursor: pointer;
-  opacity: 1;
-  color: $background;
-  background-color: $accent;
-  transition: all 0.3s ease;
-  margin-top: 0.5vh;
+
+  &.authentication {
+    height: 3.5em;
+
+    &.link-button {
+      background: none;
+      border: none;
+      color: $linkColor; 
+      text-decoration: underline; 
+      cursor: pointer;
+
+    }
+  }
 
   &.selected {
     background-color: $accentAlt;

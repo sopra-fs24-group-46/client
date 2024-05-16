@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FinalLeaderboard } from "components/ui/LeaderboardComp";
 import "styles/views/GameViewContainer.scss";
 
@@ -12,7 +11,6 @@ import { getGameView } from "../game/GameApi";
 
 
 const EndView = () => {
-  const navigate = useNavigate();
 
   const [gameInfo, setGameInfo] = useState(null);
 
@@ -33,29 +31,6 @@ const EndView = () => {
     init();
   }, []);
 
-
-
-
-
-  const handleProfileRedirect = () => {
-    // Remove specified variables from localStorage
-    localStorage.removeItem("currentRound");
-    localStorage.removeItem("mapbox.eventData");
-    localStorage.removeItem("gameId");
-    localStorage.removeItem("currentLocationName");
-    localStorage.removeItem("hasReloaded");
-    localStorage.removeItem("y");
-    localStorage.removeItem("mapRevealTime");
-    localStorage.removeItem("x");
-    localStorage.removeItem("mapbox.eventData.uuid");
-    localStorage.removeItem("questionTime");
-    localStorage.removeItem("mapbox.eventData:YW1lbWJhZA==");
-    localStorage.removeItem("mapbox.eventData.uuid:YW1lbWJhZA==");
-    localStorage.removeItem("guessingTime");
-
-    // Redirect to profile page
-    navigate("/profile");
-  };
     if (gameInfo) {
         return (
             <div className="game_view_container">

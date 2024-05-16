@@ -4,20 +4,18 @@ import { Spinner } from "components/ui/Spinner";
 import BaseContainer from "components/ui/BaseContainer";
 import { useNavigate } from "react-router-dom";
 import { getDomain } from "helpers/getDomain";
-//import PropTypes from "prop-types";
-import "styles/views/Lobby.scss";
 import QRCode from "qrcode.react";
+import { Storage } from "helpers/LocalStorageManagement";
+import { getGameView, getSettings, leaveGame } from "components/game/GameApi";
+import { useError } from "components/ui/ErrorContext";
 
-//import { Score } from "../../helpers/types";
+import "styles/views/Lobby.scss";
 
 const Lobby = () => {
+  const { showError } = useError();
   const navigate = useNavigate();
   const [gameSettings, setGameSettings] = useState(null);
   const [gameId, setGameId] = useState(null);
-  const [maxPlayers, setMaxPlayers] = useState(null);
-  const userId = localStorage.getItem("id");
-  const currentRound = localStorage.getItem("currentRound");
-  const [playerId, setPlayerId] = useState<string>("");
   const [players, setPlayers] = useState([]);
   const copyButtonRef = useRef(null);
 
@@ -25,13 +23,11 @@ const Lobby = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const gameId = localStorage.getItem("gameId");
 
-        const response = await fetch(`${getDomain()}game/${gameId}/getView`);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+        const jsonData = await getGameView(showError);
+        if (!jsonData || jsonData.gameState === "CLOSED") {
+          doLeaveGame();
         }
-        const jsonData = await response.json();
         const gameState = jsonData.gameState;
         console.log(gameState);
 
@@ -56,14 +52,11 @@ const Lobby = () => {
   //Gets game settings when site loads
   useEffect(() => {
     async function fetchGameSettings() {
+      const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
       try {
-        const gameId = localStorage.getItem("gameId");
-        const maxPlayers = localStorage.getItem("maxPlayers");
-        const response = await api.get(`/game/${gameId}/settings`);
-        const settings = response.data;
+        const settings = await getSettings(showError);
         setGameSettings(settings);
         setGameId(gameId);
-        setMaxPlayers(maxPlayers);
       } catch (error) {
         console.error("Error fetching game settings:", error);
       }
@@ -72,11 +65,10 @@ const Lobby = () => {
     fetchGameSettings();
   }, []);
 
-  const startGame_test = async () => {
+  const startGame = async () => {
     //Define current variables
-    const gameId = localStorage.getItem("gameId");
-    const userId = localStorage.getItem("id");
-    const token = localStorage.getItem("token");
+    const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
+    const {id: userId, token} = Storage.retrieveUser();
 
     //Create requestBody
     const requestBody = {
@@ -101,23 +93,24 @@ const Lobby = () => {
     // Check if the user confirmed
     if (confirmed) {
       // User confirmed, leaving the lobby
-      const token = localStorage.getItem("token");
-      if (token) {
-        localStorage.removeItem("gameId");
-        localStorage.removeItem("playerId");
-
-        navigate("/profile");
-      } else {
-        localStorage.removeItem("gameId");
-        localStorage.removeItem("playerId");
-
-        navigate("/home");
-      }
+      doLeaveGame();
     } else {
       // User canceled, do nothing or provide feedback
       console.log("User canceled leaving the lobby.");
     }
   };
+  
+  const doLeaveGame = async () => {
+      leaveGame(showError);
+      const {id , token} = Storage.retrieveUser();
+      Storage.removeGameIdAndPlayerId();
+      
+      if (token) {
+        navigate("/profile");
+      } else {
+        navigate("/home");
+      }
+  }
 
   const copyGameCode = () => {
     if (gameId) {
@@ -131,25 +124,6 @@ const Lobby = () => {
         copyButton.innerHTML = "Copied!";
       }
     }
-  };
-
-  //Change as soon as BE is changed
-  const handleLeaveLobby_test = async () => {
-    //Define current variables
-    const gameId = localStorage.getItem("gameId");
-    const playerId = localStorage.getItem("playerId");
-
-    //Create requestBody
-    const requestBody = {
-      playerId: playerId,
-    };
-
-    try {
-      const response = await api.put(`/game/${gameId}/leave`, requestBody);
-    } catch (error) {
-      console.log(`Error Details: ${handleError(error)}`);
-    }
-    navigate("/profile");
   };
 
   let content = <Spinner />;
@@ -196,7 +170,7 @@ const Lobby = () => {
             </table>
           </div>
 
-          <button onClick={startGame_test} className="button">
+          <button onClick={startGame} className="button">
             Start Game
           </button>
           {/* Button to start the game */}
@@ -215,7 +189,7 @@ const Lobby = () => {
   }
   return (
     <BaseContainer>
-      <h1 className="header title1">GAME LOBBY</h1>
+      <h1 className="header1 lobby">GAME LOBBY</h1>
       {content}
     </BaseContainer>
   );

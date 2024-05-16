@@ -21,26 +21,28 @@ import Guessing from "components/game/Guessing";
 import MapReveal from "components/game/MapReveal";
 import LeaderBoard from "components/game/LeaderBoard";
 import BaseContainer from "components/ui/BaseContainer";
-import { getGameState, getSettings, getGameView, storeSettings} from "./GameApi";
+import { getGameState, getSettings, getGameView, submitAnswer} from "./GameApi";
 import {NavigateButtons} from "components/game/DevHelpers"
 import ProgressBar from "components/ui/ProgressBar";
 import { useError } from "components/ui/ErrorContext";
+import { Storage } from "helpers/LocalStorageManagement";
 
 
 const GameView = () => {
   const {showError} = useError();
   //mapbox
+  const [answer, setAnswer] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [jokerData, setJokerData] = useState([]);
   const [currentQuestionLocation, setCurrentQuestionLocation] = useState(null);
-  const [mapReveal, setMapReveal] = useState(0);
 
   //gamestate
   const [roundState, setRoundState] = useState("QUESTION");
   const [remainingTimeInMillis, setRemainingTimeInMillis] = useState(2);
   const [restartTimer, setRestartTimer] = useState(false);
+  const [settings, setSettings] = useState({questionTime: 1});
   
-  const gameId = localStorage.getItem("gameId");
+  const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -57,9 +59,16 @@ const GameView = () => {
 
         //check if gamesState is defined before checking gamesState.gameState
         if ((gameState ?? false) && gameState.gameState !== "PLAYING") {
-          navigate("/game/ended");
+          if ((gameState ?? false) && gameState.gameState === "ENDED") {
+            navigate("/game/ended");
+          }
+          if ((gameState ?? false) && gameState.gameState === "LOBBY") {
+            navigate("/game/lobby/easter_egg");
+          }
+          if ((gameState ?? false) && gameState.gameState === "SETUP") {
+            navigate("/game/create");
+          }
         }
-        
       } catch (error) {
         console.log("Error fetching game state:", error);
       }
@@ -68,7 +77,7 @@ const GameView = () => {
     //this is executed once
     const init = async () => {
       const settings = (gameId ?? false) ? await getSettings(showError) : null;
-      storeSettings(settings);
+      if (settings) setSettings(settings);
       updateGameState(); //load immediately and then every 500ms
     }
 
@@ -77,6 +86,10 @@ const GameView = () => {
 
     return () => { clearInterval(intervalId); }
   }, []);
+  
+  useEffect(() => {
+    submitAnswer(answer, showError);
+  }, [answer]);
 
   const executeOnNewRound = async () => {
     try {
@@ -96,13 +109,6 @@ const GameView = () => {
       executeOnNewRound();
     }
 
-    //updating map
-    if (roundState === "MAP_REVEAL") {
-      setMapReveal(1);
-    } else{
-      setMapReveal(0);
-    }
-
   }, [roundState]);
   
   useEffect (() => {
@@ -113,7 +119,7 @@ const GameView = () => {
   return (
     <BaseContainer>
       {
-      (localStorage.getItem("playerId") === null || localStorage.getItem("gameId") === null) ?
+      (playerId === null || gameId === null) ?
           (<NavigateButtons
             roundState={roundState}
             setRoundState={setRoundState}
@@ -124,21 +130,21 @@ const GameView = () => {
       }
       
       
-      <GameViewChild state={roundState} setAnswers={setAnswers} setJokerData={setJokerData} />
+      <GameViewChild state={roundState} setAnswers={setAnswers} setJokerData={setJokerData} answer={answer} />
       
       <div className="map container">
         <MapBoxComponent
           roundState={roundState}
           jokerData={jokerData}
           currentQuestionLocation={currentQuestionLocation ?? null}
-          reveal={mapReveal ?? 0}
           guessesMapReveal={answers ?? []}
+          setAnswer={setAnswer}
         />
       </div>
       
       <ProgressBar
         remainingTimeInSeconds={Math.ceil((remainingTimeInMillis / 1000))}
-        durationInSeconds={phaseTimeInSeconds(roundState)}
+        durationInSeconds={phaseTimeInSeconds(roundState, settings)}
         onFinish={() => { }}
         restartTimer={restartTimer}
         setRestartTimer={setRestartTimer}
@@ -148,7 +154,7 @@ const GameView = () => {
 };
 
 //these are the different round states.
-const GameViewChild = ({state, setAnswers, setJokerData}) => {
+const GameViewChild = ({state, setAnswers, setJokerData, answer}) => {
   switch (state) {
     case "QUESTION":
       return <RoundStart  />;
@@ -166,18 +172,19 @@ GameViewChild.propTypes = {
   state: PropTypes.string.isRequired,
   setAnswers: PropTypes.func.isRequired,
   setJokerData: PropTypes.func.isRequired,
+  answer: PropTypes.shape({x:PropTypes.string,y:PropTypes.string}).isRequired
 };
 
-const phaseTimeInSeconds = (phase) => {
+const phaseTimeInSeconds = (phase, settings) => {
   switch (phase) {
     case "QUESTION":
-      return localStorage.getItem("questionTime") ?? 1;
+      return settings.questionTime ?? 1;
     case "GUESSING":
-      return localStorage.getItem("guessingTime") ?? 2;
+      return settings.guessingTime ?? 2;
     case "MAP_REVEAL":
-      return localStorage.getItem("mapRevealTime") ?? 4;
+      return settings.mapRevealTime ?? 4;
     case "LEADERBOARD":
-      return localStorage.getItem("leaderBoardTime") ?? 4;
+      return settings.leaderBoardTime ?? 4;
     default:
       return 0;
   }

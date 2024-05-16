@@ -1,10 +1,6 @@
 import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { GameGuard } from "../routeProtectors/GameGuard";
-import GameRouter from "./GameRouter";
-import { LoginGuard } from "../routeProtectors/LoginGuard";
-import { HomeGuard } from "../routeProtectors/HomeGuard";
-import { RegisterGuard } from "../routeProtectors/RegisterGuard";
 import { IsNoUserGuard } from "../routeProtectors/IsNoUserGuard";
 import { IsUserGuard } from "../routeProtectors/IsUserGuard";
 import { PageNotFound } from "../../views/PageNotFound";
@@ -19,6 +15,7 @@ import Rules from "../../views/Rules";
 import ComponentDev from "../../views/ComponentDev";
 import GameView from "../../game/GameView";
 import EndView from "../../views/EndView";
+import IsNotInGame_Guard from "../routeProtectors/IsNotInGame_Guard";
 
 /**
  * Main router of your application.
@@ -30,11 +27,21 @@ import EndView from "../../views/EndView";
  * Documentation about routing in React: https://reactrouter.com/en/main/start/tutorial
  */
 const AppRouter = () => {
-  localStorage.setItem("playerId", "true");
   return (
     <BrowserRouter>
       <Routes>
 
+       {/* This are all the view which are exclusively for clients with gameId and playerId  */}
+        <Route path="/game" element={<GameGuard />}>
+          <Route path="/game/create" element={<IsUserGuard />}>
+            <Route path="/game/create" element={<SetGame />} /> 
+          </Route>
+          <Route path="/game" element={<GameView />} />
+          <Route path="/game/ended" element={<EndView />} />
+          <Route path="/game/lobby/:gameId" element={<Lobby />} />
+        </Route>
+      {/* Everything else is accessable without gameId and playerId */}
+        <Route path="/" element={<IsNotInGame_Guard />}>
         {/* This are all views which are exclusively for clients without id and userName */}
         <Route path="/register" element={<IsNoUserGuard />}>
           <Route path="/register" element={<Register />} />
@@ -49,18 +56,9 @@ const AppRouter = () => {
         {/* this are all views which are exclusively for clients with id and userName */}
         <Route path="/profile" element={<IsUserGuard />}>
           <Route path="/profile" element={<Profile />} />
-          <Route path="profile/edit" element={<Edit />} />
-        </Route>
-        <Route path="/game/create" element={<IsUserGuard />}>
-          <Route path="/game/create" element={<SetGame />} /> 
+          <Route path="/profile/edit" element={<Edit />} />
         </Route>
 
-       {/* This are all the view which are exclusively for clients with gameId and playerId  */}
-        <Route path="/game" element={<GameGuard />}>
-          <Route path="/game" element={<GameView />} />
-          <Route path="/game/ended" element={<EndView />} />
-          <Route path="/game/lobby/:gameId" element={<Lobby />} />
-        </Route>
 
         {/* allway accesable */}
         <Route path="/rules" element={<Rules />} />
@@ -73,6 +71,7 @@ const AppRouter = () => {
         <Route path="/" element={<Navigate to="/home" replace />} />
         {/* todo create catch all page */}
         <Route path="*" element={<PageNotFound />} />
+      </Route>
       </Routes>
     </BrowserRouter>
   );

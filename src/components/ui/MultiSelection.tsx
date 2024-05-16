@@ -10,6 +10,8 @@ export const MultiSelection = ({ options, onChange, label, defaultValue = [] }) 
 
   //close drop down when clicking outside the multi selection
   useEffect(() => {
+    onChange(defaultValue);
+
     const handleClick = (event) => {
       if (ref.current && !ref.current.contains(event.target)) {
         closeDropDown();
@@ -67,16 +69,6 @@ export const MultiSelection = ({ options, onChange, label, defaultValue = [] }) 
           </div>
         ))}
       
-      {/* {isOpen && options.filter((option) => !selectedWords.includes(option)).length > 0 && (
-        <div className="dropdown" >
-        {options.filter((option) => !selectedWords.includes(option))
-          .map((option, index) => (
-            <div key={index} className="option" onClick={() => handleWordSelect(option)}>
-            {option}
-            </div>
-          ))}
-          </div>
-        )} */}
     <Dropdown hide={!isOpen} elements={options.filter((option) => !selectedWords.includes(option))} onClick={handleWordSelect} />
     </div>
   
