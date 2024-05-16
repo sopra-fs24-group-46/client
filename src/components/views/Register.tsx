@@ -8,6 +8,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import Header from "components/views/Header";
 import PropTypes from "prop-types";
 import { useError } from "components/ui/ErrorContext";
+import { Storage } from "helpers/LocalStorageManagement";
 
 const FormField = (props) => {
     return (
@@ -46,8 +47,7 @@ const SignUp = (props) => {
             const token = response.data.token;
             const id = response.data.id;
 
-            localStorage.setItem("token", token);
-            localStorage.setItem("id", id);
+            Storage.storeUser(id, token);
 
             // Navigate to the desired route
             navigate("/profile");

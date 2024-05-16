@@ -1,9 +1,11 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import PropTypes from "prop-types";
+import { Storage } from "helpers/LocalStorageManagement";
 
 export const IsNoUserGuard = () => {
-  if (localStorage.getItem("token") && localStorage.getItem("id")) {
+  const { id, token } = Storage.retrieveUser();
+  if (id && token) {
     // If token exists, redirect to '/profile'
     return <Navigate to="/profile" replace />;
   }

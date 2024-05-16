@@ -7,6 +7,7 @@ import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
 import User from "models/User";
 import { useError } from "components/ui/ErrorContext";
+import { Storage } from "helpers/LocalStorageManagement";
 
 const Edit = () => {
   const navigate = useNavigate();
@@ -24,8 +25,7 @@ const Edit = () => {
       try {
         // Retrieve the user ID from localStorage
   
-        const id = localStorage.getItem('id');
-        const token = localStorage.getItem('token');
+        const {id, token} = Storage.retrieveUser();
         const user = await getUser(id, token, showError);
 
         setUser(user);
@@ -59,8 +59,7 @@ const Edit = () => {
         return;
       }
 
-      const storedUserId = localStorage.getItem('id');
-      const token = localStorage.getItem('token');
+      const {id: storedUserId, token} = Storage.retrieveUser();
       if (!storedUserId) {
         throw new Error('User ID not found in localStorage');
       }

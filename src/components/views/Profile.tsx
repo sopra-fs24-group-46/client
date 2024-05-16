@@ -11,6 +11,7 @@ import "styles/views/Header.scss";
 import { User } from "types";
 import { joinGame } from "components/game/GameApi";
 import { useError } from "components/ui/ErrorContext";
+import { Storage } from "helpers/LocalStorageManagement";
 
 
 const FormField = (props) => {
@@ -60,16 +61,14 @@ const Profile = () => {
 
 
   const logout = (): void => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("id");
+    Storage.removeUser();
     navigate("/home");
   };
 
 
   const createCustomGame = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("id");
+      const {id, token} = Storage.retrieveUser();
 
 
       if (!token || !id) {
@@ -88,8 +87,7 @@ const Profile = () => {
 
 
       // Save gameId to localStorage
-      localStorage.setItem("gameId", gameId);
-      localStorage.setItem("playerId", playerId);
+      Storage.storeGameIdAndPlayerId(gameId, playerId);
 
 
       console.log('Game creation');
@@ -105,7 +103,6 @@ const Profile = () => {
   //TODO dont let user join if game is full
   const joinGameHandler = async () => {
     try {
-      const token = localStorage.getItem("token");
       if (!gameId) {
         throw new Error("No Game Pin provided!");
       }
@@ -136,13 +133,11 @@ const Profile = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const id = localStorage.getItem('id');
-      const token = localStorage.getItem('token');
+      const {id, token} = Storage.retrieveUser();
       const user = await getUser(id, token, console.log);
 
       if (!user) {//invalid token and or id
-        localStorage.removeItem('token');
-        localStorage.removeItem('id');
+        Storage.removeUser();
       }
 
       console.log("Fetched User:", user);

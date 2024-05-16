@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { api } from "helpers/api";
 
 import { useNavigate } from "react-router-dom";
+import { Storage } from "helpers/LocalStorageManagement";
 
 interface PlayerData {
   score: number;
@@ -14,13 +15,14 @@ export const FinalLeaderboard = ({ scores, currentRound }) => {
 
   const handleReturnToProfile = () => {
     // Check if there's a token in localStorage
-    const token = localStorage.getItem("token");
+    const { id, token } = Storage.retrieveUser();
 
     if (token) {
       // Remove specified variables from localStorage
+      Storage.removeGameIdAndPlayerId();
+
       localStorage.removeItem("currentRound");
       localStorage.removeItem("mapbox.eventData");
-      localStorage.removeItem("gameId");
       localStorage.removeItem("currentLocationName");
       localStorage.removeItem("hasReloaded");
       localStorage.removeItem("y");
@@ -42,8 +44,9 @@ export const FinalLeaderboard = ({ scores, currentRound }) => {
 
   const createNewGame = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("id");
+      const { id, token } = Storage.retrieveUser();
+      // const token = localStorage.getItem("token");
+      // const id = localStorage.getItem("id");
 
       if (!token || !id) {
         throw new Error("Token or user id not found in localStorage");
@@ -59,8 +62,7 @@ export const FinalLeaderboard = ({ scores, currentRound }) => {
       const { playerId } = response.data;
 
       // Save gameId to localStorage
-      localStorage.setItem("gameId", gameId);
-      localStorage.setItem("playerId", playerId);
+      Storage.storeGameIdAndPlayerId(gameId, playerId);
 
       console.log("Game creation");
 

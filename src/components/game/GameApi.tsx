@@ -1,8 +1,9 @@
+import { Storage } from "helpers/LocalStorageManagement";
 import { api, shortError } from "helpers/api";
 
 export const getGameState = async (showError = console.log) => {
   try {
-    const gameId = localStorage.getItem("gameId");
+    const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
     const response = await api.get(`game/${gameId}/getGameState`);
     const data = response.data;
 
@@ -14,7 +15,7 @@ export const getGameState = async (showError = console.log) => {
 
 export const getSettings = async (showError = console.log) => {
   try {
-    const gameId = localStorage.getItem("gameId");
+    const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
     const response = await api.get(`game/${gameId}/settings`);
     const data = response.data;
 
@@ -25,8 +26,7 @@ export const getSettings = async (showError = console.log) => {
 };
 
 export const getGameView = async (showError = console.log) => {
-  const playerId = localStorage.getItem("playerId");
-  const gameId = localStorage.getItem("gameId");
+  const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
 
   const devData = JSON.parse(localStorage.getItem("devGameView"));
   if (gameId === null || playerId === null) {//returning dev data if in dev mode
@@ -34,7 +34,7 @@ export const getGameView = async (showError = console.log) => {
   }
 
   try {
-    const gameId = localStorage.getItem("gameId");
+    const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
     const response = await api.get(`game/${gameId}/getView`);
     const data = response.data;
 
@@ -55,11 +55,11 @@ export const storeSettings = (settings: any, showError = console.log) => {
   }
 }
 
-export const submitAnswer = async (gameId, showError = console.log) => {
+export const submitAnswer = async (showError = console.log) => {
+  const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
   if (gameId === null) {
     return;
   }
-  const playerId = localStorage.getItem("playerId");
   const x = parseFloat(localStorage.getItem("x") || "0");
   const y = parseFloat(localStorage.getItem("y") || "0");
 
@@ -90,9 +90,7 @@ export const joinGame = async (gameId: string, name: string, navigate: any, show
 
     // Handle response as needed, e.g., updating localStorage, navigating
     console.log(response.data);
-    localStorage.setItem("gameId", gameId);
-    localStorage.setItem("playerId", response.data);
-
+    Storage.storeGameIdAndPlayerId(gameId, response.data);
 
     navigate(`/game/lobby/${gameId}`);
   } catch (error) {

@@ -1,10 +1,6 @@
 import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { GameGuard } from "../routeProtectors/GameGuard";
-import GameRouter from "./GameRouter";
-import { LoginGuard } from "../routeProtectors/LoginGuard";
-import { HomeGuard } from "../routeProtectors/HomeGuard";
-import { RegisterGuard } from "../routeProtectors/RegisterGuard";
 import { IsNoUserGuard } from "../routeProtectors/IsNoUserGuard";
 import { IsUserGuard } from "../routeProtectors/IsUserGuard";
 import { PageNotFound } from "../../views/PageNotFound";

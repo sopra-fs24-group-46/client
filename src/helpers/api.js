@@ -58,8 +58,7 @@ export const getAuthToken = () => {
 
 export const usePowerUp = async (powerUp, showError = alert) => {
   //Define current variables
-  const gameId = localStorage.getItem("gameId");
-  const playerId = localStorage.getItem("playerId");
+  const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
 
   //Create requestBody
   const requestBody = {

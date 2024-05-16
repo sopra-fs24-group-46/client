@@ -81,10 +81,6 @@ const LeaderBoard = () => {
             </div>
           </div>
 
-        {/* <ProgressBar
-          durationInSeconds={localStorage.getItem("mapRevealTime")}
-          onFinish={() => {}}
-        /> */}
       </div>
     );
   }

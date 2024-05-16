@@ -4,20 +4,16 @@ import { Spinner } from "components/ui/Spinner";
 import BaseContainer from "components/ui/BaseContainer";
 import { useNavigate } from "react-router-dom";
 import { getDomain } from "helpers/getDomain";
-//import PropTypes from "prop-types";
-import "styles/views/Lobby.scss";
 import QRCode from "qrcode.react";
-
-//import { Score } from "../../helpers/types";
+import { Storage } from "helpers/LocalStorageManagement";
+import { getSettings } from "components/game/GameApi";
+import { useError } from "components/ui/ErrorContext";
 
 const Lobby = () => {
+  const { showError } = useError();
   const navigate = useNavigate();
   const [gameSettings, setGameSettings] = useState(null);
   const [gameId, setGameId] = useState(null);
-  const [maxPlayers, setMaxPlayers] = useState(null);
-  const userId = localStorage.getItem("id");
-  const currentRound = localStorage.getItem("currentRound");
-  const [playerId, setPlayerId] = useState<string>("");
   const [players, setPlayers] = useState([]);
   const copyButtonRef = useRef(null);
 
@@ -25,7 +21,7 @@ const Lobby = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const gameId = localStorage.getItem("gameId");
+        const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
 
         const response = await fetch(`${getDomain()}game/${gameId}/getView`);
         if (!response.ok) {
@@ -57,13 +53,9 @@ const Lobby = () => {
   useEffect(() => {
     async function fetchGameSettings() {
       try {
-        const gameId = localStorage.getItem("gameId");
-        const maxPlayers = localStorage.getItem("maxPlayers");
-        const response = await api.get(`/game/${gameId}/settings`);
-        const settings = response.data;
+        const settings = await getSettings(showError);
         setGameSettings(settings);
         setGameId(gameId);
-        setMaxPlayers(maxPlayers);
       } catch (error) {
         console.error("Error fetching game settings:", error);
       }
@@ -74,9 +66,8 @@ const Lobby = () => {
 
   const startGame_test = async () => {
     //Define current variables
-    const gameId = localStorage.getItem("gameId");
-    const userId = localStorage.getItem("id");
-    const token = localStorage.getItem("token");
+    const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
+    const {id: userId, token} = Storage.retrieveUser();
 
     //Create requestBody
     const requestBody = {
@@ -101,16 +92,12 @@ const Lobby = () => {
     // Check if the user confirmed
     if (confirmed) {
       // User confirmed, leaving the lobby
-      const token = localStorage.getItem("token");
+      const {id , token} = Storage.retrieveUser();
+      Storage.retrieveGameIdAndPlayerId();
+      
       if (token) {
-        localStorage.removeItem("gameId");
-        localStorage.removeItem("playerId");
-
         navigate("/profile");
       } else {
-        localStorage.removeItem("gameId");
-        localStorage.removeItem("playerId");
-
         navigate("/home");
       }
     } else {
@@ -136,8 +123,7 @@ const Lobby = () => {
   //Change as soon as BE is changed
   const handleLeaveLobby_test = async () => {
     //Define current variables
-    const gameId = localStorage.getItem("gameId");
-    const playerId = localStorage.getItem("playerId");
+    const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
 
     //Create requestBody
     const requestBody = {

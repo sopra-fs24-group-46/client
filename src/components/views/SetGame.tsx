@@ -12,6 +12,7 @@ import {MultiSelection} from "components/ui/MultiSelection";
 import ValidatedTextInput from "components/ui/ValidatedTextInput";
 import SelectRegion from "components/ui/SelectRegion";
 import { useError } from "components/ui/ErrorContext";
+import { Storage } from "helpers/LocalStorageManagement";
 
 
 
@@ -55,7 +56,6 @@ const SetGame = () => {
   const [region, setRegion] = useState(null);
   const [regionType, setRegionType] = useState(null);
   const [names, setNames] = useState(null);
-  const host = localStorage.getItem("id");
   const { showError } = useError();
 
   const navigate = useNavigate();
@@ -63,9 +63,8 @@ const SetGame = () => {
   const createGame = async () => {
     try {
       // Save user credentials for verification process
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("id");
-      const gameId = localStorage.getItem("gameId");
+      const {id, token} = Storage.retrieveUser();
+      const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
 
       // Explicitly convert values to integers
       const maxPlayersInt = parseInt(maxPlayers);
@@ -97,7 +96,7 @@ const SetGame = () => {
 
       // Send a PUT request to the backend
       console.log(requestBody);
-      const response = await api.put(`/game/${localStorage.getItem("gameId")}/updateSettings`, requestBody);
+      const response = await api.put(`/game/${gameId}/updateSettings`, requestBody);
 
       console.log(requestBody.locationTypes);
       console.log('Lobby created' + response.data);
@@ -110,7 +109,7 @@ const SetGame = () => {
       await api.post(`/game/${gameId}/openLobby`, credentials);
 
       // Redirect to "/lobby" after successful creation
-      navigate(`/game/lobby/${localStorage.getItem("gameId")}`);
+      navigate(`/game/lobby/${gameId}`);
     } catch (error) {
       // Handle errors
       showError("Creating game failed: " + shortError(error));
@@ -118,7 +117,7 @@ const SetGame = () => {
   };
 
   const goBacktoProfile = () => {
-    localStorage.removeItem("gameId");
+    Storage.removeGameIdAndPlayerId();
 
     navigate("/profile");
     <Link to="/profile">Go Back</Link>
