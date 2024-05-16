@@ -21,7 +21,7 @@ import Guessing from "components/game/Guessing";
 import MapReveal from "components/game/MapReveal";
 import LeaderBoard from "components/game/LeaderBoard";
 import BaseContainer from "components/ui/BaseContainer";
-import { getGameState, getSettings, getGameView} from "./GameApi";
+import { getGameState, getSettings, getGameView, submitAnswer} from "./GameApi";
 import {NavigateButtons} from "components/game/DevHelpers"
 import ProgressBar from "components/ui/ProgressBar";
 import { useError } from "components/ui/ErrorContext";
@@ -31,16 +31,16 @@ import { Storage } from "helpers/LocalStorageManagement";
 const GameView = () => {
   const {showError} = useError();
   //mapbox
+  const [answer, setAnswer] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [jokerData, setJokerData] = useState([]);
   const [currentQuestionLocation, setCurrentQuestionLocation] = useState(null);
-  const [mapReveal, setMapReveal] = useState(0);
 
   //gamestate
   const [roundState, setRoundState] = useState("QUESTION");
   const [remainingTimeInMillis, setRemainingTimeInMillis] = useState(2);
   const [restartTimer, setRestartTimer] = useState(false);
-  const [settings, setSettings] = useState({});
+  const [settings, setSettings] = useState({questionTime: 1});
   
   const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
   const navigate = useNavigate();
@@ -61,7 +61,6 @@ const GameView = () => {
         if ((gameState ?? false) && gameState.gameState !== "PLAYING") {
           navigate("/game/ended");
         }
-        
       } catch (error) {
         console.log("Error fetching game state:", error);
       }
@@ -70,7 +69,7 @@ const GameView = () => {
     //this is executed once
     const init = async () => {
       const settings = (gameId ?? false) ? await getSettings(showError) : null;
-      setSettings(settings);
+      if (settings) setSettings(settings);
       updateGameState(); //load immediately and then every 500ms
     }
 
@@ -79,6 +78,10 @@ const GameView = () => {
 
     return () => { clearInterval(intervalId); }
   }, []);
+  
+  useEffect(() => {
+    submitAnswer(answer, showError);
+  }, [answer]);
 
   const executeOnNewRound = async () => {
     try {
@@ -96,13 +99,6 @@ const GameView = () => {
     setRestartTimer(true);
     if (roundState === "QUESTION") {
       executeOnNewRound();
-    }
-
-    //updating map
-    if (roundState === "MAP_REVEAL") {
-      setMapReveal(1);
-    } else{
-      setMapReveal(0);
     }
 
   }, [roundState]);
@@ -126,7 +122,7 @@ const GameView = () => {
       }
       
       
-      <GameViewChild state={roundState} setAnswers={setAnswers} setJokerData={setJokerData} />
+      <GameViewChild state={roundState} setAnswers={setAnswers} setJokerData={setJokerData} answer={answer} />
       
       <div className="map container">
         <MapBoxComponent
@@ -134,7 +130,7 @@ const GameView = () => {
           jokerData={jokerData}
           currentQuestionLocation={currentQuestionLocation ?? null}
           guessesMapReveal={answers ?? []}
-          setAnswer={setAnswers}
+          setAnswer={setAnswer}
         />
       </div>
       
@@ -150,7 +146,7 @@ const GameView = () => {
 };
 
 //these are the different round states.
-const GameViewChild = ({state, setAnswers, setJokerData}) => {
+const GameViewChild = ({state, setAnswers, setJokerData, answer}) => {
   switch (state) {
     case "QUESTION":
       return <RoundStart  />;
@@ -168,6 +164,7 @@ GameViewChild.propTypes = {
   state: PropTypes.string.isRequired,
   setAnswers: PropTypes.func.isRequired,
   setJokerData: PropTypes.func.isRequired,
+  answer: PropTypes.shape({x:PropTypes.string,y:PropTypes.string}).isRequired
 };
 
 const phaseTimeInSeconds = (phase, settings) => {

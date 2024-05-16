@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import "styles/views/Question.scss";
 import "styles/ui/Progressbar.scss";
-import { getGameView, submitAnswer } from "./GameApi";
+import { getGameView } from "./GameApi";
 import "styles/views/GameViewContainer.scss";
 import { Storage } from "helpers/LocalStorageManagement";
 import { useError } from "components/ui/ErrorContext";
@@ -41,8 +41,6 @@ const Guessing = ({ setJokerData }) => {
     }
 
     init();
-    const intervalId = setInterval(() => submitAnswer(showError), 500);
-    return () => clearInterval(intervalId);
   }, []);
 
   return (
