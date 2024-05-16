@@ -39,53 +39,52 @@ const SignUp = (props) => {
         }
     };
 
+    const inputIsValid = () => {
+        return password.length >= 6;
+      }
+
+
+
   return (
     <BaseContainer>
       <h1 className="header authentication">Gwüsst</h1>
       <div className="authentication container">
-          <div className="authentication form">
-              <FormField
-                className="authentication"
-                label="Username:"
-                type="text"
-                value={username || ""}
-                placeholder={"enter here..."}
-                onChange={(un) => setUsername(un)}
-              />
-              <FormField
-                className="authentication"
-                label="Password:"
-                type="password"
-                value={password || ""}
-                placeholder={"enter here..."}
-                onChange={(n) => setPassword(n)}
-              />
-              <div className="authentication password-hint">
-                password lenght {password ? `${password.length}/6` : '0/6'}
-              </div>
-                  <div className="login button-container" style={{ marginTop: '10px' }}>
-                  <Button
-                      disabled={!username || !password}
-                      width="100%"
-                      onClick={() => {
-                          // Check if the password length is greater than 6
-                          if (password.length > 5) {
-                              doSignup();
-                          } else {
-                              showError("Password should be longer than 6 characters.");
-                          }
-                      }}
-                  >
-                      Sign Up
-                  </Button>
-                  <Button
-                      width="100%"
-                      onClick={() => navigate(`/home`)}
-                  >
-                      Go back
-                  </Button>
-              </div>
+        <div className="authentication form">
+          <FormField
+            className="authentication"
+            label="Username:"
+            type="text"
+            value={username || ""}
+            placeholder={"enter here..."}
+            onChange={(un) => setUsername(un)}
+          />
+          <FormField
+            className="authentication"
+            label="Password:"
+            type="password"
+            value={password || ""}
+            placeholder={"enter here..."}
+            onChange={(n) => setPassword(n)}
+          />
+          <div className="authentication password-hint">
+            password lenght {password ? `${password.length}/6` : '0/6'}
           </div>
+          <div className="authentication button-container">
+            <Button
+              disabled={!username || !password || !inputIsValid()}
+              width="100%"
+              className={"authentication"}
+              onClick={() => doSignup()}>
+              Sign Up
+            </Button>
+            <Button
+              width="100%"
+              className={"authentication"}
+              onClick={() => navigate(`/home`)}>
+              Go back
+            </Button>
+          </div>
+        </div>
       </div>
     </BaseContainer>
   );
