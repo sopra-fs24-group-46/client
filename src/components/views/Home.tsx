@@ -70,7 +70,10 @@ const Home = () => {
               disabled={!inputIsValid()}
               className={"authentication"}
               width="100%" 
-              onClick={() => joinGame(gamePin, playerName, navigate, showError)}>
+              onClick={() => {
+                joinGame(gamePin, playerName, showError)
+                navigate("game/lobby/" + gamePin);
+              }}>
               Join Game
             </Button>
           </div>

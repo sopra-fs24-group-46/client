@@ -64,7 +64,7 @@ export const submitAnswer = async (answer: {x: string, y: string} ,showError = c
   }
 };
 
-export const joinGame = async (gameId: string, name: string, navigate: any, showError = console.log) => {
+export const joinGame = async (gameId: string, name: string, showError = console.log) => {
   try {
     // Construct the request body
     const requestBody = {
@@ -77,7 +77,6 @@ export const joinGame = async (gameId: string, name: string, navigate: any, show
     console.log(response.data);
     Storage.storeGameIdAndPlayerId(gameId, response.data);
 
-    navigate(`/game/lobby/${gameId}`);
   } catch (error) {
     showError(shortError(error));
   }
