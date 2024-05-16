@@ -21,7 +21,7 @@ import Guessing from "components/game/Guessing";
 import MapReveal from "components/game/MapReveal";
 import LeaderBoard from "components/game/LeaderBoard";
 import BaseContainer from "components/ui/BaseContainer";
-import { getGameState, getSettings, getGameView, storeSettings} from "./GameApi";
+import { getGameState, getSettings, getGameView} from "./GameApi";
 import {NavigateButtons} from "components/game/DevHelpers"
 import ProgressBar from "components/ui/ProgressBar";
 import { useError } from "components/ui/ErrorContext";
@@ -71,7 +71,6 @@ const GameView = () => {
     const init = async () => {
       const settings = (gameId ?? false) ? await getSettings(showError) : null;
       setSettings(settings);
-      storeSettings(settings);
       updateGameState(); //load immediately and then every 500ms
     }
 
@@ -134,14 +133,14 @@ const GameView = () => {
           roundState={roundState}
           jokerData={jokerData}
           currentQuestionLocation={currentQuestionLocation ?? null}
-          reveal={mapReveal ?? 0}
           guessesMapReveal={answers ?? []}
+          setAnswer={setAnswers}
         />
       </div>
       
       <ProgressBar
         remainingTimeInSeconds={Math.ceil((remainingTimeInMillis / 1000))}
-        durationInSeconds={phaseTimeInSeconds(roundState)}
+        durationInSeconds={phaseTimeInSeconds(roundState, settings)}
         onFinish={() => { }}
         restartTimer={restartTimer}
         setRestartTimer={setRestartTimer}
@@ -171,16 +170,16 @@ GameViewChild.propTypes = {
   setJokerData: PropTypes.func.isRequired,
 };
 
-const phaseTimeInSeconds = (phase) => {
+const phaseTimeInSeconds = (phase, settings) => {
   switch (phase) {
     case "QUESTION":
-      return localStorage.getItem("questionTime") ?? 1;
+      return settings.questionTime ?? 1;
     case "GUESSING":
-      return localStorage.getItem("guessingTime") ?? 2;
+      return settings.guessingTime ?? 2;
     case "MAP_REVEAL":
-      return localStorage.getItem("mapRevealTime") ?? 4;
+      return settings.mapRevealTime ?? 4;
     case "LEADERBOARD":
-      return localStorage.getItem("leaderBoardTime") ?? 4;
+      return settings.leaderBoardTime ?? 4;
     default:
       return 0;
   }

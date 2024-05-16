@@ -42,19 +42,6 @@ const EndView = () => {
     // Remove specified variables from localStorage
     Storage.removeGameIdAndPlayerId();
 
-    localStorage.removeItem("currentRound");
-    localStorage.removeItem("mapbox.eventData");
-    localStorage.removeItem("currentLocationName");
-    localStorage.removeItem("hasReloaded");
-    localStorage.removeItem("y");
-    localStorage.removeItem("mapRevealTime");
-    localStorage.removeItem("x");
-    localStorage.removeItem("mapbox.eventData.uuid");
-    localStorage.removeItem("questionTime");
-    localStorage.removeItem("mapbox.eventData:YW1lbWJhZA==");
-    localStorage.removeItem("mapbox.eventData.uuid:YW1lbWJhZA==");
-    localStorage.removeItem("guessingTime");
-
     // Redirect to profile page
     navigate("/profile");
   };

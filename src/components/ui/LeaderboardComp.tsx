@@ -21,19 +21,6 @@ export const FinalLeaderboard = ({ scores, currentRound }) => {
       // Remove specified variables from localStorage
       Storage.removeGameIdAndPlayerId();
 
-      localStorage.removeItem("currentRound");
-      localStorage.removeItem("mapbox.eventData");
-      localStorage.removeItem("currentLocationName");
-      localStorage.removeItem("hasReloaded");
-      localStorage.removeItem("y");
-      localStorage.removeItem("mapRevealTime");
-      localStorage.removeItem("x");
-      localStorage.removeItem("mapbox.eventData.uuid");
-      localStorage.removeItem("questionTime");
-      localStorage.removeItem("mapbox.eventData:YW1lbWJhZA==");
-      localStorage.removeItem("mapbox.eventData.uuid:YW1lbWJhZA==");
-      localStorage.removeItem("guessingTime");
-
       // Redirect to /profile
       navigate("/profile");
     } else {
@@ -45,8 +32,6 @@ export const FinalLeaderboard = ({ scores, currentRound }) => {
   const createNewGame = async () => {
     try {
       const { id, token } = Storage.retrieveUser();
-      // const token = localStorage.getItem("token");
-      // const id = localStorage.getItem("id");
 
       if (!token || !id) {
         throw new Error("Token or user id not found in localStorage");
@@ -103,11 +88,13 @@ export const FinalLeaderboard = ({ scores, currentRound }) => {
 
     return highestScore;
   }
+  
+  const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
 
   return (
     <div className="leaderboard container">
       <h2 className="leaderboard title">Final Leaderboard</h2>
-      {localStorage.getItem("playerId") === getHighestScorePlayer(scores) ? (
+      {playerId === getHighestScorePlayer(scores) ? (
         <h2 className="leaderboard title">
           Congratulations you have won with {getHighestScore(scores)} points!
         </h2>

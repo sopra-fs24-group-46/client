@@ -44,29 +44,16 @@ export const getGameView = async (showError = console.log) => {
   }
 };
 
-export const storeSettings = (settings: any, showError = console.log) => {
-  try {
-    localStorage.setItem("questionTime", settings.questionTime);
-    localStorage.setItem("guessingTime", settings.guessingTime);
-    localStorage.setItem("mapRevealTime", settings.mapRevealTime);
-    localStorage.setItem("leaderBoardTime", settings.leaderBoardTime);
-  } catch (error) {
-    showError(error);
-  }
-}
-
-export const submitAnswer = async (showError = console.log) => {
+export const submitAnswer = async (answer: {x: string, y: string} ,showError = console.log) => {
   const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
   if (gameId === null) {
     return;
   }
-  const x = parseFloat(localStorage.getItem("x") || "0");
-  const y = parseFloat(localStorage.getItem("y") || "0");
 
   const requestBody = {
       playerId,
-      x,
-      y
+      x: answer.x,
+      y: answer.y
   };
 
   try {

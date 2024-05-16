@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; // Import PropTypes
-import ProgressBar from "components/ui/ProgressBar";
-import MapBoxComponent from "../ui/MapBoxComponent";
 import "styles/views/Question.scss";
 import "styles/ui/Progressbar.scss";
 import { PowerUpOverlay } from "components/ui/PowerUp";
@@ -12,7 +10,6 @@ import { Storage } from "helpers/LocalStorageManagement";
 
 const MapReveal = ({ setAnswers }) => {
   const [powerUpInUse, setPowerUpInUse] = useState(null);
-  const [currentQuestionLocation, setCurrentQuestionLocation] = useState(null);
   const [playerAnswersArray, setPlayerAnswersArray] = useState([]);
   const [dataJsonString, setDataJsonString] = useState(null);
 
@@ -24,7 +21,6 @@ const MapReveal = ({ setAnswers }) => {
         
         setDataJsonString(JSON.stringify(data));
         setPowerUpInUse(data.powerUps[playerId]);
-        setCurrentQuestionLocation(data.currentQuestion.location);
 
         console.log(data.answers);
 

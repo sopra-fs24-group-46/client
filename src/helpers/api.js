@@ -46,16 +46,6 @@ export const handleError = (error, showError=alert) => {
   }
 };
 
-export const getAuthToken = () => {
-  let token = localStorage.getItem("token");
-  
-  return  {
-    headers: {
-      token: token,
-    },
-  };
-}
-
 export const usePowerUp = async (powerUp, showError = alert) => {
   //Define current variables
   const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();

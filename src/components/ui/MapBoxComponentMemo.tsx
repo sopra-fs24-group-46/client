@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import mapboxgl from "mapbox-gl";
 import { LineLayer } from "deck.gl";
 
-const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocation, guessesMapReveal }) => {
+const MapBoxComponent = ({ roundState, jokerData, currentQuestionLocation, guessesMapReveal, setAnswer }) => {
 
   const mapboxAccessToken = "pk.eyJ1IjoiYW1lbWJhZCIsImEiOiJjbHU2dTF1NHYxM3drMmlueDV3ZGtvYTlvIn0.UhwX7hVWfe4fJA-cjCX70w";
 
@@ -221,8 +221,7 @@ const MapBoxComponent = ({ roundState, jokerData, reveal, currentQuestionLocatio
 
       removeClickMarker();
 
-      localStorage.setItem("x", String(e.lngLat.lng));
-      localStorage.setItem("y", String(e.lngLat.lat));
+      setAnswer({x: e.lngLat.lng, y: e.lngLat.lat})
 
       const newMarker = new mapboxgl.Marker()
         .setLngLat([e.lngLat.lng, e.lngLat.lat])
@@ -303,7 +302,6 @@ MapBoxComponent.propTypes = {
     joker: PropTypes.bool.isRequired,
     center: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
   }).isRequired,
-  reveal: PropTypes.number.isRequired,
   currentQuestionLocation: PropTypes.string.isRequired,
   guessesMapReveal: PropTypes.arrayOf(PropTypes.shape({
     playerId: PropTypes.string.isRequired,
@@ -311,6 +309,7 @@ MapBoxComponent.propTypes = {
     guess_y: PropTypes.number.isRequired,
     colorNumber: PropTypes.number.isRequired,
   })),
+  setAnswer: PropTypes.func.isRequired,
 
 };
 

@@ -26,7 +26,6 @@ import EndView from "../../views/EndView";
  * Documentation about routing in React: https://reactrouter.com/en/main/start/tutorial
  */
 const AppRouter = () => {
-  localStorage.setItem("playerId", "true");
   return (
     <BrowserRouter>
       <Routes>
