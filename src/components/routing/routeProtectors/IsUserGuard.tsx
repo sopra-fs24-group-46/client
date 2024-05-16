@@ -5,7 +5,7 @@ import { Storage } from "helpers/LocalStorageManagement";
 
 export const IsUserGuard = () => {
   const { id, token } = Storage.retrieveUser();
-  if (id || token) {
+  if (!id || !token) {
     return <Navigate to="/home" replace />;
   }
   
