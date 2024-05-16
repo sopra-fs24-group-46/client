@@ -63,6 +63,13 @@ $borderRadius: 0.75em;
   font-size: 0.8em;
 }
 
+@mixin medium-text {
+  font-family: $fontDefault;
+  font-size: 2em;
+}
+
+
+
 @mixin input-field {
   font-family: $fontDefault;
   font-size: 1em;

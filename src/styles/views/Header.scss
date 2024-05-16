@@ -18,6 +18,8 @@
 
   &.profile {
     margin-top: 18vh;
+    display: flex;
+    justify-content: center;
   }
 
   &.createGame {
@@ -26,6 +28,13 @@
 
   &.lobby {
     margin-top: 5vh;
+  }
+
+  &.roundStart {
+    margin-top: 18vh;
+    display: flex;
+    justify-content: center;
+
   }
 
   

@@ -53,19 +53,18 @@ const RoundStart = () => {
   let content = <Spinner />;
   if (gameInfo) {
     content = (
-            <div>{currentLocationName}</div>
+            <div className="round question">{currentLocationName}</div>
     );
   }
 
-  return <div className="game_view_container" >
+  return (
+    <div className="game_view_container" >
       <div  style={{zIndex: 2}}>
         <PowerUpOverlay powerUp={powerUpInUse} />
-        <h1 className="header title1">
-          Round {currentRound}
-        </h1>
+        <h1 className="header1 roundStart">Round {currentRound}</h1>
         <div className="round container">
-          <div className="round text_container">
-            <div>Try to find this Mountain:</div>
+          <div className="round text-container">
+            <div className="round text">Try to find this Mountain:</div>
             {content}
           </div>
           <PowerUpBar
@@ -94,7 +93,8 @@ const RoundStart = () => {
                   <li></li>
           </ul>
         </div >
-  </div>;
+  </div>
+  );
 };
 
 

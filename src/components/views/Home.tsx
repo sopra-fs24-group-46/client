@@ -5,7 +5,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import Header from "components/views/Header";
 import { joinGame } from "components/game/GameApi";
 import { useError } from "components/ui/ErrorContext";
-import {FormField} from "components/ui/FormFieldString";
+import { FormField } from "components/ui/FormFieldString";
 
 //styling
 import "styles/views/Header.scss";

@@ -3,9 +3,7 @@
 .round {
 
     &.container {
-        height: 40vh;
-        width: 60vw;
-        font-weight: 300;
+        
         border-radius: 0.75em;
         background-color: $background;
         transition: opacity 0.5s ease, transform 0.5s ease;
@@ -16,15 +14,34 @@
 
     }
 
-    &.text_container {
-        height: 20vh;
-        width:60vw;
+    &.text-container {
+
+        margin-top: 3em;
 
         display: flex;
         flex-direction: column;
         align-items: center;
 
+    }
 
+    &.text {
+
+        @include medium-text;
+
+        padding-left: 1em;
+        padding-right: 1em;
+        padding-bottom: 1em;
+    }
+
+    &.question {
+
+        @include medium-text;
+
+        font-weight: bold;
+
+        padding-left: 1em;
+        padding-right: 1em;
+        padding-bottom: 1em;
     }
 
 }
