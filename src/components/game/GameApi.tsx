@@ -46,7 +46,7 @@ export const getGameView = async (showError = console.log) => {
 
 export const submitAnswer = async (answer: {x: string, y: string} ,showError = console.log) => {
   const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
-  if (gameId === null) {
+  if (gameId === null || answer === null) {
     return;
   }
 

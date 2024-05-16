@@ -31,7 +31,7 @@ import { Storage } from "helpers/LocalStorageManagement";
 const GameView = () => {
   const {showError} = useError();
   //mapbox
-  const [answer, setAnswer] = useState([]);
+  const [answer, setAnswer] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [jokerData, setJokerData] = useState([]);
   const [currentQuestionLocation, setCurrentQuestionLocation] = useState(null);

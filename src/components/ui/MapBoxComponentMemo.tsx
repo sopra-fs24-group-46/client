@@ -216,24 +216,32 @@ const MapBoxComponent = ({ roundState, jokerData, currentQuestionLocation, guess
       map.setLayoutProperty('natural-point-label', 'visibility', 'none');
     });
 
-    //Visualize the current guessing position
-    map.on("click", (e) => {
-
-      removeClickMarker();
-
-      setAnswer({x: e.lngLat.lng, y: e.lngLat.lat})
-
-      const newMarker = new mapboxgl.Marker()
-        .setLngLat([e.lngLat.lng, e.lngLat.lat])
-        .addTo(map);
-
-        clickMarker.current = newMarker;
-    });
 
     setMap(map);
 
   }, [])
+  
+  useEffect(() => {
+    if (!map) return;
+    //Adds new onclick listener with updated roundstate
+    map.on("click", guessOnClick);
+    //removes old onclick listener
+    return () => map.off("click", guessOnClick);
+  }, [roundState]);
 
+
+  const guessOnClick = (e) => {
+    //Visualize the current guessing position
+    console.log("click: ", roundState)
+    if (roundState === "GUESSING") {
+      removeClickMarker();
+      setAnswer({ x: e.lngLat.lng, y: e.lngLat.lat })
+      const newMarker = new mapboxgl.Marker()
+        .setLngLat([e.lngLat.lng, e.lngLat.lat])
+        .addTo(map);
+      clickMarker.current = newMarker;
+    }
+  }
 
   useEffect(() => {
 
