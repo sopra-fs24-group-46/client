@@ -1,6 +1,6 @@
 <h1 align="center">
 <br>
-GWÜSST-Server
+GWÜSST-Client
 <br>
 </h1>
 
