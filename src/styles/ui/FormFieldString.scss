@@ -2,12 +2,18 @@
 
 .formfieldd {
 
-
     &.field {
 
         display: flex;
         flex-direction: column;
         justify-content: center;
+
+        &.setGame {
+
+            display: flex;
+            flex-direction: row;
+
+        }
 
     }
 
@@ -22,6 +28,14 @@
 
         }
 
+        &.setGame {
+
+            height: 3em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+        }
     }
 
     &.input {
@@ -37,6 +51,14 @@
 
             margin-bottom: 1em;
             background: transparentize(white, 0.85);
+
+        }
+
+        &.setGame {
+
+            margin-bottom: 1em;
+            background: transparentize(white, 0.85);
+            width: 4em;
 
         }
 

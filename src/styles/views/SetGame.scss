@@ -8,9 +8,7 @@
  */
  .set-game {
   &.container {
-    height: 40vh;
-    width: 80vw;
-    font-weight: 300;
+
     padding-left: 37px;
     padding-right: 37px;
     border-radius: 0.75em;
@@ -22,6 +20,14 @@
     justify-content: center;
     align-items: center;
 
+  }
+
+  &.title-container {
+
+  }
+
+  &.title {
+    
   }
 
   &.inputs {

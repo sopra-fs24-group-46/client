@@ -14,6 +14,9 @@ export const FormField = (props) => {
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
         disabled={props.disabled}
+        min = {props.min}
+        max = {props.max}
+
       />
     </div>
   );
@@ -27,5 +30,7 @@ FormField.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   disabled: PropTypes.bool,
+  min: PropTypes.number,
+  max: PropTypes.number,
 
 };
