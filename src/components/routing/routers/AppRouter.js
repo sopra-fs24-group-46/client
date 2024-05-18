@@ -10,7 +10,6 @@ import Register from "../../views/Register";
 import Profile from "../../views/Profile";
 import SetGame from "../../views/SetGame";
 import Edit from "../../views/Edit";
-import Lobby from "../../views/Lobby";
 import Rules from "../../views/Rules";
 import ComponentDev from "../../views/ComponentDev";
 import GameView from "../../game/GameView";
@@ -36,9 +35,8 @@ const AppRouter = () => {
           <Route path="/game/create" element={<IsUserGuard />}>
             <Route path="/game/create" element={<SetGame />} /> 
           </Route>
-          <Route path="/game" element={<GameView />} />
           <Route path="/game/ended" element={<EndView />} />
-          <Route path="/game/lobby/:gameId" element={<Lobby />} />
+          <Route path="/game/:gameId" element={<GameView />} />
         </Route>
       {/* Everything else is accessable without gameId and playerId */}
         <Route path="/" element={<IsNotInGame_Guard />}>

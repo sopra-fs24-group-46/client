@@ -7,7 +7,7 @@ import { Button } from "components/ui/Button"; // Import the Button component
 import { useNavigate, Link } from "react-router-dom";
 import "styles/views/Header.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import {FormField} from "components/ui/FormField";
+import { FormField } from "components/ui/FormFieldString";
 import {MultiSelection} from "components/ui/MultiSelection";
 import ValidatedTextInput from "components/ui/ValidatedTextInput";
 import SelectRegion from "components/ui/SelectRegion";
@@ -60,9 +60,15 @@ const SetGame = () => {
   const { showError } = useError();
   const [difficulty, setDifficulty] = useState("HARD");
 
+  const [lakesBool, setLakesBool] = useState(false);
+  const [mountainsBool, setMountainsBool] = useState(false);
+  
+
   const navigate = useNavigate();
 
   const createGame = async () => {
+
+
     try {
       // Save user credentials for verification process
       const {id, token} = Storage.retrieveUser();
@@ -83,6 +89,8 @@ const SetGame = () => {
         return;
       }
 
+      console.log(locationTypes);
+
       // Construct the request body
       const requestBody = {
         id: id,
@@ -90,6 +98,7 @@ const SetGame = () => {
         maxPlayers: maxPlayersInt,
         rounds: roundsInt,
         guessingTime: guessingTimeInt,
+        questionTime: 5,
         locationTypes: locationTypes,
         region: region,
         regionType: regionType,
@@ -111,7 +120,7 @@ const SetGame = () => {
       await api.post(`/game/${gameId}/openLobby`, credentials);
 
       // Redirect to "/lobby" after successful creation
-      navigate(`/game/lobby/${gameId}`);
+      navigate(`/game/${gameId}`);
     } catch (error) {
       // Handle errors
       showError("Creating game failed: " + shortError(error));
@@ -130,56 +139,85 @@ const SetGame = () => {
     return true;
   }
 
+  const setLimits = (minVal, maxVal, newValue) => {
+    // Ensure the new value is within the desired range
+    newValue = Math.min(Math.max(minVal, newValue), maxVal); // Limits the value between 1 and 5
+    // Update the state with the limited value
+
+    return(newValue)
+  };
+
+  const toggleLocationTypes = (location) => {
+    if (locationTypes.includes(location)) {
+      setLocationTypes(locationTypes.filter((loc) => loc !== location));
+    } else {
+      setLocationTypes([...locationTypes, location]);
+    }
+  };
+
   return (
     <BaseContainer>
 
-      <h1 className="header1 createGame">CREATE CUSTOM GAME</h1>
+      <h1 className="header1 setGame">CREATE CUSTOM GAME</h1>
+
       <div className="set-game container">
-          <h2>Game Settings</h2>
+        <div className="set-game title-container">
+          <div className="set-game title">
+            Choose your settings
+          </div>
+        </div>
           <div className="set-game inputs">
             
             <FormField
-              label="Max number of players"
+              className="setGame"
+              label="Max number of players:"
               type ="number"
               placeholder="4"
               value={maxPlayers}
-              onChange={setMaxPlayers}
-              style = {{width: "50px"}}
+              onChange={(n) => setMaxPlayers(setLimits(1, 5, parseInt(n)))}
+              min={1}
+              max={5}
             />
             <FormField
-              label="Amount of rounds"
+              className="setGame"
+              label="Amount of rounds:"
               type="number"
               placeholder="4"
               value={rounds}
-              onChange={setRounds}
-              style = {{width: "50px"}}
+              onChange={(n) => setRounds(setLimits(1, 10, parseInt(n)))}
+              min={1}
+              max={10}
             />
             <FormField
-              label="Guessing time per round"
+              className="setGame"
+              label="Guessing time per round:"
               type="number"
-              placeholder="4"
+              placeholder="15"
               value={guessingTime}
-              onChange={setGuessingTime}
-              style = {{width: "50px"}}
+              onChange={(n) => setGuessingTime(setLimits(1, 120, parseInt(n)))}
+              min={1}
+              max={120}
             />
           </div>
-          <MultiSelection 
-            label = "Types of locations" 
-            options = {locationNames} 
-            onChange = {(name) => setLocationTypes(fromNamesToLocationTypes(name))}
-            defaultValue={[locationNames[0]]}
-          />
-          <SelectRegion region={region} setRegion={setRegion} regionType={regionType} setRegionType={setRegionType} dropDownMaxHeight={"40vh"} />
-        <div>
-          <Button onClick={() => setDifficulty("EASY")}
-          className={difficulty === "EASY" ? "selected" : ""}> Easy</Button>
-          <Button onClick={() => setDifficulty("MEDIUM")}
-          className={difficulty === "MEDIUM" ? "selected" : ""}> Medium</Button>
-          <Button onClick={() => setDifficulty("HARD")}
-          className={difficulty === "HARD" ? "selected" : ""}> Hard</Button>
-          
-          
+          <div className="set-game locationTypes-text">Choose the location types:</div>
+          <div className="set-game locationTypes-container">
+            <Button onClick={() => toggleLocationTypes('LAKE')}
+            className={locationTypes.includes("LAKE") ? "selected" : ""}>Lakes</Button>
+            <Button onClick={() => toggleLocationTypes('ALPINE_MOUNTAIN')}
+            className={locationTypes.includes("ALPINE_MOUNTAIN") ? "selected" : ""}>Mountains</Button>
           </div>
+          <div className="set-game difficulty-text">Choose difficulty:</div>
+          <div>
+            <Button onClick={() => setDifficulty("EASY")}
+            className={difficulty === "EASY" ? "selected" : ""}> Easy</Button>
+            <Button onClick={() => setDifficulty("MEDIUM")}
+            className={difficulty === "MEDIUM" ? "selected" : ""}> Medium</Button>
+            <Button onClick={() => setDifficulty("HARD")}
+            className={difficulty === "HARD" ? "selected" : ""}> Hard</Button>
+          </div>
+
+          <SelectRegion region={region} setRegion={setRegion} regionType={regionType} setRegionType={setRegionType} dropDownMaxHeight={"40vh"} />
+
           <div className="set-game button_container">
             <Button onClick={createGame} disabled={!isFormValid()}>Create Game</Button> {/* Add the Create Game button */}
             <Button onClick={() => goBacktoProfile()}>Go Back</Button>

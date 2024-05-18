@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from "react";
-import BaseContainer from "components/ui/BaseContainer";
-import ProgressBar from "components/ui/ProgressBar";
 import { Spinner } from "components/ui/Spinner";
-import "styles/views/Round.scss";
-import "styles/ui/Progressbar.scss";
 import { PowerUpBar, PowerUpOverlay } from "components/ui/PowerUp";
-import PropTypes from "prop-types";
 import { getGameView } from "./GameApi";
-import "styles/views/GameViewContainer.scss";
 import { usePowerUp } from "helpers/api";
-import "styles/views/FancyBackground.scss";
 import { useError } from "components/ui/ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
+import "styles/views/Round.scss";
+import "styles/views/GameViewContainer.scss";
+import "styles/views/FancyBackground.scss";
 
 const RoundStart = () => {
 
@@ -53,19 +49,18 @@ const RoundStart = () => {
   let content = <Spinner />;
   if (gameInfo) {
     content = (
-            <div>{currentLocationName}</div>
+            <div className="round question">{currentLocationName}</div>
     );
   }
 
-  return <div className="game_view_container" >
+  return (
+    <div className="game_view_container" >
       <div  style={{zIndex: 2}}>
         <PowerUpOverlay powerUp={powerUpInUse} />
-        <h1 className="header title1">
-          Round {currentRound}
-        </h1>
+        <h1 className="header1 roundStart">Round {currentRound}</h1>
         <div className="round container">
-          <div className="round text_container">
-            <div>Try to find this Mountain:</div>
+          <div className="round text-container">
+            <div className="round text">Try to find this Mountain/Lake:</div>
             {content}
           </div>
           <PowerUpBar
@@ -94,7 +89,8 @@ const RoundStart = () => {
                   <li></li>
           </ul>
         </div >
-  </div>;
+  </div>
+  );
 };
 
 

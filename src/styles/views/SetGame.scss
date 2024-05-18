@@ -6,11 +6,9 @@
 
   for more information visit https://sass-lang.com/guide
  */
- .set-game {
+.set-game {
   &.container {
-    height: 40vh;
-    width: 80vw;
-    font-weight: 300;
+
     padding-left: 37px;
     padding-right: 37px;
     border-radius: 0.75em;
@@ -24,6 +22,14 @@
 
   }
 
+  &.title-container {
+
+  }
+
+  &.title {
+
+  }
+
   &.inputs {
     display: flex;
     flex-direction: column;
@@ -31,7 +37,7 @@
   }
 
 
- 
+
 
 
   label {

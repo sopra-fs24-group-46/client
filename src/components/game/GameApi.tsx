@@ -96,3 +96,31 @@ export const leaveGame = async ( showError = console.log) => {
     showError(shortError(error));
   }
 }
+
+export const kickPlayer = async (playerIdToKick: string, showError = console.log) => {
+  const { gameId, playerId } = Storage.retrieveGameIdAndPlayerId();
+  if(playerIdToKick === playerId){
+    return;
+  }
+  try {
+
+    const requestBody = {
+      playerId: playerIdToKick
+    }
+
+    await api.put(`/game/${gameId}/leave`, requestBody);
+
+  } catch (error) {
+    showError(shortError(error));
+  }
+}
+
+export const isHost = async (showError = console.log) => {
+  const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
+  try {
+    const data = await getGameView();
+    return playerId === data.host.playerId;
+  } catch (error) {
+    showError(shortError(error));
+  }
+}

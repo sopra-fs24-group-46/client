@@ -8,7 +8,7 @@ import "styles/views/GameViewContainer.scss";
 import { getGameView } from "./GameApi";
 import { Storage } from "helpers/LocalStorageManagement";
 
-const MapReveal = ({ setAnswers }) => {
+const MapReveal = ({ setAnswers , numberOfRounds}) => {
   const [powerUpInUse, setPowerUpInUse] = useState(null);
   const [playerAnswersArray, setPlayerAnswersArray] = useState([]);
   const [dataJsonString, setDataJsonString] = useState(null);
@@ -51,7 +51,7 @@ const MapReveal = ({ setAnswers }) => {
   if (playerAnswersArray) {
     return (
       <div className="game_view_container">
-        <MapRevealLeaderboard dataJsonString={dataJsonString} /> {/* Fetches the data inside again, could be passed as props */}
+        <MapRevealLeaderboard dataJsonString={dataJsonString} numberOfRounds={playerAnswersArray.length}/> {/* Fetches the data inside again, could be passed as props */}
         <PowerUpOverlay powerUpInUse={powerUpInUse} />
       </div>
     );
@@ -60,6 +60,7 @@ const MapReveal = ({ setAnswers }) => {
 
 MapReveal.propTypes = {
   setAnswers: PropTypes.func.isRequired,
+  numberOfRounds: PropTypes.number
 };
 
 export default MapReveal;

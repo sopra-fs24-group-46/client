@@ -53,13 +53,14 @@ export const storeDevGameViewJson = async (gameState: string) => {
   }
 }
 
-export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTimerProgress }) => (
+export const NavigateButtons = ({roundState, setRoundState, setGameState, goToEndView, setTimerProgress }) => (
   <div>
     <Button
       style={{backgroundColor: "lightblue", position: "absolute", top: "10px", left: "10px", zIndex: 9 }}
       onClick={() => {
         storeDevGameViewJson("QUESTION");
         setRoundState("QUESTION");
+        setGameState("PLAYING");
         setTimerProgress(1000);
       }}
     >
@@ -70,6 +71,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       onClick={() => {
         storeDevGameViewJson("GUESSING");
         setRoundState("GUESSING");
+        setGameState("PLAYING");
         setTimerProgress(1000);
       }}
     >
@@ -80,6 +82,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       onClick={() => {
         storeDevGameViewJson("MAP_REVEAL");
         setRoundState("MAP_REVEAL");
+        setGameState("PLAYING");
         setTimerProgress(4000);
       }}
     >
@@ -90,6 +93,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
       onClick={() => {
         storeDevGameViewJson("LEADERBOARD");
         setRoundState("LEADERBOARD");
+        setGameState("PLAYING");
         setTimerProgress(4000);
       }}
     >
@@ -118,6 +122,7 @@ export const NavigateButtons = ({roundState, setRoundState, goToEndView, setTime
 
 NavigateButtons.propTypes = {
   setRoundState: PropTypes.func,
+  setGameState: PropTypes.func,
   goToEndView: PropTypes.func,
   roundState: PropTypes.string,
   setTimerProgress: PropTypes.func

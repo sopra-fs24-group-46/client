@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { Button } from "components/ui/Button";
-import "styles/views/Login.scss";
+import "styles/views/EditProfile.scss";
 import User from "models/User";
 import { useError } from "components/ui/ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
@@ -67,7 +67,8 @@ const Edit = () => {
       const user = { id: storedUserId, username, password }; // Include user ID in the request body
       const credentials = { id: storedUserId, token: token };
       const requestBody = { user: user, credentialsDTO: credentials };
-      await api.put(`/users/${storedUserId}`, requestBody); // Send PUT request to the correct endpoint with the updated username and user ID
+      await api.put(`/users/${storedUserId}`, requestBody);
+      // Send PUT request to the correct endpoint with the updated username and user ID
       alert("Changes saved successfully!");
       navigate(`/profile`);
     } catch (error) {
@@ -89,17 +90,28 @@ const Edit = () => {
   };
 
   return (
-    <BaseContainer className="edit-profile container">
-      <h1>Edit my Profile</h1>
+      <BaseContainer className="edit-profile container">
+        <form className="profile-edit-form">
+          <label htmlFor="username">Username:</label>
+          <input type="text" id="username" value={username} onChange={handleUsernameChange}
+                 placeholder="Enter Username"/>
 
-      <p>Username: <input type="text" value={username} onChange={handleUsernameChange} /></p>
-      <p>Password: <input type="password" value={password} onChange={handlePasswordChange} /></p>  {/* Password input field */}
-      <p>Confirm Password: <input type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} /></p>
-      {passwordError && <p style ={{color: 'red'}}>{passwordError}</p>}
-      <button onClick={doEdit}>Save</button> {/* Use doEdit instead of handleSaveButtonClick */}
-      <button onClick={handleGoBackClick}>Go back</button>
-      {/*<button onClick={() => navigate(`/users/${id}`)}>Go back</button>*/}
-    </BaseContainer>
+          <label htmlFor="password">Password:</label>
+          <input type="password" id="password" value={password} onChange={handlePasswordChange}
+                 placeholder="Enter Password"/>
+
+          <label htmlFor="confirmPassword">Confirm Password:</label>
+          <input type="password" id="confirmPassword" value={confirmPassword} onChange={handleConfirmPasswordChange}
+                 placeholder="Confirm Password"/>
+
+          {passwordError && <p className="error-message">{passwordError} <i className="fa fa-exclamation-circle"></i></p>}
+
+          <button type="submit" className="primary-button">Save</button>
+          <button type="button" className="secondary-button" onClick={handleGoBackClick}>Go Back</button>
+        </form>
+
+        {/*<button onClick={() => navigate(`/users/${id}`)}>Go back</button>*/}
+      </BaseContainer>
   );
 };
 
