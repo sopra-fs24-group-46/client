@@ -98,6 +98,7 @@ const SetGame = () => {
         maxPlayers: maxPlayersInt,
         rounds: roundsInt,
         guessingTime: guessingTimeInt,
+        questionTime: 5,
         locationTypes: locationTypes,
         region: region,
         regionType: regionType,
@@ -119,7 +120,7 @@ const SetGame = () => {
       await api.post(`/game/${gameId}/openLobby`, credentials);
 
       // Redirect to "/lobby" after successful creation
-      navigate(`/game/lobby/${gameId}`);
+      navigate(`/game/${gameId}`);
     } catch (error) {
       // Handle errors
       showError("Creating game failed: " + shortError(error));

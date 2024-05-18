@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import BaseContainer from "components/ui/BaseContainer";
@@ -9,52 +10,22 @@ import { Storage } from "helpers/LocalStorageManagement";
 import { getGameView, getSettings, leaveGame } from "components/game/GameApi";
 import { useError } from "components/ui/ErrorContext";
 
+import "styles/views/GameViewContainer.scss";
+import "styles/views/FancyBackground.scss";
 import "styles/views/Lobby.scss";
 import {Button} from "../ui/Button";
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { ConfirmToast } from 'react-confirm-toast';
 
-const Lobby = () => {
+const Lobby = ({players}) => {
   const { showError } = useError();
   const navigate = useNavigate();
   const [gameSettings, setGameSettings] = useState(null);
   const [gameId, setGameId] = useState(null);
-  const [players, setPlayers] = useState([]);
   const copyButtonRef = useRef(null);
   const [showConfirmToast, setShowConfirmToast] = useState(false);
 
-  //Gets gameView JSON-File every 0.5 seconds
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-
-        const jsonData = await getGameView(showError);
-        if (!jsonData || jsonData.gameState === "CLOSED") {
-          doLeaveGame();
-        }
-        const gameState = jsonData.gameState;
-        console.log(gameState);
-
-        const gamePlayers = jsonData.players || [];
-        setPlayers(gamePlayers);
-
-        if (gameState === "PLAYING") {
-          console.log("NOW PLAYING");
-          navigate("/game")
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    const intervalId = setInterval(fetchData, 500);
-
-    // Cleanup function to clear the interval when component unmounts or useEffect runs again
-    return () => clearInterval(intervalId);
-  }, []); // Empty dependency array to run effect only once on mount
-
-  //Gets game settings when site loads
   useEffect(() => {
     async function fetchGameSettings() {
       const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
@@ -191,12 +162,46 @@ const Lobby = () => {
     );
   }
   return (
-      <BaseContainer>
+      <div className="game_view_container" >
+
+<div style={{zIndex: 4}}>
         <h1 className="header1 lobby">GAME LOBBY</h1>
         {content}
+</div>
 
-      </BaseContainer>
+        <div className="area" style={{zIndex: 3}}>
+          <ul className="circles">
+                  <li></li>
+                  <li><div className="centering">{':O'}</div></li>
+                  <li><div className="centering">{':)'}</div></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+          </ul>
+        </div >
+
+      </div>
   );
 };
 
+Lobby.propTypes = {
+  players: PropTypes.array.isRequired,
+};
+
 export default Lobby;
+
+export const doLeaveGame = async (navigate, showError) => {
+      leaveGame(showError);
+      const {id , token} = Storage.retrieveUser();
+      Storage.removeGameIdAndPlayerId();
+      
+      if (token) {
+        navigate("/profile");
+      } else {
+        navigate("/home");
+      }
+  }

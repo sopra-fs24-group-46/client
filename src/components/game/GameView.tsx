@@ -8,42 +8,52 @@
 //Common components, like a Map, Button and so on should be defined in their own files as well.
 //This is done to have one central map component which is only loaded once.
 
+//functions
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { getGameState,getSettings, getGameView, submitAnswer} from "./GameApi";
+import { useError } from "components/ui/ErrorContext";
+import { Storage } from "helpers/LocalStorageManagement";
+import { doLeaveGame } from "./Lobby";
 
-
-import "styles/views/MapContainer.scss";
-import MapBoxComponent from "components/ui/MapBoxComponentMemo";
-
+//views
+import Lobby from "components/game/Lobby";
 import RoundStart from "components/game/RoundStart";
 import Guessing from "components/game/Guessing";
 import MapReveal from "components/game/MapReveal";
 import LeaderBoard from "components/game/LeaderBoard";
+
+//components
 import BaseContainer from "components/ui/BaseContainer";
-import { getGameState, getSettings, getGameView, submitAnswer} from "./GameApi";
-import {NavigateButtons} from "components/game/DevHelpers"
 import ProgressBar from "components/ui/ProgressBar";
-import { useError } from "components/ui/ErrorContext";
-import { Storage } from "helpers/LocalStorageManagement";
+import {NavigateButtons} from "components/game/DevHelpers"
+import MapBoxComponent from "components/ui/MapBoxComponentMemo";
+import "styles/views/MapContainer.scss";
 
 
 const GameView = () => {
-  const {showError} = useError();
   //mapbox
   const [answer, setAnswer] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [jokerData, setJokerData] = useState([]);
   const [currentQuestionLocation, setCurrentQuestionLocation] = useState(null);
-
+  
   //gamestate
+  const [gameState, setGameState] = useState("LOBBY");
   const [roundState, setRoundState] = useState("QUESTION");
   const [remainingTimeInMillis, setRemainingTimeInMillis] = useState(2);
   const [restartTimer, setRestartTimer] = useState(false);
   const [settings, setSettings] = useState({questionTime: 1});
   
+  //lobby
+  const [players, setPlayers] = useState([]);
+
+  //other
   const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
   const navigate = useNavigate();
+  const { showError } = useError();
+  
 
   useEffect(() => {
     //this is executed every 500ms
@@ -52,21 +62,25 @@ const GameView = () => {
         const gameState = (gameId ?? false) ? await getGameState(showError): null;
         //check if gameState is defined
         if (gameState ?? false) {
-          //console.log(gameState);
+          console.log(gameState);
+          setGameState(gameState.gameState);
           setRoundState(gameState.roundState);
           setRemainingTimeInMillis(gameState.timeTillNextPhaseInMillis);
-        }
-
-        //check if gamesState is defined before checking gamesState.gameState
-        if ((gameState ?? false) && gameState.gameState !== "PLAYING") {
-          if ((gameState ?? false) && gameState.gameState === "ENDED") {
-            navigate("/game/ended");
-          }
-          if ((gameState ?? false) && gameState.gameState === "LOBBY") {
-            navigate("/game/lobby/easter_egg");
-          }
-          if ((gameState ?? false) && gameState.gameState === "SETUP") {
-            navigate("/game/create");
+          
+          if (gameState.gameState !== "PLAYING") {
+            if (gameState.gameState === "SETUP") {
+              navigate("/game/create");
+            }
+            if (gameState.gameState === "LOBBY") {
+              const data = await getGameView(showError);
+              setPlayers(data.players);
+            }
+            if (gameState.gameState === "ENDED") {
+              navigate("/game/ended");
+            }
+            if (gameState.gameState === "CLOSED") {
+              doLeaveGame(navigate, showError);
+            }
           }
         }
       } catch (error) {
@@ -80,7 +94,7 @@ const GameView = () => {
       if (settings) setSettings(settings);
       updateGameState(); //load immediately and then every 500ms
     }
-
+    
     init();
     const intervalId = setInterval(updateGameState , 500);
 
@@ -110,27 +124,33 @@ const GameView = () => {
     }
 
   }, [roundState]);
-  
-  useEffect (() => {
-    //console.log(answers);
-  }, [answers]);
 
+  
+  // const MapBoxComponent = React.lazy(() => import("components/ui/MapBoxComponentMemo"));
+  
 
   return (
     <BaseContainer>
-      {
+      {//dev buttons for testing
       (playerId === null || gameId === null) ?
           (<NavigateButtons
             roundState={roundState}
             setRoundState={setRoundState}
+            setGameState={setGameState}
             goToEndView={() => navigate("/game/ended")}
             setTimerProgress={setRemainingTimeInMillis}
           />)
           : null
       }
       
-      
-      <GameViewChild state={roundState} setAnswers={setAnswers} setJokerData={setJokerData} answer={answer} />
+      {/* The different views which are layered over the map. (Lobby, Question, Guessing, MapReveal, LeaderBoard)  */}
+      <GameViewChild
+        gameState={gameState}
+        roundState={roundState}
+        players={players}
+        setAnswers={setAnswers}
+        setJokerData={setJokerData}
+      />
       
       <div className="map container">
         <MapBoxComponent
@@ -153,9 +173,11 @@ const GameView = () => {
   );
 };
 
-//these are the different round states.
-const GameViewChild = ({state, setAnswers, setJokerData, answer}) => {
-  switch (state) {
+//return appropriate view
+const GameViewChild = ({gameState, roundState, players, setAnswers, setJokerData}) => {
+  if (gameState === "LOBBY") return <Lobby players={players}/>;
+  if (gameState !== "PLAYING") return null;
+  switch (roundState) {
     case "QUESTION":
       return <RoundStart  />;
     case "GUESSING":
@@ -165,14 +187,15 @@ const GameViewChild = ({state, setAnswers, setJokerData, answer}) => {
     case "LEADERBOARD":
       return <LeaderBoard  />;
     default:
-      return <RoundStart  />;
+      return <RoundStart />;
   }
 };
 GameViewChild.propTypes = {
-  state: PropTypes.string.isRequired,
+  gameState: PropTypes.string.isRequired,
+  roundState: PropTypes.string.isRequired,
   setAnswers: PropTypes.func.isRequired,
   setJokerData: PropTypes.func.isRequired,
-  answer: PropTypes.shape({x:PropTypes.string,y:PropTypes.string}).isRequired
+  players: PropTypes.array.isRequired,
 };
 
 const phaseTimeInSeconds = (phase, settings) => {

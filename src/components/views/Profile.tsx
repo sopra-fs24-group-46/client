@@ -83,7 +83,7 @@ const Profile = () => {
         throw new Error("No Game Pin provided!");
       }
       await joinGame(gameId, loggedInUser.username, showError)
-      navigate("/game/lobby/" + gameId);
+      navigate("/game/" + gameId);
     } catch (error) {
       if (error.message === "No Game Pin provided!") {
         console.error("No Game Pin provided!");

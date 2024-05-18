@@ -47,7 +47,7 @@ const Home = () => {
   const handleJoinGame = async () => {
     try {
       await joinGame(gamePin, playerName, showError);
-      navigate("/game/lobby/" + gamePin);
+      navigate("/game/" + gamePin);
     } catch (error) {
       showError("Joining game failed.\n" + error.message);
     }

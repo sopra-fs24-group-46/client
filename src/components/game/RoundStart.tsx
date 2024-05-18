@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from "react";
-import BaseContainer from "components/ui/BaseContainer";
-import ProgressBar from "components/ui/ProgressBar";
 import { Spinner } from "components/ui/Spinner";
-import "styles/views/Round.scss";
-import "styles/ui/Progressbar.scss";
 import { PowerUpBar, PowerUpOverlay } from "components/ui/PowerUp";
-import PropTypes from "prop-types";
 import { getGameView } from "./GameApi";
-import "styles/views/GameViewContainer.scss";
 import { usePowerUp } from "helpers/api";
-import "styles/views/FancyBackground.scss";
 import { useError } from "components/ui/ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
+import "styles/views/Round.scss";
+import "styles/views/GameViewContainer.scss";
+import "styles/views/FancyBackground.scss";
 
 const RoundStart = () => {
 
