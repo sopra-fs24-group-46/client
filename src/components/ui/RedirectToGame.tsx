@@ -21,7 +21,7 @@ const RedirectToGame = () => {
   
   const goBackToGame = () => {
     //navigate to game
-    window.location.href = "/game";
+    window.location.href = "/game/welcome_back";
     setShow(false);
   }
     

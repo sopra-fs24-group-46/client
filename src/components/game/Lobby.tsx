@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { getDomain } from "helpers/getDomain";
 import QRCode from "qrcode.react";
 import { Storage } from "helpers/LocalStorageManagement";
-import { getGameView, getSettings, leaveGame } from "components/game/GameApi";
+import { getGameView, getSettings, isHost as loadIsHost, kickPlayer, leaveGame } from "components/game/GameApi";
 import { useError } from "components/ui/ErrorContext";
 
 import "styles/views/GameViewContainer.scss";
@@ -22,9 +22,13 @@ const Lobby = ({players}) => {
   const { showError } = useError();
   const navigate = useNavigate();
   const [gameSettings, setGameSettings] = useState(null);
+  const [locationTypes, setLocationTypes] = useState([]);
+  const [locationNames, setLocationNames] = useState(null);
   const [gameId, setGameId] = useState(null);
   const copyButtonRef = useRef(null);
   const [showConfirmToast, setShowConfirmToast] = useState(false);
+  const [isHost, setIsHost] = useState(false);
+  const [playerId, setPlayerId] = useState(false);
 
   useEffect(() => {
     async function fetchGameSettings() {
@@ -32,6 +36,17 @@ const Lobby = ({players}) => {
       try {
         const settings = await getSettings(showError);
         setGameSettings(settings);
+
+        if(settings.locationTypes){
+          setLocationTypes(settings.locationTypes);
+        }
+        if(settings.names){
+          setLocationNames(settings.names);
+        }
+        
+        setIsHost(await loadIsHost(showError));
+        setPlayerId(playerId);
+
         setGameId(gameId);
       } catch (error) {
         console.error("Error fetching game settings:", error);
@@ -98,46 +113,60 @@ const Lobby = ({players}) => {
     content = (
         <div className="lobby container">
           <div className="lobby settings-container">
-            <div className="lobby gameSettings-title">Game settings:</div>
+            <Button ref={copyButtonRef} onClick={copyGameCode}>
+              Copy GameId
+            </Button>
+            <div className="lobby gameID-content">Game ID: <mark>{gameId}</mark></div>
             <div className="lobby gameSettings-content">
+              <div className="set-game locationTypes-container" style={{}}>
+              <Button onClick={() => { }} disabled={true} style={{width: "40%", margin: "0 4%", marginLeft: "8%"}}
+                className={locationTypes.includes("LAKE") ? "selected" : ""}>Lakes</Button>
+              <Button onClick={() => { }} disabled={true} style={{width: "40%"}}
+                className={locationTypes.includes("ALPINE_MOUNTAIN") ? "selected" : ""}>Mountains</Button>
+              </div>
               <ol>
                 <li>
-                  Max Players: &nbsp;
-                  <mark> {gameSettings.maxPlayers}</mark>
+                  Region: &nbsp;
+                  <mark>{gameSettings.region ?? "Switzerland"}</mark>
+                </li>
+                <li>
+                  Difficulty: &nbsp;
+                  <mark>{getDifficultyFromNames(locationNames)}</mark>
                 </li>
                 <li>
                   Rounds: &nbsp;
                   <mark>{gameSettings.rounds}</mark>
                 </li>
                 <li>
-                  Guessing Time per Round: &nbsp;
-                  <mark>{gameSettings.guessingTime}</mark>
+                  Guess Time: &nbsp;
+                  <mark>{gameSettings.guessingTime} sec</mark>
                 </li>
               </ol>
             </div>
-            <div className="lobby gameID-content">Game ID: <mark>{gameId}</mark></div>
-            <Button ref={copyButtonRef} onClick={copyGameCode}>
-              Copy GameId
-            </Button>
           </div>
 
           <div className="lobby players-container">
             <div className="lobby playersTable-title">
-              {players.length}/{gameSettings.maxPlayers} Players in the Lobby
+              Players {players.length}/{gameSettings.maxPlayers}
             </div>
             <div className="lobby playersTable-container">
               <ol className="lobby playersList">
                 {players.map((player, index) => (
                     <li key={index}>
-                      {player.playerId}  <mark> {player.displayName}</mark>
+                      <mark> {player.displayName}</mark>
+                      {isHost && (player.playerId !== playerId)?
+                      <span className="lobby remove-player" onClick={() => kickPlayer(player.playerId)}>
+                        &#10006;
+                      </span>:null
+                      }
                     </li>
                 ))}
               </ol>
             </div>
 
-            <Button onClick={startGame} className="button-primary">
+            {isHost ?<Button onClick={startGame} className="button-primary">
               Start Game
-            </Button>
+            </Button>: null}
             {/* Button to start the game */}
             <Button onClick={handleLeaveLobby} className="button-primary">
               Leave Lobby
@@ -164,10 +193,10 @@ const Lobby = ({players}) => {
   return (
       <div className="game_view_container" >
 
-<div style={{zIndex: 4}}>
+      <div style={{zIndex: 4}}>
         <h1 className="header1 lobby">GAME LOBBY</h1>
         {content}
-</div>
+      </div>
 
         <div className="area" style={{zIndex: 3}}>
           <ul className="circles">
@@ -205,3 +234,10 @@ export const doLeaveGame = async (navigate, showError) => {
         navigate("/home");
       }
   }
+
+function getDifficultyFromNames(names: Array<string>) {
+  if (!names) return "Hard";
+  if (names.length < 50) return "Easy";
+  if (names.length < 1000) return "Medium";
+  return "Hard";
+}

@@ -73,6 +73,8 @@ const GameView = () => {
             }
             if (gameState.gameState === "LOBBY") {
               const data = await getGameView(showError);
+              const isInGame = data.players.some((player) => player.playerId === playerId);
+              if (!isInGame) handleBeingKicked(); //player has been kicked
               setPlayers(data.players);
             }
             if (gameState.gameState === "ENDED") {
@@ -104,6 +106,12 @@ const GameView = () => {
   useEffect(() => {
     submitAnswer(answer, showError);
   }, [answer]);
+
+  const handleBeingKicked = () => {
+    Storage.removeGameIdAndPlayerId();
+    showError("You have been kicked from the game.");
+    navigate("/home");
+  }
 
   const executeOnNewRound = async () => {
     try {
@@ -215,3 +223,5 @@ const phaseTimeInSeconds = (phase, settings) => {
   }
 }
 export default GameView;
+
+

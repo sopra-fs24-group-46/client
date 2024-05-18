@@ -5,10 +5,11 @@
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      width: 45vw;
+      max-width: 90vw;
       background-color: $background;
       margin: 0 auto;
       font-weight: 450;
+      border-radius: $borderRadius;
     }
 
     &.settings-container {
@@ -132,19 +133,34 @@
 
   }
 
-    &.playersTable-container::-webkit-scrollbar {
-      width: 0.5vw; //Width of scrollbar
-    }
+  &.playersTable-container::-webkit-scrollbar {
+    width: 0.5vw; //Width of scrollbar
+  }
 
-    &.playersTable-container::-webkit-scrollbar-track {
-      background-color: transparent;
-    }
+  &.playersTable-container::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 
-    &.playersTable-container::-webkit-scrollbar-thumb {
-      background-color: white; //Color of scrollbar
-      border-radius: 6px;
-      border: 2px solid transparent;
-    }
+  &.playersTable-container::-webkit-scrollbar-thumb {
+    background-color: white; //Color of scrollbar
+    border-radius: 6px;
+    border: 2px solid transparent;
+  }
+
+  .remove-player {
+      //the X to remove selected words
+      opacity: 0.5;
+      border-radius: $borderRadius;
+      cursor: pointer;
+  }
+
+
+  .remove-player:hover {
+      //the X to remove hover
+      opacity: 1;
+      border-radius: $borderRadius;
+      cursor: pointer;
+  }
 
 }
 
