@@ -10,6 +10,10 @@ import { getGameView, getSettings, leaveGame } from "components/game/GameApi";
 import { useError } from "components/ui/ErrorContext";
 
 import "styles/views/Lobby.scss";
+import {Button} from "../ui/Button";
+import {toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { ConfirmToast } from 'react-confirm-toast';
 
 const Lobby = () => {
   const { showError } = useError();
@@ -18,6 +22,7 @@ const Lobby = () => {
   const [gameId, setGameId] = useState(null);
   const [players, setPlayers] = useState([]);
   const copyButtonRef = useRef(null);
+  const [showConfirmToast, setShowConfirmToast] = useState(false);
 
   //Gets gameView JSON-File every 0.5 seconds
   useEffect(() => {
@@ -86,43 +91,33 @@ const Lobby = () => {
     }
   };
 
-  const handleLeaveLobby = () => {
-    // Show a confirmation dialog
-    const confirmed = window.confirm("Are you sure you want to leave the lobby?");
 
-    // Check if the user confirmed
-    if (confirmed) {
-      // User confirmed, leaving the lobby
-      doLeaveGame();
-    } else {
-      // User canceled, do nothing or provide feedback
-      console.log("User canceled leaving the lobby.");
-    }
+  const handleLeaveLobby = () => {
+    setShowConfirmToast(true);
   };
-  
+
+
   const doLeaveGame = async () => {
-      leaveGame(showError);
-      const {id , token} = Storage.retrieveUser();
-      Storage.removeGameIdAndPlayerId();
-      
-      if (token) {
-        navigate("/profile");
-      } else {
-        navigate("/home");
-      }
+    leaveGame(showError);
+    const {id , token} = Storage.retrieveUser();
+    Storage.removeGameIdAndPlayerId();
+
+    if (token) {
+      navigate("/profile");
+    } else {
+      navigate("/home");
+    }
   }
 
   const copyGameCode = () => {
     if (gameId) {
-      navigator.clipboard.writeText(gameId);
-
-      if (copyButtonRef.current) {
-        const copyButton = copyButtonRef.current;
-        copyButton.style.backgroundColor = "white";
-        copyButton.style.color = "black";
-        copyButton.style.border = "2px solid black";
-        copyButton.innerHTML = "Copied!";
-      }
+      navigator.clipboard.writeText(gameId)
+          .then(() => {
+            toast.info("Game ID copied!", { position: "top-center", autoClose:500 , hideProgressBar: true, theme:"dark"});
+          })
+          .catch((error) => {
+            console.error("Failed to copy game ID:", error);
+          });
     }
   };
 
@@ -130,68 +125,77 @@ const Lobby = () => {
 
   if (gameSettings) {
     content = (
-      <div className="lobby container">
-        <div className="lobby settings-container">
-          <div className="lobby gameID-title">Game ID:</div>
-          <div className="lobby gameID-content">{gameId}</div>
-          <button
-            ref={copyButtonRef}
-            onClick={copyGameCode}
-            className="button"
-            type="button"
-          >
-            Copy GameId
-          </button>
-          <div className="lobby gameSettings-title">Game settings:</div>
-          <div className="lobby gameSettings-content">
-            Max Players: {gameSettings.maxPlayers}
+        <div className="lobby container">
+          <div className="lobby settings-container">
+            <div className="lobby gameSettings-title">Game settings:</div>
+            <div className="lobby gameSettings-content">
+              <ol>
+                <li>
+                  Max Players: &nbsp;
+                  <mark> {gameSettings.maxPlayers}</mark>
+                </li>
+                <li>
+                  Rounds: &nbsp;
+                  <mark>{gameSettings.rounds}</mark>
+                </li>
+                <li>
+                  Guessing Time per Round: &nbsp;
+                  <mark>{gameSettings.guessingTime}</mark>
+                </li>
+              </ol>
+            </div>
+            <div className="lobby gameID-content">Game ID: <mark>{gameId}</mark></div>
+            <Button ref={copyButtonRef} onClick={copyGameCode}>
+              Copy GameId
+            </Button>
           </div>
-          <div className="lobby gameSettings-content">
-            Rounds: {gameSettings.rounds}
-          </div>
-          <div className="lobby gameSettings-content">
-            Guessing Time per Round: {gameSettings.guessingTime}
-          </div>
-        </div>
-        <div className="lobby players-container">
-          <div className="lobby playersTable-title">
-            {players.length}/{gameSettings.maxPlayers} Players in the Lobby
-          </div>
-          <div className="lobby playersTable-container">
-            <table className="lobby playersTable">
-              <tbody>
+
+          <div className="lobby players-container">
+            <div className="lobby playersTable-title">
+              {players.length}/{gameSettings.maxPlayers} Players in the Lobby
+            </div>
+            <div className="lobby playersTable-container">
+              <ol className="lobby playersList">
                 {players.map((player, index) => (
-                  <tr key={index}>
-                    <td>{player.playerId}</td>
-                    <td>{player.displayName}</td>
-                  </tr>
+                    <li key={index}>
+                      {player.playerId}  <mark> {player.displayName}</mark>
+                    </li>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </ol>
+            </div>
 
-          <button onClick={startGame} className="button">
-            Start Game
-          </button>
-          {/* Button to start the game */}
-          <button onClick={handleLeaveLobby} className="button">
-            Leave Lobby
-          </button>
-          <div className="lobby qr-code">
-            <div className="lobby qr-code title">Scan code:</div>
+            <Button onClick={startGame} className="button-primary">
+              Start Game
+            </Button>
+            {/* Button to start the game */}
+            <Button onClick={handleLeaveLobby} className="button-primary">
+              Leave Lobby
+            </Button>
+            <ConfirmToast
+                showConfirmToast={showConfirmToast}
+                setShowConfirmToast={setShowConfirmToast}
+                customFunction={doLeaveGame}
+                toastText="Are you sure you want to leave the lobby?"
+                buttonYesText="Leave"
+                buttonNoText="Cancel"
+                theme="dark"
+            />
+            <div className="lobby qr-code">
+              <div className="lobby qr-code title">Scan code:</div>
 
-            <QRCode value={`${window.location.origin}/home?gameId=${gameId}`} />
-            {/* Rest of the component */}
+              <QRCode value={`${window.location.origin}/home?gameId=${gameId}`} />
+              {/* Rest of the component */}
+            </div>
           </div>
         </div>
-      </div>
     );
   }
   return (
-    <BaseContainer>
-      <h1 className="header1 lobby">GAME LOBBY</h1>
-      {content}
-    </BaseContainer>
+      <BaseContainer>
+        <h1 className="header1 lobby">GAME LOBBY</h1>
+        {content}
+
+      </BaseContainer>
   );
 };
 

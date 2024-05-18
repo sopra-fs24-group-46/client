@@ -2,113 +2,149 @@
 
 .lobby {
     &.container {
-      height: 60vh;
-      width: 80vw;
-      background-color: $background;
-      border-radius: 0.75em;
-      box-shadow: $dropShadow;
-      font-weight: 600;
-      transition: opacity 0.5s ease, transform 0.5s ease;
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
+      width: 45vw;
+      background-color: $background;
+      margin: 0 auto;
+      font-weight: 450;
     }
 
     &.settings-container {
-      border: 2px solid white;
-      margin: 0 auto;
-      height: 60vh;
-      width: 35vw;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      width: 50%;
+      padding: 20px;
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     &.players-container {
-      border: 2px solid white;
-      margin: 0 auto;
-      height: 60vh;
-      width: 45vw;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      width: 50%;
+      padding: 20px;
     }
 
   &.qr-code {
-    padding: 20px;
-    margin: 0 auto;
-    height: auto;
-    width: auto;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
   }
 
   &.qr-code title {
-    padding: 20px;
-    margin: 0 auto;
-    height: auto;
-    width: auto;
-    text-align: center;
-    color: #7bf2a3;
+    font-weight: bold;
+    margin-bottom: 5px;
   }
 
-    &.gameID-title {
-      font-weight: bold;
-      font-size: 1.7em;
-      margin-top: 5vh;
-      display: flex;
-      justify-content: center;
-
-    }
-
     &.gameID-content {
-      font-size: 2.5em;
+      margin-bottom: 15px;
+      font-size: 1.7em;
       display: flex;
       justify-content: center;
+      mark{
+        background: none;
+        color: $accent;
+        border: 10px;
+
+      }
     }
 
     &.gameSettings-title{
       font-weight: bold;
       font-size: 1.7em;
-      margin-top: 7vh;
-      margin-bottom: 3vh;
+      margin-top: 5vh;
+      margin-bottom: .3vh;
+      justify-content: left;
+    }
+  &.gameSettings-content{
+    margin-bottom: 15px;
+  }
+  &.gameSettings-content ol {
+    padding: 0;
+    list-style: none;
+    margin: 0;
+  }
+
+    &.gameSettings-content ol li{
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
     }
 
-    &.gameSettings-content {
-      margin-left: 7vw;
+  ol {
+    list-style: none;
+
+    mark{
+      background: none;
+      color: $accent;
+      border: 10px;
     }
+  }
 
     &.playersTable-title {
+      text-align: center;
+      padding: 10px;
       font-weight: bold;
-      font-size: 1.7em;
-      margin-top: 5vh;
-      display: flex;
-      justify-content: center;
+      margin-bottom: 10px;
     }
 
     &.playersTable-container {
-      border: 1px solid white;
-      margin: 2vh;
+      border: 1px solid rgba(82, 186, 186, 0.2);
+      margin: 2vh 0;
       height: 15vh;
-      max-height: 15vh; 
-      overflow-y: auto; //Table is scrollable
+      max-height: 15vh;
+      overflow-y: auto;
+      border-radius: 5px;
+      background-color: rgba(0, 0, 0, 0.1);
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     &.playersTable {
       margin-left: 1vw;
     }
 
+  &.playersList {
+    padding: 0;
+    list-style: none;
+    margin: 0;
+    font-family: Arial, sans-serif;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+    }
+
+    li mark {
+      color: $accent;
+      font-weight: bold;
+    }
+
+  }
+
     &.playersTable-container::-webkit-scrollbar {
       width: 0.5vw; //Width of scrollbar
     }
-    
+
     &.playersTable-container::-webkit-scrollbar-track {
-      background-color: transparent; 
+      background-color: transparent;
     }
-    
+
     &.playersTable-container::-webkit-scrollbar-thumb {
       background-color: white; //Color of scrollbar
-      border-radius: 6px; 
-      border: 2px solid transparent; 
+      border-radius: 6px;
+      border: 2px solid transparent;
     }
 
-    
-
-
 }
+
