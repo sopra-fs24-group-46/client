@@ -183,7 +183,9 @@ const Lobby = ({players}) => {
             <div className="lobby qr-code">
               <div className="lobby qr-code title">Scan code:</div>
 
-              <QRCode value={`${window.location.origin}/home?gameId=${gameId}`} />
+              <QRCode size={150}
+                      level="H"
+                      value={`${window.location.origin}/home?gameId=${gameId}`} />
               {/* Rest of the component */}
             </div>
           </div>
