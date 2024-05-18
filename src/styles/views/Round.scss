@@ -36,6 +36,8 @@
     &.question {
 
         @include medium-text;
+        
+        color: $accentAlt;
 
         font-weight: bold;
 

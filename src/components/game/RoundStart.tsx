@@ -60,7 +60,7 @@ const RoundStart = () => {
         <h1 className="header1 roundStart">Round {currentRound}</h1>
         <div className="round container">
           <div className="round text-container">
-            <div className="round text">Try to find this Mountain:</div>
+            <div className="round text">Try to find this Mountain/Lake:</div>
             {content}
           </div>
           <PowerUpBar

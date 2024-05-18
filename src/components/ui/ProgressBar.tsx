@@ -74,7 +74,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ durationInSeconds, onFinish, 
   }
 
   return (
-    <div style={{ width: '100%', height: '2vh', backgroundColor: 'lightgray', position: 'relative', zIndex: 2}}>
+    <div style={{ width: '100%', height: '3vh', backgroundColor: 'lightgray', position: 'absolute', bottom: 0, zIndex: 2}}>
       {/* light green follow bar */}
       <div
         style={{

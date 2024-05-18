@@ -44,7 +44,7 @@ const GameView = () => {
   const [roundState, setRoundState] = useState("QUESTION");
   const [remainingTimeInMillis, setRemainingTimeInMillis] = useState(2);
   const [restartTimer, setRestartTimer] = useState(false);
-  const [settings, setSettings] = useState({questionTime: 1});
+  const [settings, setSettings] = useState({questionTime: 1, rounds: 4});
   
   //lobby
   const [players, setPlayers] = useState([]);
@@ -148,6 +148,7 @@ const GameView = () => {
         gameState={gameState}
         roundState={roundState}
         players={players}
+        numberOfRounds={settings.rounds}
         setAnswers={setAnswers}
         setJokerData={setJokerData}
       />
@@ -160,7 +161,6 @@ const GameView = () => {
           guessesMapReveal={answers ?? []}
           setAnswer={setAnswer}
         />
-      </div>
       
       <ProgressBar
         remainingTimeInSeconds={Math.ceil((remainingTimeInMillis / 1000))}
@@ -168,22 +168,23 @@ const GameView = () => {
         onFinish={() => { }}
         restartTimer={restartTimer}
         setRestartTimer={setRestartTimer}
-      />
+        />
+      </div>
     </BaseContainer>
   );
 };
 
 //return appropriate view
-const GameViewChild = ({gameState, roundState, players, setAnswers, setJokerData}) => {
+const GameViewChild = ({gameState, roundState, players, numberOfRounds, setAnswers, setJokerData}) => {
   if (gameState === "LOBBY") return <Lobby players={players}/>;
   if (gameState !== "PLAYING") return null;
   switch (roundState) {
     case "QUESTION":
       return <RoundStart  />;
     case "GUESSING":
-      return <Guessing  setJokerData={setJokerData}/>;
+      return <Guessing  setJokerData={setJokerData} numberOfRounds={numberOfRounds}/>;
     case "MAP_REVEAL":
-      return <MapReveal setAnswers={setAnswers} />;
+      return <MapReveal setAnswers={setAnswers} numberOfRounds={numberOfRounds}/>;
     case "LEADERBOARD":
       return <LeaderBoard  />;
     default:
@@ -196,6 +197,7 @@ GameViewChild.propTypes = {
   setAnswers: PropTypes.func.isRequired,
   setJokerData: PropTypes.func.isRequired,
   players: PropTypes.array.isRequired,
+  numberOfRounds: PropTypes.number.isRequired,
 };
 
 const phaseTimeInSeconds = (phase, settings) => {
