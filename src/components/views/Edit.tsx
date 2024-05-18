@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { api, handleError, getUser} from "helpers/api";
+import { api, handleError, getUser } from "helpers/api";
 import { useNavigate, useParams } from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { Button } from "components/ui/Button";
 import "styles/views/EditProfile.scss";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import User from "models/User";
 import { useError } from "components/ui/ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
+
 
 const Edit = () => {
   const navigate = useNavigate();
@@ -19,6 +22,7 @@ const Edit = () => {
   const [password, setPassword] = useState<string>(''); // new for password
   const [confirmPassword, setConfirmPassword] = useState<string>(''); //new for password confirmation
   const [passwordError, setPasswordError] = useState<string>('');
+  const [hasChanges, setHasChanges] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -42,14 +46,17 @@ const Edit = () => {
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
+    setHasChanges(true);
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
+    setHasChanges(true);
   };
 
   const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(event.target.value);
+    setHasChanges(true);
   };
 
   const doEdit = async () => {
@@ -86,6 +93,7 @@ const Edit = () => {
     setPassword('');
     setConfirmPassword('');
     setPasswordError('');
+    setHasChanges(false);
     navigate(`/profile`);
   };
 
@@ -106,10 +114,24 @@ const Edit = () => {
 
           {passwordError && <p className="error-message">{passwordError} <i className="fa fa-exclamation-circle"></i></p>}
 
-          <button type="submit" className="primary-button">Save</button>
-          <button type="button" className="secondary-button" onClick={handleGoBackClick}>Go Back</button>
+          <Button
+              type="button"
+              className="primary-button"
+              onClick={doEdit}
+              disabled={!hasChanges}
+          >
+            Save
+          </Button>
+          <Button
+              type="button"
+              className="secondary-button"
+              onClick={handleGoBackClick}
+          >
+            Go Back
+          </Button>
         </form>
 
+        <ToastContainer />
         {/*<button onClick={() => navigate(`/users/${id}`)}>Go back</button>*/}
       </BaseContainer>
   );
