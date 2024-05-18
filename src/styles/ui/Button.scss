@@ -42,6 +42,7 @@
 
   &.selected {
     background-color: $accentAlt;
+    opacity: 1;
     &:hover {
       transform: none;
     }

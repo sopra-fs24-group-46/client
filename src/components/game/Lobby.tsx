@@ -40,8 +40,8 @@ const Lobby = ({players}) => {
         if(settings.locationTypes){
           setLocationTypes(settings.locationTypes);
         }
-        if(settings.names){
-          setLocationNames(settings.names);
+        if(settings.locationNames){
+          setLocationNames(settings.locationNames);
         }
         
         setIsHost(await loadIsHost(showError));
