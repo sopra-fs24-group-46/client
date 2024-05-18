@@ -92,13 +92,7 @@ const Profile = () => {
     }
   };
   
-  
-
-  const editPassword = () => {
-    navigate("edit");
-  }
   const editUsername = () => {
-    // Redirect to /game/create endpoint
     navigate("edit");
   };
 
