@@ -64,7 +64,8 @@ const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) =>
   
   const handleKeyPress = (e) => {
     if (document.activeElement === e.target && e.key === 'Enter') {
-      onValidStringFound(suggestions.length > 1 ? suggestions[0] : inputText);
+    //accept first suggestion or empty string
+      onValidStringFound(suggestions.length > 1 && inputText.length > 0 ? suggestions[0] : inputText);
     }
     if (e.key === 'Escape') {
       setHide(true);
@@ -88,7 +89,7 @@ const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) =>
         />
       </div>
       <div>
-        <Dropdown hide={suggestions.length <= 1 || hide} elements={suggestions} onClick={handleSelectSuggestion} style={{maxHeight: props.dropDownMaxHeight} } />
+        <Dropdown hide={suggestions.length <= 1 || hide || inputText.length === 0} elements={suggestions} onClick={handleSelectSuggestion} style={{maxHeight: props.dropDownMaxHeight} } />
       </div>
     </div>
   );
