@@ -44,6 +44,15 @@ const Home = () => {
     navigate("/login");
   };
 
+  const handleJoinGame = async () => {
+    try {
+      await joinGame(gamePin, playerName, showError);
+      navigate("/game/lobby/" + gamePin);
+    } catch (error) {
+      showError("Joining game failed.\n" + error.message);
+    }
+  };
+
 
   return (
     <BaseContainer>
@@ -70,10 +79,7 @@ const Home = () => {
               disabled={!inputIsValid()}
               className={"authentication"}
               width="100%" 
-              onClick={() => {
-                joinGame(gamePin, playerName, showError)
-                navigate("/game/lobby/" + gamePin);
-              }}>
+              onClick={handleJoinGame}>
               Join Game
             </Button>
           </div>
