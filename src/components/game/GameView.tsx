@@ -170,14 +170,14 @@ const GameView = () => {
           setAnswer={setAnswer}
         />
       
+      </div>
       <ProgressBar
         remainingTimeInSeconds={Math.ceil((remainingTimeInMillis / 1000))}
         durationInSeconds={phaseTimeInSeconds(roundState, settings)}
         onFinish={() => { }}
         restartTimer={restartTimer}
         setRestartTimer={setRestartTimer}
-        />
-      </div>
+      />
     </BaseContainer>
   );
 };

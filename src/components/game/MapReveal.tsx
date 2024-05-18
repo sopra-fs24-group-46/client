@@ -51,7 +51,7 @@ const MapReveal = ({ setAnswers , numberOfRounds}) => {
   if (playerAnswersArray) {
     return (
       <div className="game_view_container">
-        <MapRevealLeaderboard dataJsonString={dataJsonString} numberOfRounds={playerAnswersArray.length}/> {/* Fetches the data inside again, could be passed as props */}
+        <MapRevealLeaderboard dataJsonString={dataJsonString} numberOfRounds={numberOfRounds}/> {/* Fetches the data inside again, could be passed as props */}
         <PowerUpOverlay powerUpInUse={powerUpInUse} />
       </div>
     );
