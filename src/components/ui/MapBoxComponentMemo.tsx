@@ -131,7 +131,7 @@ const MapBoxComponent = ({ roundState, jokerData, currentQuestionLocation, guess
     }
   };
 
-  //Creates circle polygon as sourve for the joker circle
+  //Creates circle polygon as source for the joker circle
   var createGeoJSONCircle = function(center, radiusInKm, points) {
     if(!points) points = 64;
 
@@ -214,6 +214,8 @@ const MapBoxComponent = ({ roundState, jokerData, currentQuestionLocation, guess
     //Make Mountain Names invisible
     map.on('load', function() {
       map.setLayoutProperty('natural-point-label', 'visibility', 'none');
+      map.setLayoutProperty('water-point-label', 'visibility', 'none');
+      map.setLayoutProperty('water-line-label', 'visibility', 'none');
     });
 
 
