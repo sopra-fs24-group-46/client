@@ -67,13 +67,11 @@ const SetGame = () => {
 
   const navigate = useNavigate();
 
-  const createGame = async () => {
-
-
+  const callServerCreateGame = async (locationTypes) => {
     try {
       // Save user credentials for verification process
-      const {id, token} = Storage.retrieveUser();
-      const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
+      const { id, token } = Storage.retrieveUser();
+      const { gameId, playerId } = Storage.retrieveGameIdAndPlayerId();
 
       // Explicitly convert values to integers
       const maxPlayersInt = parseInt(maxPlayers);
@@ -126,67 +124,37 @@ const SetGame = () => {
       // Redirect to "/lobby" after successful creation
       navigate(`/game/${gameId}`);
     } catch (error) {
-
-      //If 
-      if (isOn && locationTypes.includes("ALPINE_MOUNTAIN")) {
-
-        try {
-
-          // Save user credentials for verification process
-          const {id, token} = Storage.retrieveUser();
-          const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
-
-          // Explicitly convert values to integers
-          const maxPlayersInt = parseInt(maxPlayers);
-          const roundsInt = parseInt(rounds);
-          const guessingTimeInt = parseInt(guessingTime);
-
-          // Add advanced locationTypes
-          const advLocationTypes = [...locationTypes, "MOUNTAIN", "MAIN_HILL", "HILL"]
-
-          const requestBody = {
-            id: id,
-            token: token,
-            maxPlayers: maxPlayersInt,
-            rounds: roundsInt,
-            guessingTime: guessingTimeInt,
-            questionTime: 5,
-            locationTypes: advLocationTypes,
-            region: region,
-            regionType: regionType,
-            locationNames: loadNamesForDifficulty(difficulty),
-          };
-
-          // Send a PUT request to the backend
-          console.log(requestBody);
-          const response = await api.put(`/game/${gameId}/updateSettings`, requestBody);
-
-          console.log(requestBody.locationTypes);
-          console.log('Lobby created' + response.data);
-
-          const credentials = {
-            id: id,
-            token: token,
-          }
-          // Open the lobby first before starting the game
-          await api.post(`/game/${gameId}/openLobby`, credentials);
-
-          // Redirect to "/lobby" after successful creation
-          navigate(`/game/${gameId}`);
-
-        } catch (error) {
-
-          // Handle errors
-          showError("Creating game failed: " + shortError(error));
-
-        }
-
-      } else {
-          // Handle errors
-          showError("Creating game failed hard: " + shortError(error));
-      }
-      
+      throw error;
     }
+  }
+  const throwsError = async () => {
+    throw new Error("I'm an nasty error");
+  }
+  const createGame = async () => {
+
+    try {
+      await callServerCreateGame(locationTypes);
+      // await throwsError();
+      return;
+    } catch (error) {
+
+      if (!(isOn && locationTypes.includes("ALPINE_MOUNTAIN"))) {
+        showError("Creating game failed: \n " + shortError(error));
+        // only go on if advanced settings are on and mountain is selected
+        return;
+      }
+    }
+    
+    // trying to add location types until enough data to play the game is available
+    let incrementalLocationTypes = locationTypes;
+    incrementalLocationTypes = [...incrementalLocationTypes, "MOUNTAIN"];
+    try { await callServerCreateGame(incrementalLocationTypes); return; } catch (error) { };
+    incrementalLocationTypes = [...incrementalLocationTypes, "MAIN_HILL"];
+    try { await callServerCreateGame(incrementalLocationTypes); return; } catch (error) { };
+    incrementalLocationTypes = [...incrementalLocationTypes, "HILL"];
+    try { await callServerCreateGame(incrementalLocationTypes); return; } catch (error) {
+        showError("Creating game failed hard: " + shortError(error));
+    };
   };
 
   const goBacktoProfile = () => {
