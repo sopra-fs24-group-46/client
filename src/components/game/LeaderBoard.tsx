@@ -8,7 +8,7 @@ import "styles/views/Leaderboard.scss";
 
 //map container gets styled in here
 import "styles/views/Question.scss";
-import { getGameView } from "./GameApi";
+import { getGameView, getSettings } from "./GameApi";
 
 interface PlayerData {
   score: number;
@@ -18,6 +18,8 @@ interface PlayerData {
 const LeaderBoard = () => {
 
   const [gameInfo, setGameInfo] = useState(null);
+  const [settings, setSettings] = useState(null);
+
 
 
   useEffect(() => {
@@ -25,8 +27,12 @@ const LeaderBoard = () => {
     async function init() {
       try {
         const data = await getGameView();
+        const settingsData = await getSettings();
+
 
         setGameInfo(data);
+        setSettings(settingsData);
+
 
       } catch (error) {
         console.error("Error fetching game view:", error);
@@ -37,7 +43,9 @@ const LeaderBoard = () => {
   }, []);
 
   //Checks if Data, which gets loaded from backend in useEffect, is ready to be displayed
-  if (gameInfo) {
+  if (gameInfo && settings) {
+    const roundsToPlay = settings.rounds - gameInfo.currentRound;
+
     return (
       <div className="game_view_container">
           <div className="leaderboard container">
@@ -48,7 +56,7 @@ const LeaderBoard = () => {
                 Rounds played: {gameInfo.currentRound}
               </div>
               <div className="leaderboard rounds counters">
-                Rounds to play: TODO
+                Rounds to play: {roundsToPlay}
               </div>
             </div>
 
