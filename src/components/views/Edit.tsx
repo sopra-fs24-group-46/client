@@ -5,12 +5,12 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { Button } from "components/ui/Button";
 import "styles/views/EditProfile.scss";
-import {toast, ToastContainer} from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import User from "models/User";
 import { useError } from "components/ui/ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
-
+import { FormField } from "../ui/FormField";
 
 const Edit = () => {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ const Edit = () => {
   const [initialUsername, setInitialUsername] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>(''); // new for password
-  const [confirmPassword, setConfirmPassword] = useState<string>(''); //new for password confirmation
+  const [confirmPassword, setConfirmPassword] = useState<string>(''); // new for password confirmation
   const [passwordError, setPasswordError] = useState<string>('');
   const [hasChanges, setHasChanges] = useState<boolean>(false);
 
@@ -28,8 +28,7 @@ const Edit = () => {
     async function fetchData() {
       try {
         // Retrieve the user ID from localStorage
-  
-        const {id, token} = Storage.retrieveUser();
+        const { id, token } = Storage.retrieveUser();
         const user = await getUser(id, token, showError);
 
         setUser(user);
@@ -42,7 +41,7 @@ const Edit = () => {
       }
     }
     fetchData();
-  }, [id]);
+  }, [id, showError]);
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -66,11 +65,11 @@ const Edit = () => {
         return;
       }
 
-      const {id: storedUserId, token} = Storage.retrieveUser();
+      const { id: storedUserId, token } = Storage.retrieveUser();
       if (!storedUserId) {
         throw new Error('User ID not found in localStorage');
       }
-  
+
       const user = { id: storedUserId, username, password }; // Include user ID in the request body
       const credentials = { id: storedUserId, token: token };
       const requestBody = { user: user, credentialsDTO: credentials };
@@ -80,14 +79,14 @@ const Edit = () => {
       navigate(`/profile`);
     } catch (error) {
       console.error(
-        `Something went wrong while saving the changes: \n${handleError(error)}`
+          `Something went wrong while saving the changes: \n${handleError(error)}`
       );
       alert(
-        "Something went wrong while saving the changes! See the console for details."
+          "Something went wrong while saving the changes! See the console for details."
       );
     }
   };
-  
+
   const handleGoBackClick = () => {
     setUsername(initialUsername);
     setPassword('');
@@ -99,40 +98,48 @@ const Edit = () => {
 
   return (
       <BaseContainer className="edit-profile container">
-        <form className="profile-edit-form">
-          <label htmlFor="username">Username:</label>
-          <input type="text" id="username" value={username} onChange={handleUsernameChange}
-                 placeholder="Enter Username"/>
-
-          <label htmlFor="password">Password:</label>
-          <input type="password" id="password" value={password} onChange={handlePasswordChange}
-                 placeholder="Enter Password"/>
-
-          <label htmlFor="confirmPassword">Confirm Password:</label>
-          <input type="password" id="confirmPassword" value={confirmPassword} onChange={handleConfirmPasswordChange}
-                 placeholder="Confirm Password"/>
-
-          {passwordError && <p className="error-message">{passwordError} <i className="fa fa-exclamation-circle"></i></p>}
-
-          <Button
-              type="button"
-              className="primary-button"
-              onClick={doEdit}
-              disabled={!hasChanges}
-          >
+        <form className="profile-edit form">
+          <FormField
+              className="edit"
+              label="Username"
+              type="text"
+              id="username"
+              value={username}
+              onChange={handleUsernameChange}
+              placeholder="Enter Username"
+          />
+          <FormField
+              className="edit"
+              label="Password"
+              type="password"
+              id="password"
+              value={password}
+              onChange={handlePasswordChange}
+              placeholder="Enter Password"
+          />
+          <FormField
+              className="edit"
+              label="Confirm Password"
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+              placeholder="Confirm Password"
+          />
+          {passwordError && (
+              <p className="error-message">
+                {passwordError} <i className="fa fa-exclamation-circle"></i>
+              </p>
+          )}
+          <Button onClick={doEdit} className="edit" disabled={!hasChanges}>
             Save
           </Button>
-          <Button
-              type="button"
-              className="secondary-button"
-              onClick={handleGoBackClick}
-          >
+          <Button onClick={handleGoBackClick} className="edit">
             Go Back
           </Button>
         </form>
 
         <ToastContainer />
-        {/*<button onClick={() => navigate(`/users/${id}`)}>Go back</button>*/}
       </BaseContainer>
   );
 };
@@ -140,7 +147,5 @@ const Edit = () => {
 Edit.propTypes = {
   user: PropTypes.object,
 };
-
-// FormField component definition goes here
 
 export default Edit;
