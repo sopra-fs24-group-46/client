@@ -59,6 +59,7 @@ const SetGame = () => {
   const [names, setNames] = useState(null);
   const { showError } = useError();
   const [difficulty, setDifficulty] = useState("HARD");
+  const [isOn, setIsOn] = useState(false);
 
   const [lakesBool, setLakesBool] = useState(false);
   const [mountainsBool, setMountainsBool] = useState(false);
@@ -89,7 +90,10 @@ const SetGame = () => {
         return;
       }
 
-      console.log(locationTypes);
+      if (locationTypes.length === 0) {
+        showError("Please choose a location type.");
+        return;
+      }
 
       // Construct the request body
       const requestBody = {
@@ -122,8 +126,66 @@ const SetGame = () => {
       // Redirect to "/lobby" after successful creation
       navigate(`/game/${gameId}`);
     } catch (error) {
-      // Handle errors
-      showError("Creating game failed: " + shortError(error));
+
+      //If 
+      if (isOn && locationTypes.includes("ALPINE_MOUNTAIN")) {
+
+        try {
+
+          // Save user credentials for verification process
+          const {id, token} = Storage.retrieveUser();
+          const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
+
+          // Explicitly convert values to integers
+          const maxPlayersInt = parseInt(maxPlayers);
+          const roundsInt = parseInt(rounds);
+          const guessingTimeInt = parseInt(guessingTime);
+
+          // Add advanced locationTypes
+          const advLocationTypes = [...locationTypes, "MOUNTAIN", "MAIN_HILL", "HILL"]
+
+          const requestBody = {
+            id: id,
+            token: token,
+            maxPlayers: maxPlayersInt,
+            rounds: roundsInt,
+            guessingTime: guessingTimeInt,
+            questionTime: 5,
+            locationTypes: advLocationTypes,
+            region: region,
+            regionType: regionType,
+            locationNames: loadNamesForDifficulty(difficulty),
+          };
+
+          // Send a PUT request to the backend
+          console.log(requestBody);
+          const response = await api.put(`/game/${gameId}/updateSettings`, requestBody);
+
+          console.log(requestBody.locationTypes);
+          console.log('Lobby created' + response.data);
+
+          const credentials = {
+            id: id,
+            token: token,
+          }
+          // Open the lobby first before starting the game
+          await api.post(`/game/${gameId}/openLobby`, credentials);
+
+          // Redirect to "/lobby" after successful creation
+          navigate(`/game/${gameId}`);
+
+        } catch (error) {
+
+          // Handle errors
+          showError("Creating game failed: " + shortError(error));
+
+        }
+
+      } else {
+          // Handle errors
+          showError("Creating game failed hard: " + shortError(error));
+      }
+      
     }
   };
 
@@ -147,6 +209,15 @@ const SetGame = () => {
     return(newValue)
   };
 
+  const toggleSwitch = () => {
+
+    setIsOn(!isOn);
+
+    if (!isOn) {
+      setDifficulty("HARD");
+    }
+  };
+
   const toggleLocationTypes = (location) => {
     if (locationTypes.includes(location)) {
       setLocationTypes(locationTypes.filter((loc) => loc !== location));
@@ -155,73 +226,116 @@ const SetGame = () => {
     }
   };
 
+  const setDifficultyFunc = (difficultyString) => {
+
+    if (!isOn) {
+      setDifficulty(difficultyString);
+    } else {
+      setDifficulty("HARD");
+    }
+
+  }
+
   return (
     <BaseContainer>
 
       <h1 className="header1 setGame">CREATE CUSTOM GAME</h1>
 
-      <div className="set-game container">
-        <div className="set-game title-container">
-          <div className="set-game title">
-            Choose your settings
+      <div className="set-game content">
+
+        <div className="set-game settings-content">
+
+          <div className="set-game container basic-settings">
+            <div className="set-game boxTitle">
+                Choose settings:
+            </div>
+
+            <div className="set-game inputs">
+              
+              <FormField
+                className="setGame"
+                label="Max number of players:"
+                type ="number"
+                placeholder="4"
+                value={maxPlayers}
+                onChange={(n) => setMaxPlayers(setLimits(1, 5, parseInt(n)))}
+                min={1}
+                max={5}
+              />
+              <FormField
+                className="setGame"
+                label="Amount of rounds:"
+                type="number"
+                placeholder="4"
+                value={rounds}
+                onChange={(n) => setRounds(setLimits(1, 10, parseInt(n)))}
+                min={1}
+                max={10}
+              />
+              <FormField
+                className="setGame"
+                label="Guessing time per round:"
+                type="number"
+                placeholder="15"
+                value={guessingTime}
+                onChange={(n) => setGuessingTime(setLimits(1, 120, parseInt(n)))}
+                min={1}
+                max={120}
+              />
+            </div>
           </div>
+
+          <div className="set-game container location-settings">
+
+            <div className="set-game boxTitle">Choose location types:</div>
+            <div className="set-game locationTypes-container">
+              <Button onClick={() => toggleLocationTypes('LAKE')}
+              className={locationTypes.includes("LAKE") ? "selected" : ""}>Lakes</Button>
+              <Button onClick={() => toggleLocationTypes('ALPINE_MOUNTAIN')}
+              className={locationTypes.includes("ALPINE_MOUNTAIN") ? "selected" : ""}>Mountains</Button>
+            </div>
+            <div className="set-game boxTitle">Choose difficulty:</div>
+            <div className="set-game difficulty-container">
+              <Button onClick={() => setDifficultyFunc("EASY")}
+              className={difficulty === "EASY" ? "selected" : ""}> Easy</Button>
+              <Button onClick={() => setDifficultyFunc("MEDIUM")}
+              className={difficulty === "MEDIUM" ? "selected" : ""}> Medium</Button>
+              <Button onClick={() => setDifficultyFunc("HARD")}
+              className={difficulty === "HARD" ? "selected" : ""}> Hard</Button>
+            </div>
+          </div>
+
+          <div className="set-game container advanced-settings">
+            <div className="set-game advancedSettings-switchButton">
+              <div className="set-game advancedSettings-title">Advanced settings:</div>
+              <div className={`set-game switch ${isOn ? 'on' : 'off'}`} onClick={toggleSwitch}>
+                  <div className="set-game toggle"></div>
+              </div>
+            </div>
+            {isOn && (
+              <div className="set-game advancedSettings-container">
+                
+                <SelectRegion 
+                  region={region} 
+                  setRegion={setRegion} 
+                  regionType={regionType} 
+                  setRegionType={setRegionType} 
+                  dropDownMaxHeight={"40vh"} 
+                />
+                <div className="set-game advancedSettings-text">
+                  ATTENTION: Using advanced settings will automatically set the difficulty to HARD.
+                </div>
+              </div>
+            )}
+          </div>
+
         </div>
-          <div className="set-game inputs">
-            
-            <FormField
-              className="setGame"
-              label="Max number of players:"
-              type ="number"
-              placeholder="4"
-              value={maxPlayers}
-              onChange={(n) => setMaxPlayers(setLimits(1, 5, parseInt(n)))}
-              min={1}
-              max={5}
-            />
-            <FormField
-              className="setGame"
-              label="Amount of rounds:"
-              type="number"
-              placeholder="4"
-              value={rounds}
-              onChange={(n) => setRounds(setLimits(1, 10, parseInt(n)))}
-              min={1}
-              max={10}
-            />
-            <FormField
-              className="setGame"
-              label="Guessing time per round:"
-              type="number"
-              placeholder="15"
-              value={guessingTime}
-              onChange={(n) => setGuessingTime(setLimits(1, 120, parseInt(n)))}
-              min={1}
-              max={120}
-            />
-          </div>
-          <div className="set-game locationTypes-text">Choose the location types:</div>
-          <div className="set-game locationTypes-container">
-            <Button onClick={() => toggleLocationTypes('LAKE')}
-            className={locationTypes.includes("LAKE") ? "selected" : ""}>Lakes</Button>
-            <Button onClick={() => toggleLocationTypes('ALPINE_MOUNTAIN')}
-            className={locationTypes.includes("ALPINE_MOUNTAIN") ? "selected" : ""}>Mountains</Button>
-          </div>
-          <div className="set-game difficulty-text">Choose difficulty:</div>
-          <div>
-            <Button onClick={() => setDifficulty("EASY")}
-            className={difficulty === "EASY" ? "selected" : ""}> Easy</Button>
-            <Button onClick={() => setDifficulty("MEDIUM")}
-            className={difficulty === "MEDIUM" ? "selected" : ""}> Medium</Button>
-            <Button onClick={() => setDifficulty("HARD")}
-            className={difficulty === "HARD" ? "selected" : ""}> Hard</Button>
-          </div>
 
-          <SelectRegion region={region} setRegion={setRegion} regionType={regionType} setRegionType={setRegionType} dropDownMaxHeight={"40vh"} />
+        <div className="set-game button_container">
+          <Button onClick={createGame} disabled={!isFormValid()}>Create Game</Button> {/* Add the Create Game button */}
+          <Button onClick={() => goBacktoProfile()}>Go Back</Button>
+        </div>
 
-          <div className="set-game button_container">
-            <Button onClick={createGame} disabled={!isFormValid()}>Create Game</Button> {/* Add the Create Game button */}
-            <Button onClick={() => goBacktoProfile()}>Go Back</Button>
-          </div>
       </div>
     
     </BaseContainer>
