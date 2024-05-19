@@ -59,7 +59,7 @@ const SetGame = () => {
   const [names, setNames] = useState(null);
   const { showError } = useError();
   const [difficulty, setDifficulty] = useState("HARD");
-  const [isOn, setIsOn] = useState(false);
+  const [advancedFilteringIsOn, setIsOn] = useState(false);
 
   const [lakesBool, setLakesBool] = useState(false);
   const [mountainsBool, setMountainsBool] = useState(false);
@@ -68,56 +68,59 @@ const SetGame = () => {
   const navigate = useNavigate();
 
   const callServerCreateGame = async (locationTypes) => {
-    try {
-      // Save user credentials for verification process
-      const { id, token } = Storage.retrieveUser();
-      const { gameId, playerId } = Storage.retrieveGameIdAndPlayerId();
-
-      // Explicitly convert values to integers
-      const maxPlayersInt = parseInt(maxPlayers);
-      const roundsInt = parseInt(rounds);
-      const guessingTimeInt = parseInt(guessingTime);
-
-      // Validation checks
-      if (roundsInt <= 0) {
+    
+    // Save user credentials for verification process
+    const { id, token } = Storage.retrieveUser();
+    const { gameId, playerId } = Storage.retrieveGameIdAndPlayerId();
+    
+    // Explicitly convert values to integers
+    const maxPlayersInt = parseInt(maxPlayers);
+    const roundsInt = parseInt(rounds);
+    const guessingTimeInt = parseInt(guessingTime);
+    
+    // Validation checks
+    if (roundsInt <= 0) {
         showError("Please enter a value greater than 0 for rounds.");
         return;
-      }
-      if (guessingTimeInt <= 1) {
-        showError("Please enter a guessing time greater than 1.");
-        return;
-      }
+    }
+    if (guessingTimeInt <= 1) {
+      showError("Please enter a guessing time greater than 1.");
+      return;
+    }
+    
+    if (locationTypes.length === 0) {
+      showError("Please choose a location type.");
+      return;
+    }
+    
 
-      if (locationTypes.length === 0) {
-        showError("Please choose a location type.");
-        return;
-      }
-
-      // Construct the request body
-      const requestBody = {
-        id: id,
-        token: token,
-        maxPlayers: maxPlayersInt,
-        rounds: roundsInt,
-        guessingTime: guessingTimeInt,
-        questionTime: 5,
-        locationTypes: locationTypes,
-        region: region,
-        regionType: regionType,
-        locationNames: loadNamesForDifficulty(difficulty),
-      };
-
+    const tempRegion = advancedFilteringIsOn ? region : null;
+    // Construct the request body
+    const requestBody = {
+      id: id,
+      token: token,
+      maxPlayers: maxPlayersInt,
+      rounds: roundsInt,
+      guessingTime: guessingTimeInt,
+      questionTime: 5,
+      locationTypes: locationTypes,
+      region: tempRegion,
+      regionType: regionType,
+      locationNames: loadNamesForDifficulty(difficulty),
+    };
+    
+    const credentials = {
+      id: id,
+      token: token,
+    }
+    try {
       // Send a PUT request to the backend
       console.log(requestBody);
       const response = await api.put(`/game/${gameId}/updateSettings`, requestBody);
-
+      
       console.log(requestBody.locationTypes);
       console.log('Lobby created' + response.data);
 
-      const credentials = {
-        id: id,
-        token: token,
-      }
       // Open the lobby first before starting the game
       await api.post(`/game/${gameId}/openLobby`, credentials);
 
@@ -138,7 +141,7 @@ const SetGame = () => {
       return;
     } catch (error) {
 
-      if (!(isOn && locationTypes.includes("ALPINE_MOUNTAIN"))) {
+      if (!(advancedFilteringIsOn && locationTypes.includes("ALPINE_MOUNTAIN"))) {
         showError("Creating game failed: \n " + shortError(error));
         // only go on if advanced settings are on and mountain is selected
         return;
@@ -179,9 +182,9 @@ const SetGame = () => {
 
   const toggleSwitch = () => {
 
-    setIsOn(!isOn);
+    setIsOn(!advancedFilteringIsOn);
 
-    if (!isOn) {
+    if (!advancedFilteringIsOn) {
       setDifficulty("HARD");
     }
   };
@@ -196,7 +199,7 @@ const SetGame = () => {
 
   const setDifficultyFunc = (difficultyString) => {
 
-    if (!isOn) {
+    if (!advancedFilteringIsOn) {
       setDifficulty(difficultyString);
     } else {
       setDifficulty("HARD");
@@ -276,11 +279,11 @@ const SetGame = () => {
           <div className="set-game container advanced-settings">
             <div className="set-game advancedSettings-switchButton">
               <div className="set-game advancedSettings-title">Advanced settings:</div>
-              <div className={`set-game switch ${isOn ? 'on' : 'off'}`} onClick={toggleSwitch}>
+              <div className={`set-game switch ${advancedFilteringIsOn ? 'on' : 'off'}`} onClick={toggleSwitch}>
                   <div className="set-game toggle"></div>
               </div>
             </div>
-            {isOn && (
+            {advancedFilteringIsOn && (
               <div className="set-game advancedSettings-container">
                 
                 <SelectRegion 
