@@ -10,6 +10,8 @@ const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) =>
   const [suggestions, setSuggestions] = useState(distinctValidString);
   const [hide, setHide] = useState(true);
   const [validString, setValidString] = useState(false);
+  const [mouseOverDropDown, setMouseOverDropDown] = useState(false);
+
   const ref = useRef(null);
 
   const onValidStringFound =(string: string) => {
@@ -41,7 +43,7 @@ const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) =>
   };
 
   const handleOnBlur = (e) => {
-    if (!ref.current.contains(e.relatedTarget) && e.relatedTarget !== ref.current) {
+    if (!mouseOverDropDown) {
       setHide(true);
     }
   }
@@ -76,7 +78,7 @@ const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) =>
       <div>
         <Dropdown
           hide={suggestions.length <= 1 || hide || inputText.length === 0}
-          elements={suggestions} onClick={handleSelectSuggestion} 
+          elements={suggestions} onClick={handleSelectSuggestion} setMouseOver={setMouseOverDropDown}
           style={{ maxHeight: props.dropDownMaxHeight }} />
       </div>
     </div>
