@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import User from "models/User";
 import { useError } from "components/ui/ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
-import { FormField } from "../ui/FormField";
+import { FormFieldEdit } from "../ui/FormFieldString";
 
 const Edit = () => {
   const navigate = useNavigate();
@@ -99,7 +99,7 @@ const Edit = () => {
   return (
       <BaseContainer className="edit-profile container">
         <form className="profile-edit form">
-          <FormField
+          <FormFieldEdit
               className="edit"
               label="Username"
               type="text"
@@ -108,7 +108,8 @@ const Edit = () => {
               onChange={handleUsernameChange}
               placeholder="Enter Username"
           />
-          <FormField
+          <p>Please confirm the change with your password</p> 
+          <FormFieldEdit
               className="edit"
               label="Password"
               type="password"
@@ -117,7 +118,7 @@ const Edit = () => {
               onChange={handlePasswordChange}
               placeholder="Enter Password"
           />
-          <FormField
+          <FormFieldEdit
               className="edit"
               label="Confirm Password"
               type="password"
