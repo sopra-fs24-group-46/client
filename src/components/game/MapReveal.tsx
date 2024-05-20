@@ -12,12 +12,15 @@ const MapReveal = ({ setAnswers , numberOfRounds}) => {
   const [powerUpInUse, setPowerUpInUse] = useState(null);
   const [playerDataArray, setPlayerDataArray] = useState([]);
   const [currentRound, setCurrentRound] = useState(0);
+  const [currentLocationName, setCurrentLocationName] = useState(null);
+
   useEffect(() => {
     async function init() {
       try {
         const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
         const data = await getGameView();
-        
+
+        setCurrentLocationName(data.currentQuestion.location_name);
         setCurrentRound(data.currentRound);
         setPowerUpInUse(data.powerUps[playerId]);
 
@@ -68,7 +71,7 @@ const MapReveal = ({ setAnswers , numberOfRounds}) => {
   if (playerDataArray) {
     return (
       <div className="game_view_container">
-        <MapRevealLeaderboard playerDataArray={playerDataArray}  numberOfRounds={numberOfRounds} currentRound={currentRound}/> {/* Fetches the data inside again, could be passed as props */}
+        <MapRevealLeaderboard playerDataArray={playerDataArray}  numberOfRounds={numberOfRounds} currentRound={currentRound} currentLocationName={currentLocationName}/> {/* Fetches the data inside again, could be passed as props */}
         <PowerUpOverlay powerUpInUse={powerUpInUse} />
       </div>
     );

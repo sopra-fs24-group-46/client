@@ -8,7 +8,7 @@ import {LeaderBoardPowerUp} from "components/ui/PowerUp";
 
 
 
-export const MapRevealLeaderboard = ({playerDataArray, numberOfRounds, currentRound}) => {
+export const MapRevealLeaderboard = ({playerDataArray, numberOfRounds, currentRound, currentLocationName}) => {
 
 
     //console.log(dataArray);
@@ -35,7 +35,7 @@ export const MapRevealLeaderboard = ({playerDataArray, numberOfRounds, currentRo
         <div className="mapRevealLeaderboard container">
                 <div className="mapRevealLeaderboard round-number">{currentRound}\{numberOfRounds}</div>
             <div className="mapRevealLeaderboard text-container">
-                The <span style={{ color: 'red' }}>red</span> marker shows the location of Matterhorn
+                The <span style={{ color: 'red' }}>red</span> marker shows the location of <span style={{ color: 'red' }}>{currentLocationName}</span>.
 
             </div>
 
@@ -77,6 +77,7 @@ export const MapRevealLeaderboard = ({playerDataArray, numberOfRounds, currentRo
 };
 
 MapRevealLeaderboard.propTypes = {
+    currentLocationName: PropTypes.string,
     playerDataArray: PropTypes.array,
     numberOfRounds: PropTypes.number,
     currentRound: PropTypes.number
