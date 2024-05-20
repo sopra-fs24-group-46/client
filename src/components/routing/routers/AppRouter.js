@@ -37,6 +37,7 @@ const AppRouter = () => {
           </Route>
           <Route path="/game/ended" element={<EndView />} />
           <Route path="/game/:gameId" element={<GameView />} />
+          <Route path="/game" element={<GameView />} />
         </Route>
       {/* Everything else is accessable without gameId and playerId */}
         <Route path="/" element={<IsNotInGame_Guard />}>
