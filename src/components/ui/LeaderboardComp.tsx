@@ -4,13 +4,10 @@ import { api } from "helpers/api";
 
 import { useNavigate } from "react-router-dom";
 import { Storage } from "helpers/LocalStorageManagement";
+import { LeaderBoardPowerUp } from "components/ui/PowerUp";
 
-interface PlayerData {
-  score: number;
-  distance: number;
-}
 
-export const FinalLeaderboard = ({ scores, currentRound }) => {
+export const FinalLeaderboard = ({ isEnded, playerDataArray, currentRound, numberOfRounds }) => {
   const navigate = useNavigate();
 
   const handleReturnToProfile = () => {
@@ -58,96 +55,128 @@ export const FinalLeaderboard = ({ scores, currentRound }) => {
     }
   };
 
-  function getHighestScorePlayer(scores) {
-    let highestScore = -Infinity;
-    let highestScorePlayerId = null;
-
-    for (const playerId in scores) {
-      if (scores.hasOwnProperty(playerId)) {
-        const playerScore = scores[playerId].score;
-        if (playerScore > highestScore) {
-          highestScore = playerScore;
-          highestScorePlayerId = playerId;
-        }
-      }
-    }
-
-    return highestScorePlayerId;
-  }
-
-  function getHighestScore(scores) {
-    let highestScore = -Infinity;
-
-    for (const playerId in scores) {
-      if (scores.hasOwnProperty(playerId)) {
-        const playerScore = scores[playerId].score;
-        if (playerScore > highestScore) {
-          highestScore = playerScore;
-        }
-      }
-    }
-
-    return highestScore;
-  }
   
   const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
+  const sortedPlayerDataArray = [...playerDataArray].sort((a, b) => b.data.score - a.data.score);
 
-  return (
-    <div className="leaderboard container">
-      <h2 className="leaderboard title">Final Leaderboard</h2>
-      {playerId === getHighestScorePlayer(scores) ? (
-        <h2 className="leaderboard title">
-          Congratulations you have won with {getHighestScore(scores)} points!
-        </h2>
-      ) : (
-        <h2 className="leaderboard title">
-          Player {getHighestScorePlayer(scores)} has won with {getHighestScore(scores)} points!
-        </h2>
-      )}
+  //Display End Leaderboard
+  if (isEnded) {
 
-      <div className="leaderboard rounds">
-        <div className="leaderboard rounds counters">Rounds played: {currentRound}</div>
-      </div>
+    return (
+      <div className="leaderboard container">
 
-      <div className="leaderboard table-container">
-        <table className="leaderboard table-leaderboard">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Total Km off</th>
-              <th>Total Points</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(scores).map(([playerId, playerData]: [string, PlayerData]) => {
-              return (
-                <tr key={playerId}>
-                  <td>{playerId}</td>
-                  <td>{(playerData.distance / 1000).toFixed(2)}</td>
-                  <td>{playerData.score}</td>
+        <div className="leaderboard text-container">
+
+          {playerId === sortedPlayerDataArray[0].playerId ? (
+          <div className="leaderboard boxTitle-end">
+            Congratulations you have won with {sortedPlayerDataArray[0].data.score} points!
+          </div>
+          ) : (
+          <div className="leaderboard boxTitle-end">
+            {sortedPlayerDataArray[0].displayName} has won with {sortedPlayerDataArray[0].data.score} points!
+          </div>
+          )}
+
+        </div>
+
+        <div className="leaderboard table-container">
+          <table className="leaderboard table-leaderboard">
+            <thead>
+              <tr>
+                <th>Ranking</th>
+                <th>Player</th>
+                <th>Total Km off</th>
+                <th>Total Points</th>
+                <th>Powerups used</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedPlayerDataArray.map((playerData, index) => (
+                <tr key={index}>
+                  <td>{index + 1} .</td>
+                  <td>{playerData.displayName}</td>
+                  <td>{(playerData.data.distance / 1000).toFixed(2)} Km</td>
+                  <td>{playerData.data.score}</td>
+                  <td className="leaderboard td-powerUps">
+                    {playerData.data.powerUp.length === 0 ? (
+                    <div>None</div>
+                    ) : (
+                    playerData.data.powerUp.map((powerUp, idx) => (
+                      <LeaderBoardPowerUp key={idx} powerUp={powerUp} />
+                    ))
+                    )}
+                  </td>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-        <button className="primary-button" onClick={handleReturnToProfile}>
-          Return to Profile/Home
-        </button>
-      </div>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+          <button className="primary-button" onClick={handleReturnToProfile}>
+            Return to Profile/Home
+          </button>
+        </div>
 
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-        <button className="primary-button" onClick={createNewGame}>
-          Create New Game
-        </button>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+          <button className="primary-button" onClick={createNewGame}>
+            Create New Game
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
+
+  } else if (!isEnded) {
+
+    return (
+      <div className="leaderboard container">
+
+        <div className="leaderboard boxTitle-end">Current Leaderboard</div>
+        <div>Round: {currentRound}/{numberOfRounds}</div>
+
+        <div className="leaderboard table-container">
+          <table className="leaderboard table-leaderboard">
+            <thead>
+              <tr>
+                <th>Ranking</th>
+                <th>Player</th>
+                <th>Total Km off</th>
+                <th>Total Points</th>
+                <th>Powerups used</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedPlayerDataArray.map((playerData, index) => (
+                <tr key={index}>
+                  <td>{index + 1} .</td>
+                  <td>{playerData.displayName}</td>
+                  <td>{(playerData.data.distance / 1000).toFixed(2)} Km</td>
+                  <td>{playerData.data.score}</td>
+                  <td className="leaderboard td-powerUps">
+                    {playerData.data.powerUp.length === 0 ? (
+                    <div>None</div>
+                    ) : (
+                    playerData.data.powerUp.map((powerUp, idx) => (
+                      <LeaderBoardPowerUp key={idx} powerUp={powerUp} />
+                    ))
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    );
+
+  }
 };
 
 FinalLeaderboard.propTypes = {
-  scores: PropTypes.object, // should be PropTypes.object
+  isEnded: PropTypes.bool,
+  playerDataArray: PropTypes.array,
   currentRound: PropTypes.number,
+  numberOfRounds: PropTypes.number,
+
 };

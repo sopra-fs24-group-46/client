@@ -196,7 +196,7 @@ const GameViewChild = ({gameState, roundState, players, numberOfRounds, setAnswe
     case "MAP_REVEAL":
       return <MapReveal setAnswers={setAnswers} numberOfRounds={numberOfRounds}/>;
     case "LEADERBOARD":
-      return <LeaderBoard  />;
+      return <LeaderBoard numberOfRounds={numberOfRounds} />;
     default:
       return <RoundStart />;
   }
