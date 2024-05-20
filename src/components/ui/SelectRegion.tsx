@@ -16,9 +16,7 @@ const SelectRegion = ({ region, setRegion, regionType, setRegionType, ...props }
     setRegion(region);
     if (region===null) setRegionType(null);
     var types = getRegionTypesForRegion(region);
-    if (types.length === 1) {
-      trySetRegionType(types[0], region);
-    }
+    trySetRegionType(types[0], region);
   }
 
   const isRegionInRegionType = (region, type) =>
@@ -63,6 +61,7 @@ SelectRegion.propTypes = {
 const cantons = [ "Bern", "Vaud", "St. Gallen", "Fribourg", "Aargau", "Thurgau", "Solothurn", "Basel-Landschaft", "Obwalden", "Genève", "Schaffhausen", "Appenzell Innerrhoden", "Graubünden", "Appenzell Ausserrhoden", "Zug", "Uri", "Luzern", "Jura", "Nidwalden", "Ticino", "Schwyz", "Basel-Stadt", "Neuchâtel", "Valais", "Zürich", "Glarus" ]
 const districts = [ "Interlaken-Oberhasli", "Bern-Mittelland", "Visp", "Jura bernois", "Hérens", "Frauenfeld", "Raron", "Broye-Vully", "See", "St. Gallen", "Baden", "Wil", "La Broye", "Horgen", "Biel/Bienne", "Schaffhausen", "Arbon", "Thierstein", "Laufen", "Wasseramt", "Rorschach", "Dorneck", "Luzern-Stadt", "Surselva", "La Glâne", "Münchwilen", "Gersau", "Sion", "Werdenberg", "Les Franches-Montagnes", "Rheinfelden", "Oberklettgau", "Entlebuch", "Martigny", "Entremont", "Porrentruy", "Blenio", "Reiat", "Hochdorf", "Liestal", "Schleitheim", "Brig", "Bülach", "Hinterland", "Bremgarten", "Viamala", "Dietikon", "Rheintal", "Pfäffikon", "Frutigen-Niedersimmental", "Lenzburg", "Meilen", "Sursee", "Kreuzlingen", "Leuk", "Lebern", "Sarganserland", "Maloja", "Riviera-Pays-d'Enhaut", "La Sarine", "Schwyz", "Oberaargau", "Zurzach", "Bernina", "Affoltern", "Hinwil", "Sissach", "Lugano", "La Gruyère", "Luzern-Land", "Bucheggberg", "Locarno", "Thal", "Emmental", "Solothurn", "Gösgen", "Sense", "Zofingen", "Landquart", "Gros-de-Vaud", "Andelfingen", "Muri", "Willisau", "Thun", "Uster", "Albula", "Obersimmental-Saanen", "Leventina", "Seeland", "La Veveyse", "Monthey", "Dielsdorf", "Ouest lausannois", "Prättigau/Davos", "Plessur", "Zürich", "Weinfelden", "Nyon", "Riviera", "Saint-Maurice", "Brugg", "Höfe", "Toggenburg", "Conthey", "March", "Imboden", "Arlesheim", "Bellinzona", "Lausanne", "Lavaux-Oron", "Sierre", "Winterthur", "Mendrisio", "Stein", "Unterklettgau", "Aarau", "Laufenburg", "Olten", "Jura-Nord vaudois", "Mittelland", "Einsiedeln", "Küssnacht (SZ)", "Gäu", "Vorderland", "Morges", "Delémont", "Aigle", "Waldenburg", "See-Gaster", "Vallemaggia", "Moesa", "Goms", "Engiadina Bassa/Val Müstair", "Kulm" ]
 
+//can be both
 const getRegionTypesForRegion = (region: string) => {
   var types = [];
   if (cantons.includes(region)) {

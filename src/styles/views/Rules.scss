@@ -1,27 +1,29 @@
 @import "../theme";
 
 .rules {
+  &.container {
+    height: 35vh;
+    font-weight: 300;
+    border-radius: 0.75em;
+    background-color: $background;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    box-shadow: $dropShadow;
 
-    &.container {
-        height: 35vh;
-        font-weight: 300;
-        padding-left: 37px;
-        padding-right: 37px;
-        border-radius: 0.75em;
-        background-color: $background;
-        transition: opacity 0.5s ease, transform 0.5s ease;
-        box-shadow: $dropShadow;
+    display: flex;
+    justify-content: center; /* horizontally center */
+    align-items: center; /* vertically center */
+  }
+
+  .content {
+    padding: 0 37px; /* moved padding to content */
+    text-align: center; /* center text */
+    
+    p {
+      line-height: 1.85; /* add more space between lines */
     }
+  }
+
+  .instruction-title {
+    font-size: 1.5em; /* Adjust the size as needed */
+  }
 }
-
-
-
-
-
-
-  
-
-
-
-
-

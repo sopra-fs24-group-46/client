@@ -10,33 +10,39 @@ import "styles/views/Header.scss";
 import { User } from "types";
 
 const Rules = () => {
-  const navigate = useNavigate();
+const navigate = useNavigate();
 
-  const handleGoBackClick = () => {
-    navigate(`/profile`);
-  };
+const handleGoBackClick = () => {
+  navigate(`/profile`);
+};
 
-  return (
-    <BaseContainer>
-      <h1 className="header title1">Game Rules!</h1>
-      <div className="rules container">
-        <p><strong>Explanation about the game:</strong> Welcome to the game! Here is how it works.</p>
+return (
+  <BaseContainer>
+    <h1 className="header title1">Game Rules!</h1>
+    <div className="rules container">
+      <div className="content">
+      <p className="instruction-title"><strong>Here is how it works:</strong></p>
 
-        <p><strong>Number of Players:</strong> This game can be played with 1 to 15 players.</p>
+        <p> 
+
+        </p>
+
+        <p><strong>Number of Players:</strong> This game can be played between 1 and 15 players.</p>
 
         <p><strong>Number of Rounds:</strong> This game can be played for 1 to 15 rounds.</p>
 
-        <p><strong>Guessing Time:</strong> The rounds can have a guessing time from 1 to 15 seconds, depending on how
-          difficult the creator wants the rounds to be.</p>
+        <p><strong>Guessing Time:</strong> Each round can have a guessing time from 2 to 15 seconds.</p>
 
-        <p><strong>Power Ups:</strong> Power ups are special Powers or advantages that players can choose during the
-          game to try to win over their opponents. The possible Power ups are Joker, Shield and double the points.</p>
+        <p><strong>Power Ups:</strong> Power ups add temporary advantage over other player during the game. Players can choose between Joker, Shield or Double Points during the
+        game to try to win over their opponents.</p>
+        <p>The <strong>Joker</strong> shows the region where the location is. 
+        The <strong>Double Points</strong> gives the player double the points during that round. The <strong>Shield</strong> gives the average points of all the players during the current round. </p>
 
         <button onClick={handleGoBackClick}>Go back</button>
-
       </div>
-    </BaseContainer>
-  );
+    </div>
+  </BaseContainer>
+);
 };
 
 export default Rules;

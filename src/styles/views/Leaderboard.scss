@@ -6,7 +6,6 @@
 
         position: absolute;
         top: 5vh;
-        height: 45vh;
         width: 40vw;
         font-weight: 300;
         border-radius: 0.75em;
@@ -15,30 +14,68 @@
         box-shadow: $dropShadow;
 
         z-index: 1; //Overlay over map container
-    }
 
-    &.title {
-        text-align: center;
-    }
-
-    &.rounds {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        align-items: center;
 
-        &.counters {
-            margin: 2vh;
-        }
     }
+
+    &.boxTitle-end {
+
+        text-align: center;
+        margin-top: 1em;
+        @include normal-title;
+        padding-left: 1em;
+        padding-right: 1em;
+
+    }
+
 
     &.table-container {
+        margin-top: 2em;
+        margin-bottom: 2em;
         border: 1px solid white;
-        margin: 2vh auto;
         width: 90%;
+        overflow-x: auto;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        max-height: 40vh;
     }
 
     &.table-leaderboard {
         width: 100%;
-        text-align: center;
+        
+
+        tbody {
+
+            tr{
+              height: 60px;
+              text-align: center;
+            }
+
+          }
+      
+          th {
+            
+            padding: 1rem;
+          }
+
+
+
+
+      
+    }
+
+    &.td-powerUps {
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 60px;
+        
+            
     }
 
     &.round-timer {

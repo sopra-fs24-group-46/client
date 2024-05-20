@@ -10,9 +10,11 @@ import "styles/views/Question.scss";
 import { getGameView } from "../game/GameApi";
 
 
+
 const EndView = () => {
 
   const [gameInfo, setGameInfo] = useState(null);
+  const [playerDataArray, setPlayerDataArray] = useState([]);
 
 
   useEffect(() => {
@@ -20,6 +22,25 @@ const EndView = () => {
     async function init() {
       try {
         const data = await getGameView();
+
+        const keys_playerIds = Object.keys(data.answers);
+        const dataArray = keys_playerIds.map((playerId, index) => {
+
+            const displayNameObj = data.players.find(obj => obj.playerId === playerId);
+            const displayName = displayNameObj ? displayNameObj.displayName : "Unknown"; // Fallback, falls kein Name gefunden wurde
+            return {
+                playerId: playerId,
+                displayName: displayName,
+                data: {
+                  score: data.cumulativeScores[playerId].score,
+                  distance: data.cumulativeScores[playerId].distance,
+                  powerUp: data.usedPowerUps[playerId],
+                  colourNumber: index + 1
+                }
+            };
+        });
+
+        setPlayerDataArray(dataArray);
 
         setGameInfo(data);
 
@@ -31,13 +52,15 @@ const EndView = () => {
     init();
   }, []);
 
-    if (gameInfo) {
+    if (gameInfo && playerDataArray) {
         return (
             <div className="game_view_container">
-
+    
                 <FinalLeaderboard
-                    scores={gameInfo.cumulativeScores}
+                    isEnded={true}
+                    playerDataArray={playerDataArray}
                     currentRound={gameInfo.currentRound}
+                    numberOfRounds={null}
                 />
 
 

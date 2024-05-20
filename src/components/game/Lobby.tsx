@@ -40,8 +40,8 @@ const Lobby = ({players}) => {
         if(settings.locationTypes){
           setLocationTypes(settings.locationTypes);
         }
-        if(settings.names){
-          setLocationNames(settings.names);
+        if(settings.locationNames){
+          setLocationNames(settings.locationNames);
         }
         
         setIsHost(await loadIsHost(showError));
@@ -183,7 +183,9 @@ const Lobby = ({players}) => {
             <div className="lobby qr-code">
               <div className="lobby qr-code title">Scan code:</div>
 
-              <QRCode value={`${window.location.origin}/home?gameId=${gameId}`} />
+              <QRCode size={150}
+                      level="H"
+                      value={`${window.location.origin}/home?gameId=${gameId}`} />
               {/* Rest of the component */}
             </div>
           </div>

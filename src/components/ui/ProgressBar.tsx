@@ -47,7 +47,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ durationInSeconds, onFinish, 
   useEffect(() => {
     if ((props.remainingTimeInSeconds ?? false)) {
       setProgressBarPosition(props.remainingTimeInSeconds);
-      console.log("prgchanged: ",props.remainingTimeInSeconds);
+      // console.log("prgchanged: ",props.remainingTimeInSeconds);
     } else {
       setProgressBarPosition(durationInSeconds);
       console.log("durationInSeconds changed");

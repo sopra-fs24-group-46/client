@@ -62,7 +62,7 @@ const GameView = () => {
         const gameState = (gameId ?? false) ? await getGameState(showError): null;
         //check if gameState is defined
         if (gameState ?? false) {
-          console.log(gameState);
+          // console.log(gameState);
           setGameState(gameState.gameState);
           setRoundState(gameState.roundState);
           setRemainingTimeInMillis(gameState.timeTillNextPhaseInMillis);
@@ -117,7 +117,7 @@ const GameView = () => {
     try {
       const gameView = await getGameView(showError);
       setCurrentQuestionLocation(gameView.currentQuestion.location);
-      console.log(gameView.currentQuestion.location);
+      console.log("current location: " + gameView.currentQuestion.location);
     } catch (error) {
       console.error("Error fetching game view:", error);
     }
@@ -125,13 +125,15 @@ const GameView = () => {
 
   useEffect (() => {
     //on new round
+    if(gameState !== "PLAYING") return;
+
     console.log("roundState: " + roundState);
     setRestartTimer(true);
     if (roundState === "QUESTION") {
       executeOnNewRound();
     }
 
-  }, [roundState]);
+  }, [roundState, gameState]);
 
   
   // const MapBoxComponent = React.lazy(() => import("components/ui/MapBoxComponentMemo"));
@@ -170,14 +172,14 @@ const GameView = () => {
           setAnswer={setAnswer}
         />
       
+      </div>
       <ProgressBar
         remainingTimeInSeconds={Math.ceil((remainingTimeInMillis / 1000))}
         durationInSeconds={phaseTimeInSeconds(roundState, settings)}
         onFinish={() => { }}
         restartTimer={restartTimer}
         setRestartTimer={setRestartTimer}
-        />
-      </div>
+      />
     </BaseContainer>
   );
 };
@@ -194,7 +196,7 @@ const GameViewChild = ({gameState, roundState, players, numberOfRounds, setAnswe
     case "MAP_REVEAL":
       return <MapReveal setAnswers={setAnswers} numberOfRounds={numberOfRounds}/>;
     case "LEADERBOARD":
-      return <LeaderBoard  />;
+      return <LeaderBoard numberOfRounds={numberOfRounds} />;
     default:
       return <RoundStart />;
   }

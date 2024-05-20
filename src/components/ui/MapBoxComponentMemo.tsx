@@ -131,7 +131,7 @@ const MapBoxComponent = ({ roundState, jokerData, currentQuestionLocation, guess
     }
   };
 
-  //Creates circle polygon as sourve for the joker circle
+  //Creates circle polygon as source for the joker circle
   var createGeoJSONCircle = function(center, radiusInKm, points) {
     if(!points) points = 64;
 
@@ -214,6 +214,8 @@ const MapBoxComponent = ({ roundState, jokerData, currentQuestionLocation, guess
     //Make Mountain Names invisible
     map.on('load', function() {
       map.setLayoutProperty('natural-point-label', 'visibility', 'none');
+      map.setLayoutProperty('water-point-label', 'visibility', 'none');
+      map.setLayoutProperty('water-line-label', 'visibility', 'none');
     });
 
 
@@ -232,7 +234,6 @@ const MapBoxComponent = ({ roundState, jokerData, currentQuestionLocation, guess
 
   const guessOnClick = (e) => {
     //Visualize the current guessing position
-    console.log("click: ", roundState)
     if (roundState === "GUESSING") {
       removeClickMarker();
       setAnswer({ x: e.lngLat.lng, y: e.lngLat.lat })
@@ -258,7 +259,7 @@ const MapBoxComponent = ({ roundState, jokerData, currentQuestionLocation, guess
 
         if(jokerData && jokerData.joker) {
 
-            console.log(jokerData);
+            console.log("jokerData: ", jokerData);
 
             createCircle(jokerData.center[0], jokerData.center[1], 10);
         }
@@ -310,7 +311,7 @@ MapBoxComponent.propTypes = {
     joker: PropTypes.bool.isRequired,
     center: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
   }).isRequired,
-  currentQuestionLocation: PropTypes.string.isRequired,
+  currentQuestionLocation: PropTypes.shape({x: PropTypes.number.isRequired, y: PropTypes.number.isRequired}).isRequired,
   guessesMapReveal: PropTypes.arrayOf(PropTypes.shape({
     playerId: PropTypes.string.isRequired,
     guess_x: PropTypes.number.isRequired,

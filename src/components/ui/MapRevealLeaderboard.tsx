@@ -8,50 +8,8 @@ import {LeaderBoardPowerUp} from "components/ui/PowerUp";
 
 
 
-export const MapRevealLeaderboard = props => {
+export const MapRevealLeaderboard = ({playerDataArray, numberOfRounds, currentRound}) => {
 
-    const [dataArray, setDataArray] = useState([]);
-    const [currentRound, setCurrentRound] = useState(0);
-
-    useEffect(() => {
-
-        async function getGameView() {
-            try {
-                
-                const gameView = JSON.parse(props.dataJsonString); //this is hack for the moment. todo refactor following lines out of this component
-                setCurrentRound(gameView.currentRound); 
-                console.log(gameView.players);
-
-                const keys_playerIds = Object.keys(gameView.answers);
-                const dataArray = keys_playerIds.map((playerId, index) => {
-
-                    const displayNameObj = gameView.players.find(obj => obj.playerId === playerId);
-                    const displayName = displayNameObj ? displayNameObj.displayName : "Unknown"; // Fallback, falls kein Name gefunden wurde
-                    
-                    return {
-                        playerId: playerId,
-                        displayName: displayName,
-                        data: {
-                          score: gameView.currentScores[playerId].score,
-                          distance: gameView.currentScores[playerId].distance,
-                          powerUp: gameView.powerUps[playerId],
-                          colourNumber: index + 1
-                        }
-                    };
-                });
-
-                setDataArray(dataArray);
-
-            } catch (error) {
-              console.error("Error fetching game settings:", error);
-            }
-          }
-      
-          getGameView();
-
-
-
-    }, [props.dataJsonString]);
 
     //console.log(dataArray);
 
@@ -75,7 +33,7 @@ export const MapRevealLeaderboard = props => {
 
     return (
         <div className="mapRevealLeaderboard container">
-                <div className="mapRevealLeaderboard round-number">{currentRound}\{props.numberOfRounds}</div>
+                <div className="mapRevealLeaderboard round-number">{currentRound}\{numberOfRounds}</div>
             <div className="mapRevealLeaderboard text-container">
                 The <span style={{ color: 'red' }}>red</span> marker shows the location of Matterhorn
 
@@ -93,7 +51,7 @@ export const MapRevealLeaderboard = props => {
                     </tr>
                     </thead>
                     <tbody>
-                        {dataArray.map((playerData, index) => (
+                        {playerDataArray.map((playerData, index) => (
                             <tr key={index}>
                                 <td><div style={{backgroundColor: getColorForNumber(playerData.data.colourNumber), width: '20px', height: '20px'}} ></div> </td>
                                 <td>{playerData.displayName}</td>
@@ -119,8 +77,9 @@ export const MapRevealLeaderboard = props => {
 };
 
 MapRevealLeaderboard.propTypes = {
-    dataJsonString: PropTypes.string,
+    playerDataArray: PropTypes.array,
     numberOfRounds: PropTypes.number,
+    currentRound: PropTypes.number
 }
 
 

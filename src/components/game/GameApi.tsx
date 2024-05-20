@@ -58,7 +58,7 @@ export const submitAnswer = async (answer: {x: string, y: string} ,showError = c
 
   try {
       const response = await api.post(`game/${gameId}/guess`, requestBody);
-      console.log("Guess: "+requestBody.x+","+requestBody.y+" submitted. response: ", response);
+      // console.log("Guess: "+requestBody.x+","+requestBody.y+" submitted. response: ", response);
   } catch (error) {
       showError(shortError(error));
   }

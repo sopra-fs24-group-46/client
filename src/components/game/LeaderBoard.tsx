@@ -8,17 +8,21 @@ import "styles/views/Leaderboard.scss";
 
 //map container gets styled in here
 import "styles/views/Question.scss";
-import { getGameView } from "./GameApi";
+import { getGameView, getSettings } from "./GameApi";
+import { FinalLeaderboard } from "components/ui/LeaderboardComp";
 
 interface PlayerData {
   score: number;
   distance: number;
 }
 
-const LeaderBoard = () => {
+const LeaderBoard = ({ numberOfRounds }) => {
 
   const [gameInfo, setGameInfo] = useState(null);
+  const [settings, setSettings] = useState(null);
 
+  const [playerDataArray, setPlayerDataArray] = useState([]);
+  const [currentRound, setCurrentRound] = useState(0);
 
   useEffect(() => {
     
@@ -26,7 +30,26 @@ const LeaderBoard = () => {
       try {
         const data = await getGameView();
 
-        setGameInfo(data);
+        setCurrentRound(data.currentRound);
+
+        const keys_playerIds = Object.keys(data.answers);
+        const dataArray = keys_playerIds.map((playerId, index) => {
+
+            const displayNameObj = data.players.find(obj => obj.playerId === playerId);
+            const displayName = displayNameObj ? displayNameObj.displayName : "Unknown"; // Fallback, falls kein Name gefunden wurde
+            return {
+                playerId: playerId,
+                displayName: displayName,
+                data: {
+                  score: data.cumulativeScores[playerId].score,
+                  distance: data.cumulativeScores[playerId].distance,
+                  powerUp: data.usedPowerUps[playerId],
+                  colourNumber: index + 1
+                }
+            };
+        });
+
+        setPlayerDataArray(dataArray);
 
       } catch (error) {
         console.error("Error fetching game view:", error);
@@ -36,54 +59,30 @@ const LeaderBoard = () => {
     init();
   }, []);
 
-  //Checks if Data, which gets loaded from backend in useEffect, is ready to be displayed
-  if (gameInfo) {
+
+
+  if (playerDataArray) {
+
     return (
       <div className="game_view_container">
-          <div className="leaderboard container">
-            <h2 className="leaderboard title">Current Leaderboard</h2>
 
-            <div className="leaderboard rounds">
-              <div className="leaderboard rounds counters">
-                Rounds played: {gameInfo.currentRound}
-              </div>
-              <div className="leaderboard rounds counters">
-                Rounds to play: TODO
-              </div>
-            </div>
+        <FinalLeaderboard
+          isEnded={false}
+          playerDataArray={playerDataArray}
+          currentRound={currentRound}
+          numberOfRounds={numberOfRounds}
+        />
 
-            <div className="leaderboard table-container">
-              <table className="leaderboard table-leaderboard">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Km off</th>
-                    <th>Points</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.entries(gameInfo.currentScores).map(
-                    ([playerId, playerData]: [string, PlayerData]) => {
-                      return (
-                        <tr key={playerId}>
-                          <td>{playerId}</td>
-                          <td>{(playerData.distance / 1000).toFixed(2)}</td>
-                          <td>{playerData.score}</td>
-                        </tr>
-                      );
-                    }
-                  )}
-                </tbody>
-              </table>
-            </div>
-            <div className="leaderboard round-timer">
-              Next Round starts in: TODO
-            </div>
-          </div>
-
+        
+        
       </div>
-    );
+      
+    )
   }
+};
+
+LeaderBoard.propTypes = {
+  numberOfRounds: PropTypes.number
 };
 
 export default LeaderBoard;

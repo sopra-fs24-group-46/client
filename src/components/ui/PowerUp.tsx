@@ -80,7 +80,7 @@ export const LeaderBoardPowerUp = (props) =>
   ) : null;
 
 LeaderBoardPowerUp.propTypes = {
-  powerUp: PropTypes.array,
+  powerUp: PropTypes.string,
 };
 
 export const LeaderBoardPowerUpCollection = (props) => (

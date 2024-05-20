@@ -58,6 +58,13 @@ $borderRadius: 0.75em;
   font-weight: bold;
 }
 
+@mixin normal-title {
+  ont-family: $fontDefault;
+  font-size: 1.2em;
+  ont-weight: bold;
+
+}
+
 @mixin small-text {
   font-family: $fontDefault;
   font-size: 0.8em;
