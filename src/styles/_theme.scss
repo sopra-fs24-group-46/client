@@ -20,7 +20,9 @@ $buttonTextColor: #262632;
 
 
 $background: #262632;
-
+$backgroundImage: linear-gradient(135deg, $accent 10%, $accentDark 100%);
+// not working at the moment
+// $backgroundImage: url("%PUBLIC_URL%/background.jpg");
 
 /* some constants */
 
