@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LeaderBoardComp } from "components/ui/LeaderboardComp";
-import { getGameView, isHost as loadIsHost } from "components/game/GameApi";
+import { getGameView, joinGame, isHost as loadIsHost } from "components/game/GameApi";
 import { api } from "helpers/api";
 import { useNavigate } from "react-router-dom";
 import { Storage } from "helpers/LocalStorageManagement";
@@ -16,6 +16,7 @@ const EndView = () => {
   const [gameInfo, setGameInfo] = useState(null);
   const [playerDataArray, setPlayerDataArray] = useState([]);
   const [isHost, setIsHost] = useState(false);
+  const [displayName, setDisplayName] = useState(null);
 
   const handleReturnToProfile = () => {
     // Check if there's a token in localStorage
@@ -33,9 +34,28 @@ const EndView = () => {
     }
   };
 
+  const joinNextGame = async () => {
+    try {
+      const response = await api.get("/game/" + gameId + "/next");
+      if(!response.data) return;
+      await joinGame(response.data.gameId, displayName , showError);
+      navigate("/game/wait_for_creation");
+    } catch {
+      console.log("Waiting for next game ...");
+    }
+  }
+  
+  //every second 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      joinNextGame();
+    }, 1000);
+    return () => clearInterval(interval);
+  })
   const createNewGame = async () => {
     try {
       const { id, token } = Storage.retrieveUser();
+      const { gameId: oldGameId, playerId: notUsed} = Storage.retrieveGameIdAndPlayerId();
       Storage.removeGameIdAndPlayerId();
 
       if (!token || !id) {
@@ -45,6 +65,7 @@ const EndView = () => {
       const response = await api.post("/game/create", {
         id: id,
         token: token,
+        gameId: oldGameId,
       });
 
       // Extract gameId from the response
@@ -72,6 +93,7 @@ const EndView = () => {
       try {
         const data = await getGameView();
 
+        setDisplayName(data.players.find(obj => obj.playerId === playerId).displayName);
         const keys_playerIds = Object.keys(data.answers);
         const dataArray = keys_playerIds.map((playerId, index) => {
 
