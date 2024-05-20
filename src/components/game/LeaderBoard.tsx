@@ -4,7 +4,7 @@ import { getGameView } from "./GameApi";
 import { LeaderBoardComp } from "components/ui/LeaderboardComp";
 
 import "styles/views/GameViewContainer.scss";
-
+import "../../styles/views/Leaderboard.scss";
 
 const LeaderBoard = ({ numberOfRounds }) => {
 
@@ -52,16 +52,15 @@ const LeaderBoard = ({ numberOfRounds }) => {
 
     return (
       <div className="game_view_container">
+        <div className="leaderboard container">
 
         <LeaderBoardComp
-          isEnded={false}
           playerDataArray={playerDataArray}
           currentRound={currentRound}
           numberOfRounds={numberOfRounds}
-        />
+          />
 
-        
-        
+        </div>
       </div>
       
     )
