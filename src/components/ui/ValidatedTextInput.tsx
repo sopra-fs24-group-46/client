@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import "../../styles/ui/FormField.scss";
+import {FormField} from './FormFieldString';
 import Dropdown from './DropDown';
 
 const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) => {
@@ -11,23 +12,6 @@ const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) =>
   const [validString, setValidString] = useState(false);
   const ref = useRef(null);
 
-  //close drop down when clicking outside the multi selection
-  useEffect(() => {
-    const handleClick = (event) => {
-      if (ref.current && !ref.current.contains(event.target)) {
-        setHide(true);
-      } else {
-        setHide(false);
-      }
-    };
-
-    document.addEventListener('click', handleClick);
-
-    return () => {
-      document.removeEventListener('click', handleClick);
-    };
-  }, []);
-  
   const onValidStringFound =(string: string) => {
       setInputText(string ?? inputText);
       setSuggestions([]);
@@ -35,10 +19,8 @@ const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) =>
       onValidString(string);
   }
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (value) => {
     setHide(false);
-
-    const value = e.target.value;
 
     // Filter valid strings that match the input
     const filteredSuggestions = distinctValidString.filter((str) =>
@@ -58,11 +40,18 @@ const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) =>
     }
   };
 
+  const handleOnBlur = (e) => {
+    if (!ref.current.contains(e.relatedTarget) && e.relatedTarget !== ref.current) {
+      setHide(true);
+    }
+  }
+
   const handleSelectSuggestion = (suggestion) => {
     onValidStringFound(suggestion);
   };
   
   const handleKeyPress = (e) => {
+    console.log("key pressed", e.key);
     if (document.activeElement === e.target && e.key === 'Enter') {
     //accept first suggestion or empty string
       onValidStringFound(suggestions.length > 1 && inputText.length > 0 ? suggestions[0] : inputText);
@@ -76,20 +65,19 @@ const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) =>
 
   return (
     <div ref={ref} >
-      <div className={isValidInput ?"formfield field":"formfield field invalid"}>
-        <input
-          className = {isValidInput ?"formfield input":"formfield input invalid"}
-          type="text"
-          value={inputText}
-          onChange={handleInputChange}
-          onKeyPress={handleKeyPress}
-          placeholder="Type something..."
-          //pass props
-          {...props}
-        />
-      </div>
+      <FormField
+        className="authentication"
+        placeholder="Canton or District"
+        type="text" value={inputText} onChange={handleInputChange}
+        onKeyPress={handleKeyPress} //Enter Key
+        isValidInput={isValidInput}
+        onBlur={handleOnBlur}
+      />
       <div>
-        <Dropdown hide={suggestions.length <= 1 || hide || inputText.length === 0} elements={suggestions} onClick={handleSelectSuggestion} style={{maxHeight: props.dropDownMaxHeight} } />
+        <Dropdown
+          hide={suggestions.length <= 1 || hide || inputText.length === 0}
+          elements={suggestions} onClick={handleSelectSuggestion} 
+          style={{ maxHeight: props.dropDownMaxHeight }} />
       </div>
     </div>
   );

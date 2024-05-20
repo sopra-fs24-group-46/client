@@ -16,6 +16,9 @@ export const FormField = (props) => {
         disabled={props.disabled}
         min = {props.min}
         max = {props.max}
+        onKeyPress = {props.onKeyPress ?? (() => {}) }
+        onBlur = {props.onBlur ?? (() => {}) }
+        
       />
     </div>
   );
@@ -31,6 +34,8 @@ FormField.propTypes = {
   disabled: PropTypes.bool,
   min: PropTypes.number,
   max: PropTypes.number,
+  onKeyPress: PropTypes.func,
+  onBlur: PropTypes.func
 
 };
 
@@ -63,5 +68,4 @@ FormFieldEdit.propTypes = {
   disabled: PropTypes.bool,
   min: PropTypes.number,
   max: PropTypes.number,
-
-};
+}
