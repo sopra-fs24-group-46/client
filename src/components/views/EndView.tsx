@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { LeaderBoardComp } from "components/ui/LeaderboardComp";
-import { getGameView } from "components/game/GameApi";
+import { getGameView, isHost as loadIsHost } from "components/game/GameApi";
 import { api } from "helpers/api";
 import { useNavigate } from "react-router-dom";
 import { Storage } from "helpers/LocalStorageManagement";
+import { useError } from "components/ui/ErrorContext";
 
 import "styles/views/GameViewContainer.scss";
 import "../../styles/views/Leaderboard.scss";
 
 const EndView = () => {
 
+  const { showError } = useError();
   const navigate = useNavigate();
   const [gameInfo, setGameInfo] = useState(null);
   const [playerDataArray, setPlayerDataArray] = useState([]);
+  const [isHost, setIsHost] = useState(false);
 
   const handleReturnToProfile = () => {
     // Check if there's a token in localStorage
@@ -65,6 +68,7 @@ const EndView = () => {
   useEffect(() => {
     
     async function init() {
+      setIsHost(await loadIsHost(showError));
       try {
         const data = await getGameView();
 
@@ -129,11 +133,11 @@ const EndView = () => {
           </button>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px", hide: !isHost }}>
           <button className="primary-button" onClick={createNewGame}>
             Create New Game
           </button>
-                    </div>
+        </div>
         </div>
 
             </div>

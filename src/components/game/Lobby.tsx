@@ -2,12 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
-import BaseContainer from "components/ui/BaseContainer";
 import { useNavigate } from "react-router-dom";
-import { getDomain } from "helpers/getDomain";
 import QRCode from "qrcode.react";
 import { Storage } from "helpers/LocalStorageManagement";
-import { getGameView, getSettings, isHost as loadIsHost, kickPlayer, leaveGame } from "components/game/GameApi";
+import {  getSettings, isHost as loadIsHost, kickPlayer, leaveGame } from "components/game/GameApi";
 import { useError } from "components/ui/ErrorContext";
 
 import "styles/views/GameViewContainer.scss";
