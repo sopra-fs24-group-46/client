@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; // Import PropTypes
 import "styles/views/Question.scss";
-import "styles/ui/Progressbar.scss";
 import { PowerUpOverlay } from "components/ui/PowerUp";
 import { MapRevealLeaderboard } from "components/ui/MapRevealLeaderboard";
 import "styles/views/GameViewContainer.scss";
