@@ -19,6 +19,8 @@ const LeaderBoard = () => {
 
   const [gameInfo, setGameInfo] = useState(null);
   const [settings, setSettings] = useState(null);
+  const [remainingTime, setRemainingTime] = useState(0);
+
 
 
 
@@ -32,6 +34,7 @@ const LeaderBoard = () => {
 
         setGameInfo(data);
         setSettings(settingsData);
+        setRemainingTime(data.timeTillNextPhaseInMillis / 1000); 
 
 
       } catch (error) {
@@ -41,6 +44,17 @@ const LeaderBoard = () => {
 
     init();
   }, []);
+
+
+  useEffect(() => {
+    if (remainingTime > 0) {
+      const timerId = setInterval(() => {
+        setRemainingTime((prevTime) => prevTime - 1);
+      }, 1000);
+
+      return () => clearInterval(timerId);
+    }
+  }, [remainingTime]);
 
   //Checks if Data, which gets loaded from backend in useEffect, is ready to be displayed
   if (gameInfo && settings) {
@@ -85,7 +99,7 @@ const LeaderBoard = () => {
               </table>
             </div>
             <div className="leaderboard round-timer">
-              Next Round starts in: TODO
+            Next Round starts in: {remainingTime > 0 ? remainingTime : "0"} seconds
             </div>
           </div>
 
