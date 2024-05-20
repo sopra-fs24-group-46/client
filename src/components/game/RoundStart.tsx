@@ -69,10 +69,6 @@ const RoundStart = () => {
             disableAll={powerUpInUse !== null}
             setPowerUpInUse={setPowerUpInUse}
           />
-          {/* <ProgressBar
-            durationInSeconds={4}
-            onFinish={() => { }}
-          /> */}
         </div>
       </div>
         <div className="area" >

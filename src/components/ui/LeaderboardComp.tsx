@@ -6,8 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { Storage } from "helpers/LocalStorageManagement";
 import { LeaderBoardPowerUp } from "components/ui/PowerUp";
 
+import "../../styles/views/Leaderboard.scss";
 
-export const FinalLeaderboard = ({ isEnded, playerDataArray, currentRound, numberOfRounds }) => {
+export const LeaderBoardComp = ({ isEnded, playerDataArray, currentRound, numberOfRounds }) => {
   const navigate = useNavigate();
 
   const handleReturnToProfile = () => {
@@ -173,7 +174,7 @@ export const FinalLeaderboard = ({ isEnded, playerDataArray, currentRound, numbe
   }
 };
 
-FinalLeaderboard.propTypes = {
+LeaderBoardComp.propTypes = {
   isEnded: PropTypes.bool,
   playerDataArray: PropTypes.array,
   currentRound: PropTypes.number,

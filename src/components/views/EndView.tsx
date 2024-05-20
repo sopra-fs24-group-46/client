@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { FinalLeaderboard } from "components/ui/LeaderboardComp";
+import { LeaderBoardComp } from "components/ui/LeaderboardComp";
+import { getGameView } from "components/game/GameApi";
+
+
 import "styles/views/GameViewContainer.scss";
-
-//Leaderboard container gets styled in here
-import "styles/views/Leaderboard.scss";
-
-//map container gets styled in here
-import "styles/views/Question.scss";
-import { getGameView } from "../game/GameApi";
-
 
 
 const EndView = () => {
@@ -56,7 +51,7 @@ const EndView = () => {
         return (
             <div className="game_view_container">
     
-                <FinalLeaderboard
+                <LeaderBoardComp
                     isEnded={true}
                     playerDataArray={playerDataArray}
                     currentRound={gameInfo.currentRound}

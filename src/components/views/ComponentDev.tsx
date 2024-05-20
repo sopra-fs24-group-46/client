@@ -6,7 +6,7 @@ import {
   LeaderBoardPowerUp,
   LeaderBoardPowerUpCollection,
 } from "components/ui/PowerUp";
-import { FinalLeaderboard } from "components/ui/LeaderboardComp";
+import { LeaderBoardComp } from "components/ui/LeaderboardComp";
 import { api } from "helpers/api";
 import ProgressBar from "components/ui/ProgressBar";
 import { Button } from "components/ui/Button";
