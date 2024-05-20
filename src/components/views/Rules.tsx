@@ -27,7 +27,7 @@ return (
 
         </p>
 
-        <p><strong>Number of Players:</strong> This game can be played with 1 to 15 players.</p>
+        <p><strong>Number of Players:</strong> This game can be played between 1 and 15 players.</p>
 
         <p><strong>Number of Rounds:</strong> This game can be played for 1 to 15 rounds.</p>
 
