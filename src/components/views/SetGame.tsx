@@ -15,6 +15,7 @@ import { useError } from "components/ui/ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
 import { easy_names, medium_names } from "helpers/Constants";
 import { getGameState } from "components/game/GameApi";
+import LeaderBoard from "components/game/LeaderBoard";
 
 
 
@@ -114,7 +115,9 @@ const SetGame = () => {
       maxPlayers: maxPlayersInt,
       rounds: roundsInt,
       guessingTime: guessingTimeInt,
-      questionTime: 5,
+      questionTime: "5",
+      mapRevealTime: "15",
+      LeaderBoardTime: "10",
       locationTypes: locationTypes,
       region: tempRegion,
       regionType: regionType,
@@ -267,19 +270,24 @@ const SetGame = () => {
           <div className="set-game container location-settings">
 
             <div className="set-game boxTitle">Choose location types:</div>
-            <div className="set-game locationTypes-container">
+            <div className="set-game locationTypes-container" style={{width: "100%"}}>
               <Button onClick={() => toggleLocationTypes('LAKE')}
+              style={{ width: "45%", marginLeft: "4%", marginRight: "2%" }}
               className={locationTypes.includes("LAKE") ? "selected" : ""}>Lakes</Button>
               <Button onClick={() => toggleLocationTypes('ALPINE_MOUNTAIN')}
+              style={{ width: "45%" }}
               className={locationTypes.includes("ALPINE_MOUNTAIN") ? "selected" : ""}>Mountains</Button>
             </div>
             <div className="set-game boxTitle">Choose difficulty:</div>
-            <div className="set-game difficulty-container">
+            <div className="set-game difficulty-container" style={{width: "100%"}}>
               <Button onClick={() => setDifficultyFunc("EASY")}
+                style={{ width: "31%" }}
               className={difficulty === "EASY" ? "selected" : ""}> Easy</Button>
               <Button onClick={() => setDifficultyFunc("MEDIUM")}
+                style={{ width: "34%", marginLeft: "2%", marginRight: "2%" }}
               className={difficulty === "MEDIUM" ? "selected" : ""}> Medium</Button>
               <Button onClick={() => setDifficultyFunc("HARD")}
+                style={{ width: "31%" }}
               className={difficulty === "HARD" ? "selected" : ""}> Hard</Button>
             </div>
           </div>
@@ -311,8 +319,12 @@ const SetGame = () => {
         </div>
 
         <div className="set-game button-container">
-          <Button onClick={createGame} disabled={!isFormValid()}>Create Game</Button> {/* Add the Create Game button */}
-          <Button onClick={() => goBacktoProfile()}>Go Back</Button>
+          <Button onClick={createGame} disabled={!isFormValid()}
+          style={{ width: "100%", marginRight: "2%", marginLeft: "2%" }}
+          >Create Game</Button> {/* Add the Create Game button */}
+          <Button onClick={() => goBacktoProfile()}
+          style={{ width: "100%" , marginRight: "2%"}}
+          >Go Back</Button>
         </div>
 
       </div>
