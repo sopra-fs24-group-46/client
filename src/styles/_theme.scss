@@ -9,20 +9,39 @@
 */
 
 $accent: #7bf2a3;
-$formFieldBackground: rgb(32, 97, 61);
-$formFieldBorder: 1px solid rgba(60, 179, 113, 0.5);
 $accentDark: #123597;
 $accentAlt: #ffc48d;
+
+//used in drop down
+$formFieldBackground: rgb(32, 97, 61);
+$formFieldBorder: 1px solid rgba(60, 179, 113, 0.5);
 
 $textColor: white;
 $linkColor: white;
 $buttonTextColor: #262632;
 
 
-$background: #262632;
-$backgroundImage: linear-gradient(135deg, $accent 10%, $accentDark 100%);
-// not working at the moment
-// $backgroundImage: url("%PUBLIC_URL%/background.jpg");
+$background: #262632; //color for containers
+@mixin background { //page background
+  content: '';
+  background-image: url("./background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top center;
+  z-index: -1;
+
+  //blur the image
+  $blur: 5px;
+  position: fixed;
+  //make sure edges are not see through. enlarges background
+  top: calc(-2 * $blur);
+  left: calc(-2 * $blur);
+  width: calc(100% + 4 * $blur);
+  height: calc(100% + 4 * $blur);
+
+  filter: blur($blur) contrast(0.5) brightness(0.8);
+
+}
 
 /* some constants */
 
@@ -53,11 +72,13 @@ $borderRadius: 0.75em;
   justify-content: center;
 }
 
+$titleBorder: $background;
 
 @mixin header1 {
   font-family: $fontDefault;
   font-size: 6em;
   font-weight: bold;
+  // -webkit-text-stroke: 3px $titleBorder;
 }
 
 @mixin normal-title {
