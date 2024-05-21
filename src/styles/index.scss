@@ -10,7 +10,11 @@ body {
   min-width: 100vw;
   min-height: 100vh;
   font-family: $fontDefault;
-  background-image: $backgroundImage;
+  
+}
+
+body::before {
+  @include background;
 }
 
 input,

@@ -7,6 +7,10 @@
 
   &.authentication {
     margin-top: 18vh;
+    @media all and (max-width: $SMALL_WIDTH) {
+      font-size: 5em;
+      margin-top: 4vh;
+    }
   }
 
 }
@@ -37,7 +41,20 @@
 
   }
 
-  
+  @media all and (max-width: $SMALL_WIDTH) {
+    &.roundStart {
+      display: none;
+    }
+    &.setGame {
+      display: none;
+    }
+    &.lobby {
+      display: none;
+    }
+    &.profile {
+      display: none;
+    }
+  }
 }
 
 

@@ -30,7 +30,11 @@
     align-items: center;
     align-self: flex-start; // Prevent stretching
     flex: 0 0 auto; // Ensure the container does not stretch
-
+    
+    
+    @media all and (max-width: $TINY_WIDTH) {
+      width: 100%;
+    }
   }
 
   &.boxTitle {
@@ -119,6 +123,12 @@
     max-width: 250px;
 
     @include small-text;
+  }
+  
+  &.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
 }

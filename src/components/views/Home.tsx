@@ -9,6 +9,7 @@ import { FormField } from "components/ui/FormFieldString";
 //styling
 import "styles/views/Header.scss";
 import "styles/views/Authentication.scss";
+import { shortError } from "helpers/api";
 
 
 const Home = () => {
@@ -48,7 +49,7 @@ const Home = () => {
       await joinGame(gamePin, playerName, showError);
       navigate("/game/" + gamePin);
     } catch (error) {
-      showError("Joining game failed.\n" + error.message);
+      showError(shortError(error));
     }
   };
 

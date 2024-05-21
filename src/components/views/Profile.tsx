@@ -88,6 +88,8 @@ const Profile = () => {
       if (error.message === "No Game Pin provided!") {
         console.error("No Game Pin provided!");
         showError("No Game Pin provided!");
+      } else {
+        showError(shortError(error));
       }
     }
   };

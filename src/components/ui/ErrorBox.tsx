@@ -8,15 +8,16 @@ export interface ErrorBoxProps {
 
 const ErrorBox: React.FC<ErrorBoxProps> = ({ message, onClose = () => {}, }) => {
   const [show, setShow] = useState(true);
-  const [clickCount, setClickCount] = useState(0);
+  const [closeOnLeave, setCloseOnLeave] = useState(false);
+  
 
   
   const ref = useRef(null);
 
     useEffect(() => {
     const handleClick = (event) => {
-        if (ref.current && !ref.current.contains(event.target)) {
-              // handleClose();
+        if (ref.current && !ref.current.contains(event.target) && closeOnLeave) {
+              handleClose();
         } 
     };
 
@@ -25,15 +26,23 @@ const ErrorBox: React.FC<ErrorBoxProps> = ({ message, onClose = () => {}, }) => 
     return () => {
       document.removeEventListener('click', handleClick);
     };
-  }, []);
+  }, [closeOnLeave]);
+
     useEffect(() => {
       if (message ? message.length > 0 : false) {
           handleShow();
         }
     }, [message]);
 
-  const handleClose = () => {setShow(false), onClose();};
-  const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setShow(false);
+    onClose();
+    setCloseOnLeave(false);
+  };
+  const handleShow = () => {
+    setShow(true) 
+    setTimeout(() => setCloseOnLeave(true), 500);
+  };
 
   return (
     show && (
@@ -41,7 +50,7 @@ const ErrorBox: React.FC<ErrorBoxProps> = ({ message, onClose = () => {}, }) => 
         ref = {ref}
         className="error-box"
         style={{
-          position: "absolute",
+          position: "fixed",
           top: "1em",
           left: "50%",
           transform: "translateX(-50%)",
