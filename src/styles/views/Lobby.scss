@@ -34,7 +34,11 @@
     margin-top: 8px;
     width: 100% !important;
     left: 0 !important;
+    &.img {
+      filter : invert(1);
+    }
   }
+  
 
   &.qr-code title {
     font-weight: bold;

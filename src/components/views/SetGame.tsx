@@ -285,7 +285,7 @@ const SetGame = () => {
 
           <div className="set-game container advanced-settings">
             <div className="set-game advancedSettings-switchButton">
-              <div className="set-game advancedSettings-title">Advanced settings:</div>
+              <div className="set-game advancedSettings-title">Region Filter</div>
               <div className={`set-game switch ${advancedFilteringIsOn ? 'on' : 'off'}`} onClick={toggleSwitch}>
                   <div className="set-game toggle"></div>
               </div>
