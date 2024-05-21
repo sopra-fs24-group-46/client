@@ -25,7 +25,7 @@ const SelectRegion = ({ region, setRegion, regionType, setRegionType, ...props }
       : districts.includes(region);
 
   return (
-    <div className="regions">
+    <div >
       <ValidatedTextInput
         validStrings={validStrings}
         label="Region"

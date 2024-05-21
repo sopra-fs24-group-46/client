@@ -17,6 +17,8 @@
 
   &.container {
 
+    max-width: 100vw;
+    min-width: 20em;
     padding-left: 37px;
     padding-right: 37px;
     padding-bottom: 1em;
@@ -31,9 +33,9 @@
     align-self: flex-start; // Prevent stretching
     flex: 0 0 auto; // Ensure the container does not stretch
     
-    
     @media all and (max-width: $TINY_WIDTH) {
       width: 100%;
+      min-width: unset;
     }
   }
 
@@ -120,7 +122,9 @@
   &.advancedSettings-text {
 
     margin-top: 1em;
+    margin: auto;
     max-width: 250px;
+    text-align: center;
 
     @include small-text;
   }

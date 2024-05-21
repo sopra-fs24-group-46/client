@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import "../../styles/ui/FormField.scss";
 import {FormField} from './FormFieldString';
 import Dropdown from './DropDown';
 
@@ -66,7 +65,7 @@ const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) =>
   const isValidInput = distinctValidString.includes(inputText);
 
   return (
-    <div ref={ref} >
+    <div ref={ref} style ={{ maxWidth: "100vw"}}>
       <FormField
         className="authentication"
         placeholder="Canton or District"

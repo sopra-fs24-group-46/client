@@ -62,10 +62,7 @@ const SetGame = () => {
   const { showError } = useError();
   const [difficulty, setDifficulty] = useState("HARD");
   const [advancedFilteringIsOn, setIsOn] = useState(false);
-
-  const [lakesBool, setLakesBool] = useState(false);
-  const [mountainsBool, setMountainsBool] = useState(false);
-  
+  const [mapRevealTime, setMapRevealTime] = useState(15);
 
   const navigate = useNavigate();
   
@@ -116,7 +113,7 @@ const SetGame = () => {
       rounds: roundsInt,
       guessingTime: guessingTimeInt,
       questionTime: "5",
-      mapRevealTime: "15",
+      mapRevealTime: mapRevealTime,
       LeaderBoardTime: "10",
       locationTypes: locationTypes,
       region: tempRegion,
@@ -229,7 +226,7 @@ const SetGame = () => {
 
           <div className="set-game container basic-settings">
             <div className="set-game boxTitle">
-                Choose settings:
+                General:
             </div>
 
             <div className="set-game inputs">
@@ -264,12 +261,22 @@ const SetGame = () => {
                 min={1}
                 max={120}
               />
+              <FormField
+                className="setGame"
+                label="Time showing results:"
+                type="number"
+                placeholder="15"
+                value={mapRevealTime}
+                onChange={(n) => setMapRevealTime(setLimits(1, 120, parseInt(n)))}
+                min={1}
+                max={120}
+              />
             </div>
           </div>
 
           <div className="set-game container location-settings">
 
-            <div className="set-game boxTitle">Choose location types:</div>
+            <div className="set-game boxTitle">Location types:</div>
             <div className="set-game locationTypes-container" style={{width: "100%"}}>
               <Button onClick={() => toggleLocationTypes('LAKE')}
               style={{ width: "45%", marginLeft: "4%", marginRight: "2%" }}
@@ -278,16 +285,19 @@ const SetGame = () => {
               style={{ width: "45%" }}
               className={locationTypes.includes("ALPINE_MOUNTAIN") ? "selected" : ""}>Mountains</Button>
             </div>
-            <div className="set-game boxTitle">Choose difficulty:</div>
+            <div className="set-game boxTitle">Difficulty:</div>
             <div className="set-game difficulty-container" style={{width: "100%"}}>
               <Button onClick={() => setDifficultyFunc("EASY")}
                 style={{ width: "31%" }}
+                disabled={advancedFilteringIsOn}
               className={difficulty === "EASY" ? "selected" : ""}> Easy</Button>
               <Button onClick={() => setDifficultyFunc("MEDIUM")}
                 style={{ width: "34%", marginLeft: "2%", marginRight: "2%" }}
+                disabled={advancedFilteringIsOn}
               className={difficulty === "MEDIUM" ? "selected" : ""}> Medium</Button>
               <Button onClick={() => setDifficultyFunc("HARD")}
                 style={{ width: "31%" }}
+                disabled={advancedFilteringIsOn}
               className={difficulty === "HARD" ? "selected" : ""}> Hard</Button>
             </div>
           </div>
@@ -310,7 +320,7 @@ const SetGame = () => {
                   dropDownMaxHeight={"40vh"} 
                 />
                 <div className="set-game advancedSettings-text">
-                  ATTENTION: Using advanced settings will automatically set the difficulty to HARD.
+                  ATTENTION: Using region filtering will automatically set the difficulty to HARD.
                 </div>
               </div>
             )}
