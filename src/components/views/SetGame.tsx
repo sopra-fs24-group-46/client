@@ -309,7 +309,7 @@ const SetGame = () => {
 
         </div>
 
-        <div className="set-game button_container">
+        <div className="set-game button-container">
           <Button onClick={createGame} disabled={!isFormValid()}>Create Game</Button> {/* Add the Create Game button */}
           <Button onClick={() => goBacktoProfile()}>Go Back</Button>
         </div>
