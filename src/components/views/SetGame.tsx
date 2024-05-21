@@ -217,7 +217,7 @@ const SetGame = () => {
   return (
     <BaseContainer>
 
-      <h1 className="header1 setGame">CREATE CUSTOM GAME</h1>
+      <h1 className="header1 setGame">Choose Settings</h1>
 
       <div className="set-game content">
 

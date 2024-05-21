@@ -11,6 +11,11 @@
     
     display: flex;
     flex-direction: column; 
+    
+    @media all and (max-width: $SMALL_WIDTH) {
+      max-width: 90vw;
+      margin-top: 0;
+    }
   }
 
   &.form {
