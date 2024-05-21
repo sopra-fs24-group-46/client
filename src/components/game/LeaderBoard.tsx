@@ -54,6 +54,9 @@ const LeaderBoard = ({ numberOfRounds }) => {
       <div className="game_view_container">
         <div className="leaderboard container">
 
+        {/* <div className="leaderboard boxTitle-end">Current Leaderboard</div> */}
+        <div>Round: {currentRound}/{numberOfRounds}</div>
+
         <LeaderBoardComp
           playerDataArray={playerDataArray}
           currentRound={currentRound}

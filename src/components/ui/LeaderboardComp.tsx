@@ -11,8 +11,6 @@ export const LeaderBoardComp = ({  playerDataArray, currentRound, numberOfRounds
     return (
       <>
 
-        <div className="leaderboard boxTitle-end">Current Leaderboard</div>
-        <div>Round: {currentRound}/{numberOfRounds}</div>
 
         <div className="leaderboard table-container">
           <table className="leaderboard table-leaderboard">

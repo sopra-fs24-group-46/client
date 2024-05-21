@@ -44,7 +44,7 @@ const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) =>
 
   const handleOnBlur = (e) => {
     if (!mouseOverDropDown) {
-      setHide(true);
+      setTimeout(() => setHide(true), 5);
     }
   }
 

@@ -36,6 +36,7 @@ const SelectRegion = ({ region, setRegion, regionType, setRegionType, ...props }
         onClick={() => trySetRegionType("CANTON", region)}
         className={regionType === "CANTON" ? "selected" : ""}
         disabled={!isRegionInRegionType(region, "CANTON")}
+        style={{ width: "45%", marginLeft: "5%", marginRight: "2%" }}
       >
         Canton
       </Button>
@@ -43,6 +44,7 @@ const SelectRegion = ({ region, setRegion, regionType, setRegionType, ...props }
         onClick={() => trySetRegionType("DISTRICT", region)}
         className={regionType === "DISTRICT" ? "selected" : ""}
         disabled={!isRegionInRegionType(region, "DISTRICT")}
+        style={{width: "45%"}}
       >
         District
       </Button>

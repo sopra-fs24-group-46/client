@@ -159,6 +159,7 @@ const Profile = () => {
     <BaseContainer>
       <div className="profile header-container">
         <h1 className="header1 profile">WELCOME, {loggedInUser && loggedInUser.username}!</h1>
+        <h1 className="header tiny">{loggedInUser && loggedInUser.username}</h1>
       </div>
       <div className="profile container">
         {content}
