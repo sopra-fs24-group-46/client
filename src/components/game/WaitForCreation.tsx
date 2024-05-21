@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "components/ui/Button";
 import BaseContainer from "components/ui/BaseContainer";
-import { getGameState, joinGame } from "components/game/GameApi";
+import { getGameState } from "components/game/GameApi";
 import { useError } from "components/ui/ErrorContext";
-import { FormField } from "components/ui/FormFieldString";
 
 //styling
 import "styles/views/Header.scss";

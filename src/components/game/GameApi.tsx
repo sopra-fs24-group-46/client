@@ -78,7 +78,7 @@ export const joinGame = async (gameId: string, name: string, showError = console
     Storage.storeGameIdAndPlayerId(gameId, response.data);
 
   } catch (error) {
-    showError(shortError(error));
+    throw error;
   }
 }
 
