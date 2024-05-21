@@ -218,6 +218,7 @@ const SetGame = () => {
     <BaseContainer>
 
       <h1 className="header1 setGame">Choose Settings</h1>
+      <h1 className="header tiny">Settings</h1>
 
       <div className="set-game content">
 

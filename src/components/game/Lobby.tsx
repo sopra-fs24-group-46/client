@@ -198,6 +198,7 @@ const Lobby = ({players}) => {
 
       <div style={{zIndex: 4}}>
         <h1 className="header1 lobby">GAME LOBBY</h1>
+        <h1 className="header tiny">Lobby</h1>
         {content}
       </div>
 

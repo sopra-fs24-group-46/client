@@ -82,6 +82,16 @@ $titleBorder: $background;
   // -webkit-text-stroke: 3px $titleBorder;
 }
 
+@mixin headerTiny {
+  font-family: $fontDefault;
+  font-size: 3em;
+  font-weight: bold;
+  display: none;
+  @media all and (max-width: $SMALL_WIDTH) {
+     display: unset;
+  }
+}
+
 @mixin normal-title {
   ont-family: $fontDefault;
   font-size: 1.2em;

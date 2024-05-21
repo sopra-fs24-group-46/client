@@ -58,6 +58,8 @@ const RoundStart = () => {
       <div  style={{zIndex: 2}}>
         <PowerUpOverlay powerUp={powerUpInUse} />
         <h1 className="header1 roundStart">Round {currentRound}</h1>
+        <h1 className="header tiny">Round {currentRound}</h1>
+
         <div className="round container">
           <div className="round text-container">
             <div className="round text">Try to find this Mountain/Lake:</div>
