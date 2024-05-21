@@ -155,11 +155,12 @@ const EndView = () => {
           </button>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px", hide: !isHost }}>
+        {isHost && (
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
           <button className="primary-button" onClick={createNewGame}>
             Create New Game
           </button>
-        </div>
+        </div>)}
         </div>
 
             </div>
