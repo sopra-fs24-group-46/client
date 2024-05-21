@@ -1,25 +1,12 @@
 import React, { useEffect, useState } from "react";
-import ProgressBar from "components/ui/ProgressBar";
 import PropTypes from "prop-types";
+import { getGameView } from "./GameApi";
+import { LeaderBoardComp } from "components/ui/LeaderboardComp";
+
 import "styles/views/GameViewContainer.scss";
-
-//Leaderboard container gets styled in here
-import "styles/views/Leaderboard.scss";
-
-//map container gets styled in here
-import "styles/views/Question.scss";
-import { getGameView, getSettings } from "./GameApi";
-import { FinalLeaderboard } from "components/ui/LeaderboardComp";
-
-interface PlayerData {
-  score: number;
-  distance: number;
-}
+import "../../styles/views/Leaderboard.scss";
 
 const LeaderBoard = ({ numberOfRounds }) => {
-
-  const [gameInfo, setGameInfo] = useState(null);
-  const [settings, setSettings] = useState(null);
 
   const [playerDataArray, setPlayerDataArray] = useState([]);
   const [currentRound, setCurrentRound] = useState(0);
@@ -65,16 +52,15 @@ const LeaderBoard = ({ numberOfRounds }) => {
 
     return (
       <div className="game_view_container">
+        <div className="leaderboard container">
 
-        <FinalLeaderboard
-          isEnded={false}
+        <LeaderBoardComp
           playerDataArray={playerDataArray}
           currentRound={currentRound}
           numberOfRounds={numberOfRounds}
-        />
+          />
 
-        
-        
+        </div>
       </div>
       
     )

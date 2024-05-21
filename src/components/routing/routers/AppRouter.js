@@ -15,6 +15,7 @@ import ComponentDev from "../../views/ComponentDev";
 import GameView from "../../game/GameView";
 import EndView from "../../views/EndView";
 import IsNotInGame_Guard from "../routeProtectors/IsNotInGame_Guard";
+import WaitForCreation from "../../game/WaitForCreation";
 
 /**
  * Main router of your application.
@@ -36,7 +37,9 @@ const AppRouter = () => {
             <Route path="/game/create" element={<SetGame />} /> 
           </Route>
           <Route path="/game/ended" element={<EndView />} />
+          <Route path="/game/wait_for_creation" element={<WaitForCreation />} />
           <Route path="/game/:gameId" element={<GameView />} />
+          <Route path="/game" element={<GameView />} />
         </Route>
       {/* Everything else is accessable without gameId and playerId */}
         <Route path="/" element={<IsNotInGame_Guard />}>

@@ -6,7 +6,9 @@
 
         position: absolute;
         top: 5vh;
-        width: 40vw;
+        // width: 40vw;
+        max-height: 90vh;
+        max-width: 90vw;
         font-weight: 300;
         border-radius: 0.75em;
         background-color: $background;
@@ -40,7 +42,7 @@
         overflow-x: auto;
         overflow-y: auto;
         scrollbar-width: thin;
-        max-height: 40vh;
+        max-height: 80vh;
     }
 
     &.table-leaderboard {
@@ -60,10 +62,6 @@
             
             padding: 1rem;
           }
-
-
-
-
       
     }
 

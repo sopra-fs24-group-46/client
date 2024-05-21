@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Navigate, Outlet} from "react-router-dom";
 import PropTypes from "prop-types";
 import { Storage } from "helpers/LocalStorageManagement";
+import { getGameState } from "components/game/GameApi";
 
 /**
  * routeProtectors interfaces can tell the router whether or not it should allow navigation to a requested route.
@@ -13,7 +14,38 @@ import { Storage } from "helpers/LocalStorageManagement";
  * @param props
  */
 export const GameGuard = () => {
-  const {gameId, playerId} = Storage.retrieveGameIdAndPlayerId();
+  const [gameId, setGameId] = useState("some");
+  const [playerId, setPlayerId] = useState("some");
+
+  useEffect(() => {
+    const checkGameState = async () => {
+      const gameState = await getGameState();
+
+      //If gameState is closed, redirect to profile
+      if(!gameState || gameState.gameState === "CLOSED") {
+        Storage.removeGameIdAndPlayerId();
+        window.location.href = "/profile";
+        return;
+      }
+
+      const { gameId, playerId } = Storage.retrieveGameIdAndPlayerId();
+      setGameId(gameId);
+      setPlayerId(playerId);
+    }
+
+    checkGameState();
+
+    const popListener = () => {
+      window.addEventListener("popstate", () => {
+        checkGameState();
+      });
+    };
+    popListener();
+    return () => {
+      window.removeEventListener("popstate", popListener);
+    };
+  }, []);
+
   if (gameId && playerId) {
     
     return <Outlet />;

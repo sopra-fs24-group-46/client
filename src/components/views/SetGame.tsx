@@ -14,6 +14,7 @@ import SelectRegion from "components/ui/SelectRegion";
 import { useError } from "components/ui/ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
 import { easy_names, medium_names } from "helpers/Constants";
+import { getGameState } from "components/game/GameApi";
 
 
 
@@ -66,6 +67,17 @@ const SetGame = () => {
   
 
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    const init = async () => {
+      const gameState = await getGameState();
+      if (gameState && gameState.gameState !== "SETUP") {
+        navigate("/game/back_to_game");
+      }
+    }
+    
+    init();
+  }, []);
 
   const callServerCreateGame = async (locationTypes) => {
     
@@ -130,11 +142,8 @@ const SetGame = () => {
       throw error;
     }
   }
-  const throwsError = async () => {
-    throw new Error("I'm an nasty error");
-  }
-  const createGame = async () => {
 
+  const createGame = async () => {
     try {
       await callServerCreateGame(locationTypes);
       // await throwsError();
@@ -162,9 +171,7 @@ const SetGame = () => {
 
   const goBacktoProfile = () => {
     Storage.removeGameIdAndPlayerId();
-
     navigate("/profile");
-
   };
   
   const isFormValid = () => {
@@ -278,7 +285,7 @@ const SetGame = () => {
 
           <div className="set-game container advanced-settings">
             <div className="set-game advancedSettings-switchButton">
-              <div className="set-game advancedSettings-title">Advanced settings:</div>
+              <div className="set-game advancedSettings-title">Region Filter</div>
               <div className={`set-game switch ${advancedFilteringIsOn ? 'on' : 'off'}`} onClick={toggleSwitch}>
                   <div className="set-game toggle"></div>
               </div>

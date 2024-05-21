@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import { api, shortError} from "helpers/api";
-import User from "models/User";
 import { useNavigate } from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/Login.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import Header from "components/views/Header";
-import PropTypes from "prop-types";
 import { useError } from "components/ui/ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
 import {FormField} from "components/ui/FormFieldString";
@@ -15,35 +11,34 @@ import {FormField} from "components/ui/FormFieldString";
 import "styles/views/Header.scss";
 import "styles/views/Authentication.scss";
 
-const SignUp = (props) => {
-    const navigate = useNavigate();
-    const { showError } = useError();
-    const [password, setPassword] = useState<string>(null);
-    const [username, setUsername] = useState<string>(null);
+const SignUp = () => {
+  const navigate = useNavigate();
+  const { showError } = useError();
+  const [password, setPassword] = useState<string>(null);
+  const [username, setUsername] = useState<string>(null);
 
-    const doSignup = async () => {
-        try {
-            const requestBody = JSON.stringify({ username, password });
-            const response = await api.post("/users", requestBody);
+  const doSignup = async () => {
+    
+    try {
+      const requestBody = JSON.stringify({ username, password });
+      const response = await api.post("/users", requestBody);
 
-            // Store the token from the response headers into local storage
-            const token = response.data.token;
-            const id = response.data.id;
+      // Store the token from the response headers into local storage
+      const token = response.data.token;
+      const id = response.data.id;
 
-            Storage.storeUser(id, token);
+      Storage.storeUser(id, token);
 
-            // Navigate to the desired route
-            navigate("/profile");
-        } catch (error) {
-            showError('Something went wrong during the sign up: ' + shortError(error));
-        }
-    };
-
-    const inputIsValid = () => {
-        return password.length >= 6;
+      // Navigate to the desired route
+      navigate("/profile");
+      } catch (error) {
+        showError('Something went wrong during the sign up: ' + shortError(error));
       }
+  };
 
-
+  const inputIsValid = () => {
+    return password.length >= 6;
+  };
 
   return (
     <BaseContainer>

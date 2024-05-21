@@ -14,6 +14,7 @@ interface Props {
 
 const RedirectToGame = () => {
   const [show, setShow] = React.useState(true);
+  
   const leave = () => {
     Storage.removeGameIdAndPlayerId();
     setShow(false);

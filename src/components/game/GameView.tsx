@@ -12,7 +12,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { getGameState,getSettings, getGameView, submitAnswer} from "./GameApi";
+import { getGameState,getSettings, getGameView, submitAnswer, isHost} from "./GameApi";
 import { useError } from "components/ui/ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
 import { doLeaveGame } from "./Lobby";
@@ -69,7 +69,7 @@ const GameView = () => {
           
           if (gameState.gameState !== "PLAYING") {
             if (gameState.gameState === "SETUP") {
-              navigate("/game/create");
+              (await isHost()) ? navigate("/game/create") : navigate("/game/wait_for_creation");
             }
             if (gameState.gameState === "LOBBY") {
               const data = await getGameView(showError);
