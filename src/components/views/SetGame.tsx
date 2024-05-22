@@ -274,6 +274,7 @@ const SetGame = () => {
             </div>
           </div>
 
+          <div className="set-game column">
           <div className="set-game container location-settings">
 
             <div className="set-game boxTitle">Location types:</div>
@@ -325,6 +326,7 @@ const SetGame = () => {
               </div>
             )}
           </div>
+          </div>
 
         </div>
 
@@ -332,9 +334,12 @@ const SetGame = () => {
           <Button onClick={createGame} disabled={!isFormValid()}
           style={{ width: "100%", marginRight: "2%", marginLeft: "2%" }}
           >Create Game</Button> {/* Add the Create Game button */}
+          <Button onClick={() => navigate("advanced")}
+          style={{ width: "100%" , marginRight: "2%"}}
+          >Advanced Settings</Button>
           <Button onClick={() => goBacktoProfile()}
           style={{ width: "100%" , marginRight: "2%"}}
-          >Go Back</Button>
+          >Back to Profile</Button>
         </div>
 
       </div>

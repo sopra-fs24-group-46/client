@@ -38,6 +38,16 @@
       min-width: unset;
     }
   }
+  
+  &.column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    @media all and (max-width: $TINY_WIDTH) {
+      width: 100%;
+      min-width: unset;
+    }
+  }
 
   &.boxTitle {
     margin-top: 1em;
