@@ -6,16 +6,12 @@ import "styles/views/Game.scss";
 import "styles/views/Rules.scss";
 import "styles/views/Header.scss";
 
-
-import { User } from "types";
-
 const Rules = () => {
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const handleGoBackClick = () => {
-  navigate(`/profile`);
-};
-
+  const handleGoBackClick = () => {
+    navigate(-1)
+  };
 return (
   <BaseContainer>
     <h1 className="header title1">Game Rules!</h1>
