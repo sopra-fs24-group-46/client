@@ -33,11 +33,10 @@ export const MapRevealLeaderboard = ({playerDataArray, numberOfRounds, currentRo
 
     return (
         <div className="mapRevealLeaderboard container">
-            <div className="mapRevealLeaderboard round-number">Round: {currentRound}\{numberOfRounds}</div>
             <div className="mapRevealLeaderboard text-container">
                 The <span style={{ color: 'red' }}>red</span> marker shows the location of <span style={{ color: 'red' }}>{currentLocationName}</span>.
-
             </div>
+            <div className="mapRevealLeaderboard round-number">Round: {currentRound}\{numberOfRounds}</div>
 
             <div className="mapRevealLeaderboard table-container">
                 <table className="mapRevealLeaderboard mapReveal-table">
