@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import "../../styles/ui/FormField.scss";
 import {FormField} from './FormFieldString';
 import Dropdown from './DropDown';
 
 const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) => {
   const distinctValidString: string[] = getDistinctValidStrings(validStrings);
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState(props.value ?? "");
   const [suggestions, setSuggestions] = useState(distinctValidString);
   const [hide, setHide] = useState(true);
   const [validString, setValidString] = useState(false);
@@ -20,6 +19,10 @@ const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) =>
       setValidString(true);
       onValidString(string);
   }
+  
+  useEffect(() => {
+    setInputText(props.value ?? "");
+  }, [props.value]);
 
   const handleInputChange = (value) => {
     setHide(false);
@@ -66,10 +69,10 @@ const ValidatedTextInput = ({ validStrings, label, onValidString, ...props }) =>
   const isValidInput = distinctValidString.includes(inputText);
 
   return (
-    <div ref={ref} >
+    <div ref={ref} style ={{ maxWidth: "100vw"}}>
       <FormField
         className="authentication"
-        placeholder="Canton or District"
+        placeholder={props.placeholder ?? "Canton or District"}
         type="text" value={inputText} onChange={handleInputChange}
         onKeyPress={handleKeyPress} //Enter Key
         isValidInput={isValidInput}
@@ -90,6 +93,8 @@ ValidatedTextInput.propTypes = {
   label: PropTypes.string.isRequired,
   onValidString: PropTypes.func.isRequired,
   dropDownMaxHeight: PropTypes.string,
+  placeholder: PropTypes.string,
+  value: PropTypes.string
 }
 
 export default ValidatedTextInput;

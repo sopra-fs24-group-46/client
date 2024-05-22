@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { MultiSelection } from "components/ui/MultiSelection";
-import { FormField } from "components/ui/FormField";
+import { FormField } from "components/ui/FormFieldString";
 import BaseContainer from "components/ui/BaseContainer";
 import {
   LeaderBoardPowerUp,
@@ -15,12 +15,15 @@ import Dropdown from "components/ui/DropDown";
 import ErrorBox from "components/ui/ErrorBox";
 import { useError } from "components/ui/ErrorContext";
 import RedirectToGame from "components/ui/RedirectToGame";
+import SelectRegion from "components/ui/SelectRegion";
 
 const ComponentDev = () => {
   const [maxPlayers, setMaxPlayers] = useState(2);
   const [restartTimer, setRestartTimer] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const { showError } = useError();
+  const [region, setRegion] = useState(null);
+  const [regionType, setRegionType] = useState(null);
 
   return (
     <BaseContainer>
@@ -42,7 +45,14 @@ const ComponentDev = () => {
           onChange={setMaxPlayers}
           style={{ width: "50px" }}
         />
-        <ValidatedTextInput validStrings={["test", "something else"]} label="test" onValidString={setErrorMessage} />
+        {/* <ValidatedTextInput validStrings={["test", "something else"]} label="test" onValidString={setErrorMessage} /> */}
+        <SelectRegion 
+          region={region} 
+          setRegion={setRegion} 
+          regionType={regionType} 
+          setRegionType={setRegionType} 
+          dropDownMaxHeight={"40vh"} 
+        />
         {/* <LeaderBoardPowerUp powerUp="JOKER" />
         <LeaderBoardPowerUpCollection powerUpList={["JOKER", "SHIELD"]} /> */}
         {/* <FinalLeaderboard scores={[{score: 69, distance: 0}, {score: 0, distance: 0}]} currentRound={1}/> */}
