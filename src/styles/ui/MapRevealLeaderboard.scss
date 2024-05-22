@@ -37,10 +37,7 @@
   }
 
   &.round-number {
-    @include small-text;
-    position: absolute;
-    top : 0.5em;
-    right: 1em;
+    @include medium-small-text;
   }
 
 
