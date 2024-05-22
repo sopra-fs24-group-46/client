@@ -97,10 +97,11 @@ const Edit = () => {
   };
 
   return (
-      <BaseContainer className="edit-profile container">
-        <form className="profile-edit form">
+      <BaseContainer >
+      <div className="profile container">
+        <form className="profile button-container">
           <FormFieldEdit
-              className="edit"
+              className="authentication"
               label="Username"
               type="text"
               id="username"
@@ -110,7 +111,7 @@ const Edit = () => {
           />
           <p>Please confirm the change with your password</p> 
           <FormFieldEdit
-              className="edit"
+              className="authentication"
               label="Password"
               type="password"
               id="password"
@@ -119,7 +120,7 @@ const Edit = () => {
               placeholder="Enter Password"
           />
           <FormFieldEdit
-              className="edit"
+              className="authentication"
               label="Confirm Password"
               type="password"
               id="confirmPassword"
@@ -141,6 +142,7 @@ const Edit = () => {
         </form>
 
         <ToastContainer />
+        </div>
       </BaseContainer>
   );
 };

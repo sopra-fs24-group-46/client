@@ -3,6 +3,7 @@ import {Navigate, Outlet} from "react-router-dom";
 import PropTypes from "prop-types";
 import { Storage } from "helpers/LocalStorageManagement";
 import { getGameState } from "components/game/GameApi";
+import RuleLink from "components/ui/RuleLink";
 
 /**
  * routeProtectors interfaces can tell the router whether or not it should allow navigation to a requested route.
@@ -48,7 +49,12 @@ export const GameGuard = () => {
 
   if (gameId && playerId) {
     
-    return <Outlet />;
+    return (
+      <div>
+        <RuleLink/>
+        < Outlet />
+      </div>
+    );
   }
   
   return <Navigate to="/profile" replace />;

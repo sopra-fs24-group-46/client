@@ -27,6 +27,20 @@ const Lobby = ({players}) => {
   const [showConfirmToast, setShowConfirmToast] = useState(false);
   const [isHost, setIsHost] = useState(false);
   const [playerId, setPlayerId] = useState(false);
+  const [displayedLocationTyped, setDisplayedLocationTypes] = useState([]);
+
+
+  const locationTypesSetup = (settings) => {
+
+    if (settings.includes("LAKE") && !settings.includes("ALPINE_MOUNTAIN")) {
+      setDisplayedLocationTypes(["Lakes"]);
+    } else if (settings.includes("ALPINE_MOUNTAIN") && !settings.includes("LAKE")) {
+      setDisplayedLocationTypes(["Mountains"]);
+    } else if (settings.includes("ALPINE_MOUNTAIN") && settings.includes("LAKE")) {
+      setDisplayedLocationTypes(["Lakes", "Mountains"]);
+    }
+  };
+
 
   useEffect(() => {
     async function fetchGameSettings() {
@@ -37,7 +51,9 @@ const Lobby = ({players}) => {
 
         if(settings.locationTypes){
           setLocationTypes(settings.locationTypes);
+          locationTypesSetup(settings.locationTypes);
         }
+
         if(settings.locationNames){
           setLocationNames(settings.locationNames);
         }
@@ -105,24 +121,25 @@ const Lobby = ({players}) => {
     }
   };
 
+
+
   let content = <Spinner />;
 
   if (gameSettings) {
     content = (
         <div className="lobby container">
           <div className="lobby settings-container">
+            <div className="lobby gameID-content">Game-ID: <mark>{gameId}</mark></div>
             <Button ref={copyButtonRef} onClick={copyGameCode}>
-              Copy GameId
+              Copy Game-ID
             </Button>
-            <div className="lobby gameID-content">Game ID: <mark>{gameId}</mark></div>
             <div className="lobby gameSettings-content">
-              <div className="set-game locationTypes-container" style={{}}>
-              <Button onClick={() => { }} disabled={true} style={{width: "40%", margin: "0 4%", marginLeft: "8%"}}
-                className={locationTypes.includes("LAKE") ? "selected" : ""}>Lakes</Button>
-              <Button onClick={() => { }} disabled={true} style={{width: "40%"}}
-                className={locationTypes.includes("ALPINE_MOUNTAIN") ? "selected" : ""}>Mountains</Button>
-              </div>
+              <div className="lobby gameSettings-title">Game settings:</div>
               <ol>
+                <li>
+                  Locations: &nbsp;
+                  <mark>{displayedLocationTyped.join(', ')}</mark>
+                </li>
                 <li>
                   Region: &nbsp;
                   <mark>{gameSettings.region ?? "Switzerland"}</mark>
@@ -137,7 +154,7 @@ const Lobby = ({players}) => {
                 </li>
                 <li>
                   Guess Time: &nbsp;
-                  <mark>{gameSettings.guessingTime} sec</mark>
+                  <mark>{gameSettings.guessingTime} sec.</mark>
                 </li>
               </ol>
             </div>

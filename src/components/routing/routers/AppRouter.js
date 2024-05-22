@@ -32,6 +32,9 @@ const AppRouter = () => {
     <BrowserRouter>
       <Routes>
 
+        {/* allway accesable */}
+        <Route path="/rules" element={<Rules />} />
+
        {/* This are all the view which are exclusively for clients with gameId and playerId  */}
         <Route path="/game" element={<GameGuard />}>
           <Route path="/game/create" element={<IsUserGuard />}>
@@ -63,8 +66,6 @@ const AppRouter = () => {
         </Route>
 
 
-        {/* allway accesable */}
-        <Route path="/rules" element={<Rules />} />
 
         {/* dev routs */}
         <Route path="/ComponentDev" element={<ComponentDev />} />

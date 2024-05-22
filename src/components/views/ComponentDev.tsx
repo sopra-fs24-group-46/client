@@ -16,6 +16,7 @@ import ErrorBox from "components/ui/ErrorBox";
 import { useError } from "components/ui/ErrorContext";
 import RedirectToGame from "components/ui/RedirectToGame";
 import SelectRegion from "components/ui/SelectRegion";
+import RuleLink from "components/ui/RuleLink";
 
 const ComponentDev = () => {
   const [maxPlayers, setMaxPlayers] = useState(2);
@@ -25,7 +26,8 @@ const ComponentDev = () => {
   const [region, setRegion] = useState(null);
   const [regionType, setRegionType] = useState(null);
 
-  return (
+  return (<>
+      <RuleLink />
     <BaseContainer>
       {/* <ErrorBox message={errorMessage} onClose={() => {}} /> */}
         <RedirectToGame />
@@ -64,7 +66,7 @@ const ComponentDev = () => {
           setRestartTimer={setRestartTimer} /> */}
       </div>
     </BaseContainer>
-  );
+  </>);
 };
 
 export default ComponentDev;
