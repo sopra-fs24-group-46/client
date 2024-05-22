@@ -4,6 +4,7 @@ import {  Outlet } from "react-router-dom";
 import { Storage } from "helpers/LocalStorageManagement";
 import  RedirectToGame  from "components/ui/RedirectToGame";
 import { getGameState } from "components/game/GameApi";
+import RuleLink from "components/ui/RuleLink";
 
 const IsNotInGame_Guard = () => {
   const [gameId, setGameId] = useState(null);
@@ -29,13 +30,19 @@ const IsNotInGame_Guard = () => {
   if (gameId && playerId) {
     return (
       <div>
+        <RuleLink />
         <RedirectToGame />
         <Outlet />
       </div>
     );
   }
   
-  return <Outlet />;
+  return (
+  <div>
+    <RuleLink />
+    <Outlet />
+  </div>
+  );
 };
 
 export default IsNotInGame_Guard;

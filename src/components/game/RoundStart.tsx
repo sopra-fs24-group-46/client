@@ -55,7 +55,7 @@ const RoundStart = () => {
 
   return (
     <div className="game_view_container" >
-      <div  style={{zIndex: 2}}>
+      <div  style={{zIndex: 2, position : 'absolute', top: '1em'}}>
         <PowerUpOverlay powerUp={powerUpInUse} />
         <h1 className="header1 roundStart">Round {currentRound}</h1>
         <h1 className="header tiny">Round {currentRound}</h1>

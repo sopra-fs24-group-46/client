@@ -22,8 +22,8 @@
   }
 
   &.text-container {
+    @include normal-title;
     margin-bottom: 2vh;
-    font-weight: bold;
   }
 
   &.table-container {
@@ -38,6 +38,7 @@
 
   &.round-number {
     @include medium-small-text;
+    margin-bottom: 0.5em;
   }
 
 

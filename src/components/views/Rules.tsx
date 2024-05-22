@@ -7,12 +7,11 @@ import "styles/views/Rules.scss";
 import "styles/views/Header.scss";
 
 const Rules = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const handleGoBackClick = () => {
-    navigate(`/profile`);
-  };
-
+    const handleGoBackClick = () => {
+      navigate(-1)
+    };
   return (
     <BaseContainer>
       <div className="rules header-container">
@@ -28,11 +27,11 @@ const Rules = () => {
           <p><strong>Power Ups:</strong> Power ups add temporary advantage over other players during the game. Players can choose between Joker, Shield, or Double Points during the game to try to win over their opponents.</p>
           <p>The <strong>Joker</strong> shows a red circle where the location could be. The <strong>Double Points</strong> gives the player double the points during that round. The <strong>Shield</strong> gives the average points of all the players during the current round.</p>
 
-          <Button onClick={handleGoBackClick} className="edit">Go Back</Button>
-        </div>
+        <button onClick={handleGoBackClick}>Go back</button>
       </div>
-    </BaseContainer>
-  );
+    </div>
+  </BaseContainer>
+);
 };
 
 export default Rules;

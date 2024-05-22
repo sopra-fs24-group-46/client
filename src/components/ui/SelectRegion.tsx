@@ -29,6 +29,7 @@ const SelectRegion = ({ region, setRegion, regionType, setRegionType, ...props }
       <ValidatedTextInput
         validStrings={validStrings}
         label="Region"
+        value={region}
         onValidString={setRegionAndPossiblyType}
         dropDownMaxHeight={props.dropDownMaxHeight}
       />

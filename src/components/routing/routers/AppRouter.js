@@ -16,6 +16,7 @@ import GameView from "../../game/GameView";
 import EndView from "../../views/EndView";
 import IsNotInGame_Guard from "../routeProtectors/IsNotInGame_Guard";
 import WaitForCreation from "../../game/WaitForCreation";
+import AdvancedSettings from "../../views/AdvancedSettings";
 
 /**
  * Main router of your application.
@@ -31,9 +32,13 @@ const AppRouter = () => {
     <BrowserRouter>
       <Routes>
 
+        {/* allway accesable */}
+        <Route path="/rules" element={<Rules />} />
+
        {/* This are all the view which are exclusively for clients with gameId and playerId  */}
         <Route path="/game" element={<GameGuard />}>
           <Route path="/game/create" element={<IsUserGuard />}>
+            <Route path="/game/create/advanced" element={<AdvancedSettings />} />
             <Route path="/game/create" element={<SetGame />} /> 
           </Route>
           <Route path="/game/ended" element={<EndView />} />
@@ -61,8 +66,6 @@ const AppRouter = () => {
         </Route>
 
 
-        {/* allway accesable */}
-        <Route path="/rules" element={<Rules />} />
 
         {/* dev routs */}
         <Route path="/ComponentDev" element={<ComponentDev />} />

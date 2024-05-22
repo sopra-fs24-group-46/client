@@ -70,7 +70,7 @@ const Home = () => {
             className="authentication"
             type="text"
             value={gamePin}
-            placeholder={"Enter Game Pin"}
+            placeholder={"Enter Game-ID"}
             onChange={(un: string) => setGamePin(un)}
             disabled={!isGamePinEditable}
           />
