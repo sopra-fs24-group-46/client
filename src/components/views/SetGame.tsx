@@ -253,7 +253,7 @@ const SetGame = () => {
               />
               <FormField
                 className="setGame"
-                label="Guessing time per round:"
+                label="Guessing time (sec.) per round:"
                 type="number"
                 placeholder="15"
                 value={guessingTime}
@@ -263,7 +263,7 @@ const SetGame = () => {
               />
               <FormField
                 className="setGame"
-                label="Time showing results:"
+                label="Time showing (sec.) results:"
                 type="number"
                 placeholder="15"
                 value={mapRevealTime}
