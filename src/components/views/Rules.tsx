@@ -34,7 +34,7 @@ return (
         <p>The <strong>Joker</strong> shows the region where the location is. 
         The <strong>Double Points</strong> gives the player double the points during that round. The <strong>Shield</strong> gives the average points of all the players during the current round. </p>
 
-        <button onClick={handleGoBackClick}>Go back</button>
+        <button className="primary-button" onClick={handleGoBackClick}>Go back</button>
       </div>
     </div>
   </BaseContainer>
