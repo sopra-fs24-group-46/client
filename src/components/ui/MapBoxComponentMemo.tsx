@@ -257,11 +257,16 @@ const MapBoxComponent = ({ roundState, jokerData, currentQuestionLocation, guess
 
       if (roundState === "GUESSING") {
 
+        map.flyTo({  
+          center: [8.2275, 46.8182],
+          zoom: 7
+        });
+
         if(jokerData && jokerData.joker) {
 
-            console.log("jokerData: ", jokerData);
+          console.log("jokerData: ", jokerData);
 
-            createCircle(jokerData.center[0], jokerData.center[1], 10);
+          createCircle(jokerData.center[0], jokerData.center[1], 10);
         }
       }
 
@@ -274,6 +279,11 @@ const MapBoxComponent = ({ roundState, jokerData, currentQuestionLocation, guess
           const newMarker = new mapboxgl.Marker({color: 'red'})
           .setLngLat([currentQuestionLocation.x, currentQuestionLocation.y])
           .addTo(map);
+
+          map.flyTo({  
+            center: [currentQuestionLocation.x, currentQuestionLocation.y],
+            zoom: 9
+          });
   
           currentLocationMarker.current = newMarker;
 
