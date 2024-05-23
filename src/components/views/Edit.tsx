@@ -21,8 +21,6 @@ const Edit = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>(''); // new for password
   const [confirmPassword, setConfirmPassword] = useState<string>(''); // new for password confirmation
-  const [passwordError, setPasswordError] = useState<string>('');
-  const [hasChanges, setHasChanges] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -45,38 +43,31 @@ const Edit = () => {
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
-    setHasChanges(true);
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
-    setHasChanges(true);
   };
 
   const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(event.target.value);
-    setHasChanges(true);
   };
 
-  const doEdit = async () => {
+  const changeUsername = async () => {
     try {
-      if (password !== confirmPassword) {
-        setPasswordError("Passwords do not match");
-        return;
-      }
 
       const { id: storedUserId, token } = Storage.retrieveUser();
       if (!storedUserId) {
         throw new Error('User ID not found in localStorage');
       }
 
-      const user = { id: storedUserId, username, password }; // Include user ID in the request body
+      const user = { id: storedUserId, username, password: null }; // Include user ID in the request body
       const credentials = { id: storedUserId, token: token };
       const requestBody = { user: user, credentialsDTO: credentials };
       await api.put(`/users/${storedUserId}`, requestBody);
       // Send PUT request to the correct endpoint with the updated username and user ID
       alert("Changes saved successfully!");
-      navigate(`/profile`);
+      window.location.reload();
     } catch (error) {
       console.error(
           `Something went wrong while saving the changes: \n${handleError(error)}`
@@ -84,22 +75,62 @@ const Edit = () => {
       alert(
           "Something went wrong while saving the changes! See the console for details."
       );
+      window.location.reload();
     }
   };
+
+
+  const changePassword = async () => {
+
+    try {
+
+      const { id: storedUserId, token } = Storage.retrieveUser();
+      if (!storedUserId) {
+        throw new Error('User ID not found in localStorage');
+      }
+
+      const user = { id: storedUserId, username: null, password }; // Include user ID in the request body
+      const credentials = { id: storedUserId, token: token };
+      const requestBody = { user: user, credentialsDTO: credentials };
+      await api.put(`/users/${storedUserId}`, requestBody);
+      // Send PUT request to the correct endpoint with the updated username and user ID
+      alert("Changes saved successfully!");
+      window.location.reload();
+    } catch (error) {
+      console.error(
+          `Something went wrong while saving the changes: \n${handleError(error)}`
+      );
+      alert(
+          "Something went wrong while saving the changes! See the console for details."
+      );
+      window.location.reload();
+    }
+  };
+
+  const newUsernameIsValid = (currentUsername) => {
+
+    return currentUsername === initialUsername || currentUsername === '';
+
+  }
+
+  const newPasswordIsValid = (password, confirmPassword) => {
+
+    return password === '' || password !== confirmPassword || password.length < 6;
+
+  }
 
   const handleGoBackClick = () => {
     setUsername(initialUsername);
     setPassword('');
     setConfirmPassword('');
-    setPasswordError('');
-    setHasChanges(false);
     navigate(`/profile`);
   };
 
   return (
-      <BaseContainer >
+    <BaseContainer >
       <div className="profile container">
-        <form className="profile button-container">
+        <div className="profile button-container">
+          <div className="edit formfield-title">Change username:</div>
           <FormFieldEdit
               className="authentication"
               label="Username"
@@ -109,41 +140,40 @@ const Edit = () => {
               onChange={handleUsernameChange}
               placeholder="Enter Username"
           />
-          <p>Please confirm the change with your password</p> 
+          <Button onClick={changeUsername} className="edit" disabled={newUsernameIsValid(username)} style={{width: "100%"}}>
+            Save new username
+          </Button>
+
+          <div className="edit formfield-title">Change password:</div>
           <FormFieldEdit
               className="authentication"
-              label="Password"
+              label="new Password"
               type="password"
               id="password"
               value={password}
               onChange={handlePasswordChange}
-              placeholder="Enter Password"
+              placeholder="new password"
           />
           <FormFieldEdit
               className="authentication"
-              label="Confirm Password"
+              label="confirm new password"
               type="password"
               id="confirmPassword"
               value={confirmPassword}
               onChange={handleConfirmPasswordChange}
-              placeholder="Confirm Password"
+              placeholder="new password"
           />
-          {passwordError && (
-              <p className="error-message">
-                {passwordError} <i className="fa fa-exclamation-circle"></i>
-              </p>
-          )}
-          <Button onClick={doEdit} className="edit" disabled={!hasChanges} style={{width: "100%"}}>
-            Save
+
+          <Button onClick={changePassword} className="edit" disabled={newPasswordIsValid(password, confirmPassword)} style={{width: "100%"}}>
+            Save new password
           </Button>
           <Button onClick={handleGoBackClick} className="edit" style={{width: "100%"}}>
             Go Back
           </Button>
-        </form>
-
-        <ToastContainer />
         </div>
-      </BaseContainer>
+
+      </div>
+    </BaseContainer>
   );
 };
 

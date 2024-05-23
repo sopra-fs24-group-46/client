@@ -52,7 +52,6 @@ export const FormFieldEdit = (props) => {
         disabled={props.disabled}
         min = {props.min}
         max = {props.max}
-        style={{ color: 'black' }}
       />
     </div>
   );

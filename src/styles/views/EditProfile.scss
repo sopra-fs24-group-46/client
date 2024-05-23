@@ -1,5 +1,17 @@
 @import "../theme";
 
+.edit{
+
+  &.formfield-title{
+    @include normal-title;
+
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+  }
+}
+
+
+
 .profile-edit{
   &.container {
       height:30vh;
