@@ -6,7 +6,7 @@ GWÜSST-Client
 
 
 ## Introduction
-How good do you and your peers know Switzerland's most famous landscapes? Would you be able to show your knowledge and win against your friends? Gwüsst is an exciting game that allows players to compete against each other in guessing a certain location from Switzerland's most famous landscapes, such as mountains or hills. This is the back-end component of our project. The front-end component can be found [here](https://github.com/sopra-fs24-group-46/server).
+How good do you and your peers know Switzerland's most famous landscapes? Would you be able to show your knowledge and win against your friends? Gwüsst is an exciting game that allows players to compete against each other in guessing a certain location from Switzerland's most famous landscapes, such as mountains or hills. This is the front-end component of our project. The bakc-end component can be found [here](https://github.com/sopra-fs24-group-46/server).
 
 ## Technologies
 The front-end components of this project were written in TSX and JS, using scss as well for styling. Moreover, the React framework is used. Persistence is managed through JPA/Hibernate. Communication between the server and client is achieved through REST.
@@ -31,80 +31,76 @@ Moreover, this command builds the app for dev to the build folder.
 ## Illustrations
 <h3 align="center">
   <br>
+  Home Page 
+  <br>
+  <br>
   <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/HomePage.png" width="500"></a>
-  <br>
-  Home - Home page before every game.
-  <br>
+
 </h3>
 <h3 align="center">
+    <br>
+  Registration Page
+  <br>
   <br>
   <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/RegisterPage.png" width="500"></a>
-  <br>
-  Register - Register for new players.
-  <br>
+
 </h3>
 <h3 align="center">
+  <br>
+  Profile Page  
+  <br>
   <br>
   <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/ProfilePage.png" width="500"></a>
-  <br>
-  Profile - Profile page for players. 
-  <br>
+
 </h3>
 <h3 align="center">
-  <br>
-  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/SettingGame.png" width="500"></a>
-  <br>
+    <br>
   Creating/Setting a game.
   <br>
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/SettingGame.png" width="500"></a>
+
 </h3>
 <h3 align="center">
-  <br>
-  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/Lobby.png" width="500"></a>
-  <br>
+    <br>
   Lobby of a game.
   <br>
-</h3>
-<h3 align="center">
   <br>
   <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/Lobby.png" width="500"></a>
-  <br>
-  Lobby of a game.
-  <br>
+
+
 </h3>
 <h3 align="center">
-  <br>
-  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/Lobby.png" width="500"></a>
   <br>
   Round announcement/Start of the game
   <br>
-</h3>
-<h3 align="center">
   <br>
   <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/RoundAnnouncement.png" width="500"></a>
-  <br>
-  Round announcement/Start of the game
-  <br>
+
 </h3>
 <h3 align="center">
-  <br>
-  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/LocationShowing.png" width="500"></a>
   <br>
   Location display
   <br>
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/LocationShowing.png" width="500"></a>
+
 </h3>
 <h3 align="center">
-  <br>
-  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/CurrentLeaderboard.png" width="500"></a>
   <br>
   Current Leadearboard
   <br>
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/CurrentLeaderboard.png" width="500"></a>
+
 </h3>
 <h3 align="center">
   <br>
-  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/EndLeaderboard.png" width="500"></a>
-  <br>
   End Leadearboard/ End of the game
   <br>
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/EndLeaderboard.png" width="500"></a>
+
 </h3>
 
 ## Authors and Acknowledgment
