@@ -189,12 +189,12 @@ const AdvancedSettings = () => {
     setPolygonFilter(!polygonFilter);
   };
 
-  const toggleLocationTypes = (location) => {
+  const toggleLocationTypes = (location: Array<string>) => {
     let locationTypes = settings.locationTypes;
-    if (locationTypes.includes(location)) {
-      locationTypes =(locationTypes.filter((loc) => loc !== location));
+    if (locationTypes.includes(location[0])) {
+      locationTypes =(locationTypes.filter((loc) => !(location.includes(loc))));
     } else {
-      locationTypes =([...locationTypes, location]);
+      locationTypes =([...locationTypes, ...location]);
     }
     updateSettings("locationTypes", locationTypes);
   };
@@ -305,11 +305,11 @@ const AdvancedSettings = () => {
 
             <div className="set-game boxTitle">Location types:</div>
             <div className="set-game locationTypes-container" style={{display: "flex", flexDirection: "column"}}>
-              <Button onClick={() => toggleLocationTypes('LAKE')}
+              <Button onClick={() => toggleLocationTypes(['LAKE'])}
               className={settings.locationTypes.includes("LAKE") ? "selected" : ""}>Lakes</Button>
-                <Button onClick={() => { toggleLocationTypes('MOUNTAIN'); toggleLocationTypes('ALPINE_MOUNTAIN'); }}
+                <Button onClick={() => toggleLocationTypes(['ALPINE_MOUNTAIN', 'MOUNTAIN']) }
               className={settings.locationTypes.includes("MOUNTAIN") ? "selected" : ""}>Mountains</Button>
-                <Button onClick={() => { toggleLocationTypes('HILL'); toggleLocationTypes('MAIN_HILL'); }}
+                <Button onClick={() => toggleLocationTypes(['HILL', 'MAIN_HILL'])}
               className={settings.locationTypes.includes("HILL") ? "selected" : ""}>Hills</Button>
             </div>
           </div>
