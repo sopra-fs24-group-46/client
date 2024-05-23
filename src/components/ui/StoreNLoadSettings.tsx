@@ -38,21 +38,23 @@ const StoreNLoadSettings = ({ settings, setSettings, ...props }) => {
 
 
   return (
-    <div >
+    <div style={{display: "flex", flexDirection: "row", padding: "10px", gap: "10px"}}>
       <Button onClick={storeSettings}
         disabled={settings.name.length === 0}
       >Store Settings</Button>
-      <div style={{overflowY: "scroll", maxHeight: "40vh"}}>
+<div>
         Stored Settings:
+      <div style={{overflowY: "scroll", maxHeight: "20vh"}}>
         {storedSettings.map((settings) => (
           <div key={settings}
             onClick={() => setSettings(settings)}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", onHover: { backgroundColor: "lightgray" } }}
           >{settings.name} 
             
           </div>
         ))}
       </div>
+</div>
     </div>
   );
 };
