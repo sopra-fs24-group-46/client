@@ -15,7 +15,8 @@ const Rules = () => {
   return (
     <BaseContainer>
       <div className="rules header-container">
-        <h1 className="header title1">Game Rules!</h1>
+        <h1 className="header1 rules">Game Rules!</h1>
+        <h1 className="header tiny">Game Rules!</h1>
       </div>
       <div className="rules container">
         <div className="rules content">
