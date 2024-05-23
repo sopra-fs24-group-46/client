@@ -307,13 +307,9 @@ const AdvancedSettings = () => {
             <div className="set-game locationTypes-container" style={{display: "flex", flexDirection: "column"}}>
               <Button onClick={() => toggleLocationTypes('LAKE')}
               className={settings.locationTypes.includes("LAKE") ? "selected" : ""}>Lakes</Button>
-              <Button onClick={() => toggleLocationTypes('ALPINE_MOUNTAIN')}
-              className={settings.locationTypes.includes("ALPINE_MOUNTAIN") ? "selected" : ""}>Alpine Mountains</Button>
-              <Button onClick={() => toggleLocationTypes('MOUNTAIN')}
+                <Button onClick={() => { toggleLocationTypes('MOUNTAIN'); toggleLocationTypes('ALPINE_MOUNTAIN'); }}
               className={settings.locationTypes.includes("MOUNTAIN") ? "selected" : ""}>Mountains</Button>
-              <Button onClick={() => toggleLocationTypes('MAIN_HILL')}
-              className={settings.locationTypes.includes("MAIN_HILL") ? "selected" : ""}>Main Hills</Button>
-              <Button onClick={() => toggleLocationTypes('HILL')}
+                <Button onClick={() => { toggleLocationTypes('HILL'); toggleLocationTypes('MAIN_HILL'); }}
               className={settings.locationTypes.includes("HILL") ? "selected" : ""}>Hills</Button>
             </div>
           </div>
