@@ -40,6 +40,18 @@
     }
   }
 
+  &.set-game {
+    height: 3.5em;
+
+    &.info-button {
+      background: none;
+      border: none;
+      color: $linkColor; 
+      text-decoration: underline; 
+      cursor: pointer;
+    }
+  }
+
   &.selected {
     background-color: $accentAlt;
     opacity: 1;
