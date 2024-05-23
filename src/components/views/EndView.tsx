@@ -128,34 +128,38 @@ const EndView = () => {
             <div className="game_view_container">
     
             <div className="leaderboard container">
-              
 
-          <div className="leaderboard text-container">
 
-            {playerId === sortedPlayerDataArray[0].playerId ? (
-            <div className="leaderboard boxTitle-end">
-              Congratulations you have won with {sortedPlayerDataArray[0].data.score} points!
-            </div>
-            ) : (
-              <div className="leaderboard boxTitle-end">
-              {sortedPlayerDataArray[0].displayName} has won with {sortedPlayerDataArray[0].data.score} points!
-            </div>
-            )}
+              <div className="leaderboard text-container">
 
-          </div>
-                <LeaderBoardComp
-                    playerDataArray={playerDataArray}
-                    currentRound={gameInfo.currentRound}
-                    numberOfRounds={null}
-                    />
 
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-          <button className="primary-button" onClick={handleReturnToProfile}>
-            Return to Profile/Home
-          </button>
-        </div>
+                {playerId === sortedPlayerDataArray[0].playerId ? (
+                    <div className="leaderboard boxTitle-end">
+                      Congratulations <mark>you</mark> have won with <mark>{sortedPlayerDataArray[0].data.score} points!</mark>
+                    </div>
+                ) : (
+                    <div className="leaderboard boxTitle-end">
+                      <mark>{sortedPlayerDataArray[0].displayName} </mark>
+                      has won with <mark>{sortedPlayerDataArray[0].data.score} points!</mark>
+                  </div>
+                )}
 
-        {isHost && (
+
+              </div>
+
+              <LeaderBoardComp
+                  playerDataArray={playerDataArray}
+                  currentRound={gameInfo.currentRound}
+                  numberOfRounds={null}
+              />
+
+              <div style={{display: "flex", justifyContent: "center", marginTop: "20px"}}>
+                <button className="primary-button" onClick={handleReturnToProfile}>
+                  Return to Profile/Home
+                </button>
+              </div>
+
+              {isHost && (
         <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
           <button className="primary-button" onClick={createNewGame}>
             Create New Game

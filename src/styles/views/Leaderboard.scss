@@ -33,6 +33,14 @@
 
     }
 
+    mark {
+        color: $accent;
+        font-weight: bold;
+        background: none;
+        border: 10px;
+    }
+
+
 
     &.table-container {
         margin-top: 2em;
@@ -43,6 +51,7 @@
         overflow-y: auto;
         scrollbar-width: thin;
         max-height: 80vh;
+        border-radius: 0.75em;
     }
 
     &.table-leaderboard {
