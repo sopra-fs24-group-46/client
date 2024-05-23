@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import ValidatedTextInput from "./ValidatedTextInput";
-import {lakes, mountains, main_hills, hills, alpine_mountains} from "helpers/Constants";
+import {lakes, mountains, main_hills, hills, alpine_mountains} from "helpers/Constant_names";
 
 
 const NameFilter = ({ locationNames, setLocationNames, locationTypes, ...props }) => {

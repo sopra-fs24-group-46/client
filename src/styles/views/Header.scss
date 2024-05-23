@@ -45,6 +45,7 @@
 
   }
 
+
   @media all and (max-width: $SMALL_WIDTH) {
     &.roundStart {
       display: none;
@@ -56,6 +57,9 @@
       display: none;
     }
     &.profile {
+      display: none;
+    }
+    &.rules {
       display: none;
     }
   }

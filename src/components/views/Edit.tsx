@@ -133,10 +133,10 @@ const Edit = () => {
                 {passwordError} <i className="fa fa-exclamation-circle"></i>
               </p>
           )}
-          <Button onClick={doEdit} className="edit" disabled={!hasChanges}>
+          <Button onClick={doEdit} className="edit" disabled={!hasChanges} style={{width: "100%"}}>
             Save
           </Button>
-          <Button onClick={handleGoBackClick} className="edit">
+          <Button onClick={handleGoBackClick} className="edit" style={{width: "100%"}}>
             Go Back
           </Button>
         </form>

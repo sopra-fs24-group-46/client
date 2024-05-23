@@ -29,9 +29,83 @@ Moreover, this command builds the app for dev to the build folder.
 - npm run build
 
 ## Illustrations
-
-
-
+<h3 align="center">
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/HomePage.png" width="500"></a>
+  <br>
+  Home - Home page before every game.
+  <br>
+</h3>
+<h3 align="center">
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/RegisterPage.png" width="500"></a>
+  <br>
+  Register - Register for new players.
+  <br>
+</h3>
+<h3 align="center">
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/ProfilePage.png" width="500"></a>
+  <br>
+  Profile - Profile page for players. 
+  <br>
+</h3>
+<h3 align="center">
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/SettingGame.png" width="500"></a>
+  <br>
+  Creating/Setting a game.
+  <br>
+</h3>
+<h3 align="center">
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/Lobby.png" width="500"></a>
+  <br>
+  Lobby of a game.
+  <br>
+</h3>
+<h3 align="center">
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/Lobby.png" width="500"></a>
+  <br>
+  Lobby of a game.
+  <br>
+</h3>
+<h3 align="center">
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/Lobby.png" width="500"></a>
+  <br>
+  Round announcement/Start of the game
+  <br>
+</h3>
+<h3 align="center">
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/RoundAnnouncement.png" width="500"></a>
+  <br>
+  Round announcement/Start of the game
+  <br>
+</h3>
+<h3 align="center">
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/LocationShowing.png" width="500"></a>
+  <br>
+  Location display
+  <br>
+</h3>
+<h3 align="center">
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/CurrentLeaderboard.png" width="500"></a>
+  <br>
+  Current Leadearboard
+  <br>
+</h3>
+<h3 align="center">
+  <br>
+  <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/EndLeaderboard.png" width="500"></a>
+  <br>
+  End Leadearboard/ End of the game
+  <br>
+</h3>
 
 ## Authors and Acknowledgment
 

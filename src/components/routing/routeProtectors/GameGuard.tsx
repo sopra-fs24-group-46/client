@@ -49,12 +49,7 @@ export const GameGuard = () => {
 
   if (gameId && playerId) {
     
-    return (
-      <div>
-        <RuleLink/>
-        < Outlet />
-      </div>
-    );
+    return  < Outlet />;
   }
   
   return <Navigate to="/profile" replace />;

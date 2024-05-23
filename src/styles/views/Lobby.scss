@@ -11,6 +11,10 @@
       margin: 0 auto;
       font-weight: 450;
       border-radius: $borderRadius;
+      @media screen and (max-width: 500px) {
+        min-width: unset;
+        width: 100vw;
+      }
     }
 
     &.settings-container {

@@ -5,6 +5,7 @@ import ValidatedTextInput from "./ValidatedTextInput";
 import { api, shortError } from "helpers/api";
 import { useError } from "./ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
+import "../../styles/ui/StoreSettings.scss"
 
 
 const StoreNLoadSettings = ({ settings, setSettings, ...props }) => {
@@ -38,21 +39,23 @@ const StoreNLoadSettings = ({ settings, setSettings, ...props }) => {
 
 
   return (
-    <div >
+    <div className="store-settings container">
       <Button onClick={storeSettings}
         disabled={settings.name.length === 0}
       >Store Settings</Button>
-      <div style={{overflowY: "scroll", maxHeight: "40vh"}}>
+      <div className="store-settings load-container">
         Stored Settings:
+      <div style={{overflowY: "scroll", maxHeight: "20vh"}}>
         {storedSettings.map((settings) => (
           <div key={settings}
             onClick={() => setSettings(settings)}
-            style={{ cursor: "pointer" }}
+            className = "store-settings clickable-list"
           >{settings.name} 
             
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 };
