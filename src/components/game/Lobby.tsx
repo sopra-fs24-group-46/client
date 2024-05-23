@@ -32,13 +32,21 @@ const Lobby = ({players}) => {
 
   const locationTypesSetup = (settings) => {
 
-    if (settings.includes("LAKE") && !settings.includes("ALPINE_MOUNTAIN")) {
-      setDisplayedLocationTypes(["Lakes"]);
-    } else if (settings.includes("ALPINE_MOUNTAIN") && !settings.includes("LAKE")) {
-      setDisplayedLocationTypes(["Mountains"]);
-    } else if (settings.includes("ALPINE_MOUNTAIN") && settings.includes("LAKE")) {
-      setDisplayedLocationTypes(["Lakes", "Mountains"]);
+    let LocArray = [];
+
+    if (settings.includes("LAKE")) {
+      LocArray.push("Lakes");
     }
+
+    if (settings.includes("ALPINE_MOUNTAIN") || settings.includes("MOUNTAIN")) {
+      LocArray.push("Mountains");
+    }
+
+    if (settings.includes("HILL") || settings.includes("MAIN_HILL")) {
+      LocArray.push("Hills");
+    }
+
+    setDisplayedLocationTypes(LocArray);
   };
 
 
