@@ -19,7 +19,7 @@
   &.container {
 
     max-width: 100vw;
-    min-width: 20em;
+    min-width: 24em;
     padding-left: 37px;
     padding-right: 37px;
     padding-bottom: 1em;
@@ -134,7 +134,7 @@
 
     margin-top: 1em;
     margin: auto;
-    max-width: 250px;
+    max-width: 280px;
     text-align: center;
 
     @include small-text;

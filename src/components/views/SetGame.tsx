@@ -62,6 +62,7 @@ const SetGame = () => {
   const { showError } = useError();
   const [difficulty, setDifficulty] = useState("HARD");
   const [advancedFilteringIsOn, setIsOn] = useState(false);
+  const [infoIsOn, setInfoIsOn] = useState(false);
   const [mapRevealTime, setMapRevealTime] = useState(15);
 
   const navigate = useNavigate();
@@ -194,6 +195,16 @@ const SetGame = () => {
     if (!advancedFilteringIsOn) {
       setDifficulty("HARD");
     }
+
+    if (infoIsOn) {
+      setInfoIsOn(false);
+    }
+  };
+
+  const toggleInfoSwitch = () => {
+
+    setInfoIsOn(!infoIsOn);
+
   };
 
   const toggleLocationTypes = (location) => {
@@ -305,7 +316,7 @@ const SetGame = () => {
 
           <div className="set-game container advanced-settings">
             <div className="set-game advancedSettings-switchButton">
-              <div className="set-game advancedSettings-title">Region Filter</div>
+              <div className="set-game advancedSettings-title">Region filter</div>
               <div className={`set-game switch ${advancedFilteringIsOn ? 'on' : 'off'}`} onClick={toggleSwitch}>
                   <div className="set-game toggle"></div>
               </div>
@@ -320,9 +331,14 @@ const SetGame = () => {
                   setRegionType={setRegionType} 
                   dropDownMaxHeight={"40vh"} 
                 />
-                <div className="set-game advancedSettings-text">
-                  ATTENTION: Using region filtering will automatically set the difficulty to HARD.
-                </div>
+                <Button className="set-game info-button" onClick={toggleInfoSwitch}>
+                  More Info
+                </Button>
+                {infoIsOn && (
+                  <div className="set-game advancedSettings-text">
+                    Filtering sets the difficulty to HARD and the additional location type (HILLS) can be added to ensure there is enough data to play.
+                  </div>)}
+                
               </div>
             )}
           </div>
