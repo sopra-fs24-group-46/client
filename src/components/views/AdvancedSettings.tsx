@@ -216,25 +216,12 @@ const AdvancedSettings = () => {
           <div className="set-game column">
 
           <div className="set-game container basic-settings">
-            <StoreNLoadSettings
-              settings={settings}
-              setSettings={loadSetting}
-            />
-          </div>
-          <div className="set-game container basic-settings">
             <div className="set-game boxTitle">
                 General:
             </div>
 
             <div className="set-game inputs">
               
-              <FormField
-                className="authentication"
-                type ="text"
-                placeholder="name"
-                value={settings.name}
-                onChange={(n) => updateSettings("name", n)}
-              />
               <FormField
                 className="setGame"
                 label="Max number of players:"
@@ -301,15 +288,27 @@ const AdvancedSettings = () => {
           </div>
 
           <div className="set-game column">
+
+          <div className="set-game container basic-settings">
+            <StoreNLoadSettings
+              settings={settings}
+              setSettings={loadSetting}
+              name={settings.name}
+              setName={(n) => updateSettings("name", n)}
+            />
+          </div>
           <div className="set-game container location-settings">
 
             <div className="set-game boxTitle">Location types:</div>
-            <div className="set-game locationTypes-container" style={{display: "flex", flexDirection: "column"}}>
+            <div className="set-game locationTypes-container" style={{width: "100%"}}>
               <Button onClick={() => toggleLocationTypes(['LAKE'])}
+              style ={{width: "30%", marginRight: "5%"}}
               className={settings.locationTypes.includes("LAKE") ? "selected" : ""}>Lakes</Button>
                 <Button onClick={() => toggleLocationTypes(['ALPINE_MOUNTAIN', 'MOUNTAIN']) }
+              style ={{width: "30%", marginRight: "5%"}}
               className={settings.locationTypes.includes("MOUNTAIN") ? "selected" : ""}>Mountains</Button>
                 <Button onClick={() => toggleLocationTypes(['HILL', 'MAIN_HILL'])}
+              style ={{width: "30%"}}
               className={settings.locationTypes.includes("HILL") ? "selected" : ""}>Hills</Button>
             </div>
           </div>
