@@ -1,0 +1,32 @@
+@import "../theme";
+
+.store-settings {
+    &.clickable-list {
+        cursor: pointer;
+        background-color: $formFieldBackground;
+        opacity: 0.8;
+        padding: 5px;
+        margin: 5px;
+        border-radius: 5px;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+    
+    &.container {
+        display: flex;
+        // flex-direction: column;
+        align-items: center;
+        flex-direction: row;
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    &.load-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+}
