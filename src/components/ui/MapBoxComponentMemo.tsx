@@ -276,7 +276,7 @@ const MapBoxComponent = ({ roundState, jokerData, currentQuestionLocation, guess
         if(guessesMapReveal && currentQuestionLocation) {
 
           //Create marker for current question location
-          const newMarker = new mapboxgl.Marker({color: 'red'})
+          const newMarker = new mapboxgl.Marker({color: 'red', scale : 1.5})
           .setLngLat([currentQuestionLocation.x, currentQuestionLocation.y])
           .addTo(map);
 
