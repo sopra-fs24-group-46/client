@@ -88,7 +88,7 @@ npm run build
 </h3>
 <h3 align="center">
   <br>
-  Round announcement/Start of the game
+  Gameplay
   <br>
   <br>
   <a href="https://github.com/sopra-fs24-group-46"><img src="/ReadMeScreenshots/playing.png" width="500"></a>
