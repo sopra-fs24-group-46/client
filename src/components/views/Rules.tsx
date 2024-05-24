@@ -26,7 +26,7 @@ const Rules = () => {
           
 
           <p><strong>Number of Players:</strong> The game can be played with up to 5 players.</p>
-          <p><strong>Number of Rounds:</strong> Each game consists of multiple rounds, which each display one location which you then have to guess on the map. You can play up to 10 rounds in a single game.</p>
+          <p><strong>Number of Rounds:</strong> Each game consists of multiple rounds where a location name is displayed, and you have to guess its position on the map. You can play up to 10 rounds in one game.</p>
           <p><strong>Guessing Time:</strong> As soon as a location name gets shown to you and the map gets displayed, the guessing stage of the game has started. In this stage each player has to submit a guess by clicking on the map. Guessing time can be set between 2 and 120 seconds.  </p>
           <p><strong>Power Ups:</strong> Power ups add a temporary advantage over other players during the game. Each round, before the map gets shown, every player gets a chance to choose one out of three different power ups. Each power up can only be used once per game and will last for one round.
            Players can choose between the Joker, Double Points or the Shield power up to try to win over their opponents.
