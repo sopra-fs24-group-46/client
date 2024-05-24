@@ -62,7 +62,7 @@ const SignUp = () => {
             onChange={(n) => setPassword(n)}
           />
           <div className="authentication password-hint">
-            password lenght {password ? `${password.length}/6` : '0/6'}
+            password length {password ? `${password.length}/6` : '0/6'}
           </div>
           <div className="authentication button-container">
             <Button

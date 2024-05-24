@@ -49,7 +49,7 @@ const Guessing = ({ setJokerData, numberOfRounds}) => {
     <div className="game_view_container">
         <PowerUpOverlay powerUp={powerUpInUse} />
         <div className="guess container">
-            <div className="guess round-number">{currentRound}\{numberOfRounds}</div>
+            <div className="guess round-number">{currentRound}/{numberOfRounds}</div>
           <div className="guess text-container" >
             <div className="guess text">
               Find:

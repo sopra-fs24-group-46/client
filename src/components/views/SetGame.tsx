@@ -16,6 +16,7 @@ import { Storage } from "helpers/LocalStorageManagement";
 import { easy_names, medium_names } from "helpers/Constants";
 import { getGameState } from "components/game/GameApi";
 import LeaderBoard from "components/game/LeaderBoard";
+import RuleLink from "components/ui/RuleLink";
 
 
 
@@ -64,6 +65,7 @@ const SetGame = () => {
   const [advancedFilteringIsOn, setIsOn] = useState(false);
   const [infoIsOn, setInfoIsOn] = useState(false);
   const [mapRevealTime, setMapRevealTime] = useState(15);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   
@@ -83,7 +85,6 @@ const SetGame = () => {
     // Save user credentials for verification process
     const { id, token } = Storage.retrieveUser();
     const { gameId, playerId } = Storage.retrieveGameIdAndPlayerId();
-    
     // Explicitly convert values to integers
     const maxPlayersInt = parseInt(maxPlayers);
     const roundsInt = parseInt(rounds);
@@ -126,6 +127,7 @@ const SetGame = () => {
       id: id,
       token: token,
     }
+    setIsLoading(true);
     try {
       // Send a PUT request to the backend
       console.log(requestBody);
@@ -152,8 +154,9 @@ const SetGame = () => {
     } catch (error) {
 
       if (!(advancedFilteringIsOn && locationTypes.includes("ALPINE_MOUNTAIN"))) {
-        showError("Creating game failed: \n " + shortError(error));
+        showError("Creating game failed. Not enough Mountains/Lakes available for " + rounds + " rounds: \n " + shortError(error));
         // only go on if advanced settings are on and mountain is selected
+        setIsLoading(false);
         return;
       }
     }
@@ -168,6 +171,7 @@ const SetGame = () => {
     try { await callServerCreateGame(incrementalLocationTypes); return; } catch (error) {
         showError("Creating game failed hard: " + shortError(error));
     };
+    setIsLoading(false);
   };
 
   const goBacktoProfile = () => {
@@ -227,7 +231,7 @@ const SetGame = () => {
 
   return (
     <BaseContainer>
-
+      <RuleLink />
       <h1 className="header1 setGame">Choose Settings</h1>
       <h1 className="header tiny">Settings</h1>
 
@@ -349,7 +353,7 @@ const SetGame = () => {
         <div className="set-game button-container">
           <Button onClick={createGame} disabled={!isFormValid()}
           style={{ width: "100%", marginRight: "2%", marginLeft: "2%" }}
-          >Create Game</Button> {/* Add the Create Game button */}
+          >{isLoading ? "Loading..." : "Create Game"}</Button> {/* Add the Create Game button */}
           <Button onClick={() => navigate("advanced")}
           style={{ width: "100%" , marginRight: "2%"}}
           >Advanced Settings</Button>

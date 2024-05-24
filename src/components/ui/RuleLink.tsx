@@ -11,7 +11,7 @@ const RuleLink = () => {
     return (
         <div style={{ position: "fixed", bottom: 0, left: 0, zIndex: 4 }}>
             <Button className="authentication link-button" onClick={handleLoginClick} style={{margin: 0, height: "30px"}}>
-                Rules
+                Rules/Info
             </Button>
         </div>
     );

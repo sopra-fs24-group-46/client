@@ -18,6 +18,7 @@ import { getGameState } from "components/game/GameApi";
 import LeaderBoard from "components/game/LeaderBoard";
 import NameFilter from "components/ui/NameFilter";
 import StoreNLoadSettings from "components/ui/StoreNLoadSettings";
+import RuleLink from "components/ui/RuleLink";
 
 
 
@@ -76,6 +77,7 @@ const AdvancedSettings = () => {
   const navigate = useNavigate(); 
   const { showError } = useError();
   const { id, token } = Storage.retrieveUser();
+  const [isLoading, setIsLoading] = useState(false);
   const [settings, setSettings] = useState<Settings>({
     id: id,
     token: token,
@@ -137,6 +139,7 @@ const AdvancedSettings = () => {
       id: id,
       token: token,
     }
+    setIsLoading(true);
     try {
       // Send a PUT request to the backend
       console.log(requestBody);
@@ -161,8 +164,9 @@ const AdvancedSettings = () => {
       // await throwsError();
       return;
     } catch (error) {
-      showError("Creating game failed: \n " + shortError(error));
+      showError("Creating game failed. Not enough Mountains/Lakes available for " + settings.rounds + " rounds: \n " + shortError(error));
     }
+    setIsLoading(false);
   };
 
   const backToSimpleSettings = () => {
@@ -206,7 +210,7 @@ const AdvancedSettings = () => {
 
   return (
     <BaseContainer>
-
+      <RuleLink />
       <h1 className="header1 setGame">Advanced Settings</h1>
       <h1 className="header tiny">Advanced</h1>
 
@@ -361,7 +365,7 @@ const AdvancedSettings = () => {
         <div className="set-game button-container">
           <Button onClick={createGame}
           style={{ width: "100%", marginRight: "2%", marginLeft: "2%" }}
-          >Create Game</Button> {/* Add the Create Game button */}
+          >{isLoading ? "Loading..." : "Create Game"}</Button> {/* Add the Create Game button */}
           <Button onClick={() => backToSimpleSettings()}
           style={{ width: "100%" , marginRight: "2%"}}
           >Back to Normal Settings</Button>
