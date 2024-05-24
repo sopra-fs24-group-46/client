@@ -12,7 +12,7 @@ How good do you and your peers know Switzerland's most famous landscapes? Would 
 The front-end components of this project were written in TSX and JS, using scss as well for styling. Moreover, the React framework is used. Communication between the server and client is achieved through Axios.
 
 ## High Level Components
-The Client is the User Interface desgined to interact with the [Server](https://github.com/sopra-fs24-group-46/server). It displays all the needed Informations and provides pages to make the necessary calls to the server. The Client takes care of Input validation and automatically navigates through the views as the game progresses. More over it loads the Map from [MapBox](https://github.com/sopra-fs24-group-46/client/blob/development/src/components/game/Lobby.tsx) Api to visualize locations in a meaningful way. Further we used QRCode.React to create QR-codes in the [Lobby](https://github.com/sopra-fs24-group-46/client/blob/development/src/components/game/Lobby.tsx)
+The Client (this Repo) is the User Interface desgined to interact with the [Server](https://github.com/sopra-fs24-group-46/server). It displays all the needed Informations and provides pages to make the necessary calls to the server. The Client takes care of Input validation and automatically navigates through the views as the game progresses. More over it loads the Map from [MapBox](https://github.com/sopra-fs24-group-46/client/blob/development/src/components/game/Lobby.tsx) Api to visualize locations in a meaningful way. Further we used QRCode.React to create QR-codes in the [Lobby](https://github.com/sopra-fs24-group-46/client/blob/development/src/components/game/Lobby.tsx)
 
 ## Launch & Deployment
 
