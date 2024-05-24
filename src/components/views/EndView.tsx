@@ -40,7 +40,7 @@ const EndView = () => {
       if(!response.data) return;
       await joinGame(response.data.gameId, displayName , showError);
       navigate("/game/wait_for_creation");
-    } catch {
+    } catch(error) {
       console.log("Waiting for next game ...");
     }
   }
