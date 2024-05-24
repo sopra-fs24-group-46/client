@@ -35,7 +35,7 @@ const Edit = () => {
         console.log("Fetched User:", user);
       } catch (error) {
         console.error(`Something went wrong while fetching the user: \n${handleError(error)}`);
-        alert("Something went wrong while fetching the user! See the console for details.");
+        showError("Something went wrong while fetching the user! See the console for details.");
       }
     }
     fetchData();
@@ -67,15 +67,16 @@ const Edit = () => {
       await api.put(`/users/${storedUserId}`, requestBody);
       // Send PUT request to the correct endpoint with the updated username and user ID
       alert("Changes saved successfully!");
-      window.location.reload();
+      // window.location.reload();
+      setInitialUsername(username);
     } catch (error) {
       console.error(
           `Something went wrong while saving the changes: \n${handleError(error)}`
       );
-      alert(
+      showError(
           "Something went wrong while saving the changes! See the console for details."
       );
-      window.location.reload();
+      // window.location.reload();
     }
   };
 
@@ -95,15 +96,17 @@ const Edit = () => {
       await api.put(`/users/${storedUserId}`, requestBody);
       // Send PUT request to the correct endpoint with the updated username and user ID
       alert("Changes saved successfully!");
-      window.location.reload();
+      // window.location.reload();
+      setPassword('');
+      setConfirmPassword('');
     } catch (error) {
       console.error(
           `Something went wrong while saving the changes: \n${handleError(error)}`
       );
-      alert(
+      showError(
           "Something went wrong while saving the changes! See the console for details."
       );
-      window.location.reload();
+      // window.location.reload();
     }
   };
 
@@ -154,15 +157,20 @@ const Edit = () => {
               onChange={handlePasswordChange}
               placeholder="new password"
           />
+          <div className="authentication password-hint">
+            password length {password ? `${password.length}/6` : '0/6'}
+          </div>
           <FormFieldEdit
               className="authentication"
-              label="confirm new password"
               type="password"
               id="confirmPassword"
               value={confirmPassword}
               onChange={handleConfirmPasswordChange}
-              placeholder="new password"
+              placeholder="confirm password"
           />
+          <div className="authentication password-hint">
+            {confirmPassword !== password ? 'passwords do not match' : ''}
+          </div>
 
           <Button onClick={changePassword} className="edit" disabled={newPasswordIsValid(password, confirmPassword)} style={{width: "100%"}}>
             Save new password
