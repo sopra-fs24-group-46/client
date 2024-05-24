@@ -18,6 +18,7 @@ import { getGameState } from "components/game/GameApi";
 import LeaderBoard from "components/game/LeaderBoard";
 import NameFilter from "components/ui/NameFilter";
 import StoreNLoadSettings from "components/ui/StoreNLoadSettings";
+import RuleLink from "components/ui/RuleLink";
 
 
 
@@ -209,7 +210,7 @@ const AdvancedSettings = () => {
 
   return (
     <BaseContainer>
-
+      <RuleLink />
       <h1 className="header1 setGame">Advanced Settings</h1>
       <h1 className="header tiny">Advanced</h1>
 

@@ -16,6 +16,7 @@ import { Storage } from "helpers/LocalStorageManagement";
 import { easy_names, medium_names } from "helpers/Constants";
 import { getGameState } from "components/game/GameApi";
 import LeaderBoard from "components/game/LeaderBoard";
+import RuleLink from "components/ui/RuleLink";
 
 
 
@@ -230,7 +231,7 @@ const SetGame = () => {
 
   return (
     <BaseContainer>
-
+      <RuleLink />
       <h1 className="header1 setGame">Choose Settings</h1>
       <h1 className="header tiny">Settings</h1>
 
