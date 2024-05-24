@@ -124,7 +124,7 @@ SoPra Group 46 2024 consists of [Serafin Schoch](https://github.com/S3r4f1n), [D
 
 We would like to thank our teaching assistant [Cedric von Rauscher](https://github.com/cedric-vr) for his support throughout the semester. We also like to thank GeoAdmin for providing its API. This semester has been both intriguing and challenging, providing us with valuable opportunities for growth. We've acquired extensive knowledge, not only in coding but also in teamwork and project execution. We would like to as well thank the whole SoPra 2024 team for the effort, we appreciate the opportunity and the experience gained from this project.
 ## License
-
+The project is licensed under the Apache 2.0 License - see the LICENSE [file](https://github.com/sopra-fs24-group-46/client/blob/development/LICENSE) for details.
 ### GNU GPLv3
 
 ### MIT License
