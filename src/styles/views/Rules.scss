@@ -33,6 +33,12 @@
     max-height: 400px;
   }
 
+  &.settings-title{
+    @include normal-title;
+    margin-bottom: 1em;
+    margin-top: 1em;
+  }
+
   .instruction-title {
     font-size: 1.5rem;
     margin-bottom: 20px;

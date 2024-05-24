@@ -42,6 +42,11 @@ const Rules = () => {
             The <strong>Double Points</strong> power up is super easy to understand and will just double the points you score in the upcoming round. Be sure to used it when you feel confident. The <strong>Shield</strong> power up helps you when you are unsure about a location.
             Using it will safely give you the average score of all players for the upcoming round.
           </div>
+
+          <div className="rules settings-title">
+            Settings Info:
+          </div>
+          <div>Advanced options will always set the difficulty to HARD.</div>
       </div>
       <Button onClick={handleGoBackClick} className="edit">Go Back</Button>
     </div>
