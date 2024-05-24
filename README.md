@@ -12,8 +12,7 @@ How good do you and your peers know Switzerland's most famous landscapes? Would 
 The front-end components of this project were written in TSX and JS, using scss as well for styling. Moreover, the React framework is used. Communication between the server and client is achieved through Axios.
 
 ## High Level Components
-The [Client](https://github.com/sopra-fs24-group-46/client/tree/development/src) is the User Interface desgined to interact with the [Server](https://github.com/sopra-fs24-group-46/server). It displays all the needed Informations and provides pages to make the necessary calls to the server. The Client takes care of Input validation and automatically navigates through the views as the game progresses. More over it loads the Map from [MapBox](https://github.com/sopra-fs24-group-46/client/blob/development/src/components/game/Lobby.tsx) Api to visualize locations in a meaningful way. Further we used QRCode.React to create QR-codes in the [Lobby](https://github.com/sopra-fs24-group-46/client/blob/development/src/components/game/Lobby.tsx)
-
+The [Client](https://github.com/sopra-fs24-group-46/client/tree/development/src) is the User Interface desgined to interact with the [Server](https://github.com/sopra-fs24-group-46/server). It displays all the needed Informations and provides pages to make the necessary calls to the server. The Client takes care of Input validation and automatically navigates through the views as the game progresses. More over it loads the Map from [MapBox](https://github.com/sopra-fs24-group-46/client/blob/development/src/components/game/Lobby.tsx) Api to visualize locations in a meaningful way. Further we used React-Toastify (Licensed under MIT), QRCode.React (Licensed under ISC, see License section below) to create QR-codes in the [Lobby](https://github.com/sopra-fs24-group-46/client/blob/development/src/components/game/Lobby.tsx)
 ## Launch & Deployment
 
 First install the node packages
@@ -126,4 +125,31 @@ SoPra Group 46 2024 consists of [Serafin Schoch](https://github.com/S3r4f1n), [D
 We would like to thank our teaching assistant [Cedric von Rauscher](https://github.com/cedric-vr) for his support throughout the semester. We also like to thank GeoAdmin for providing its API. This semester has been both intriguing and challenging, providing us with valuable opportunities for growth. We've acquired extensive knowledge, not only in coding but also in teamwork and project execution. We would like to as well thank the whole SoPra 2024 team for the effort, we appreciate the opportunity and the experience gained from this project.
 ## License
 
-GNU GPLv3
+### GNU GPLv3
+
+### MIT License
+
+### ISC License:
+
+QR Code generator library (TypeScript)
+
+Copyright (c) Project Nayuki.
+https://www.nayuki.io/page/qr-code-generator-library
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
