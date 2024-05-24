@@ -138,11 +138,10 @@ const Profile = () => {
         <Button width="100%" onClick={() => editUsername()}>
           Edit Username or password
         </Button>
-        <Button width="100%" onClick={() => rules()}>
+        <Button width="100%" onClick={() => rules()}
+          style={{marginBottom: "10px"}}
+        >
           Game Rules
-        </Button>
-        <Button width="100%" onClick={() => joinGameHandler()}>
-          Join Game
         </Button>
         <FormField
           className="profile"
@@ -151,6 +150,10 @@ const Profile = () => {
           value={gameId}
           onChange={(un: string) => setGameId(un)}
         />
+        <Button width="100%" onClick={() => joinGameHandler()}
+        disabled={gameId.length === 0}>
+          Join Game
+        </Button>
       </div>
     );
   }
