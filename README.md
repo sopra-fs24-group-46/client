@@ -110,6 +110,13 @@ npm run build
 
 </h3>
 
+## Roadmap
+This sections outlines the top 3 future improvements (client sided) which we would suggest to implement when continuing this project: 
+
+- Optimize the game for mobile users. At the moment the game is playable on mobile but the user experience is not optimal. Changes on the responsiveness of our design would improve the experience for mobile players.
+- Dynamic approximation of the optimal zoom level based on the scattering of the guesses. This could improve the quality of the guess reveal state of our game.
+- Optimize the descriptions of the features of the game and game settings. Describing each feature seperately and in a more user friendly way than with a single information page could improve the experience of the users of the game. 
+
 ## Authors and Acknowledgment
 
 
