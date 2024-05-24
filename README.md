@@ -16,9 +16,15 @@ The [Client](https://github.com/sopra-fs24-group-46/client/tree/development/src)
 
 ## Launch & Deployment
 
-The following command runs the app in the dev mode.
-- npm run dev
+First install the node packages
+```console
+npm install
+```
 
+The following command runs the app in the dev mode.
+```console
+npm run dev
+```
   
   Open http://localhost:3000 to view it in your browser.
 
@@ -26,8 +32,9 @@ The following command runs the app in the dev mode.
 
 Moreover, this command builds the app for dev to the build folder.
 
-- npm run build
-
+```console
+npm run build
+```
 ## Illustrations
 <h3 align="center">
   <br>
