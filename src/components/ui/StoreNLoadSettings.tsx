@@ -6,9 +6,10 @@ import { api, shortError } from "helpers/api";
 import { useError } from "./ErrorContext";
 import { Storage } from "helpers/LocalStorageManagement";
 import "../../styles/ui/StoreSettings.scss"
+import { FormField } from "./FormFieldString";
 
 
-const StoreNLoadSettings = ({ settings, setSettings, ...props }) => {
+const StoreNLoadSettings = ({ settings, setSettings, name, setName, ...props }) => {
 
   const [storedSettings, setStoredSettings] = useState([]);
   const {id, token} = Storage.retrieveUser();
@@ -40,12 +41,21 @@ const StoreNLoadSettings = ({ settings, setSettings, ...props }) => {
 
   return (
     <div className="store-settings container">
+              <FormField
+                className="authentication"
+                type ="text"
+                placeholder="name"
+                value={settings.name}
+                onChange={setName}
+              />
+      <div style={{display: "flex", flexDirection: "row", gap: "1em", width: "100%"}}>
       <Button onClick={storeSettings}
+        style={{width: "100%"}}
         disabled={settings.name.length === 0}
       >Store Settings</Button>
       <div className="store-settings load-container">
         Stored Settings:
-      <div style={{overflowY: "scroll", maxHeight: "20vh"}}>
+      <div style={{overflowY: "scroll", maxHeight: "20vh", width: "100%", overflowX: "hidden"}}>
         {storedSettings.map((settings) => (
           <div key={settings}
             onClick={() => setSettings(settings)}
@@ -54,6 +64,7 @@ const StoreNLoadSettings = ({ settings, setSettings, ...props }) => {
             
           </div>
         ))}
+      </div>
       </div>
     </div>
     </div>
@@ -65,6 +76,8 @@ StoreNLoadSettings.propTypes = {
     name: PropTypes.string.isRequired,
   }).isRequired,
   setSettings: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  setName: PropTypes.func.isRequired
 };
 
 export default StoreNLoadSettings;
