@@ -18,12 +18,19 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     max-width: 800px;
     margin: 0 auto;
+
+
   }
 
   &.content {
     width: 100%;
     max-width: 600px;
+    display:flex;
+    flex-direction: column;
     text-align: center;
+
+    overflow-y: auto;
+    max-height: 400px;
   }
 
   .instruction-title {
@@ -40,6 +47,29 @@
     margin-top: 20px;
     width: 100%;
     max-width: 200px;
+  }
+
+  .powerUp-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Hide the scrollbar track */
+  .content::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+  }
+
+  .content::-webkit-scrollbar-track {
+    background: transparent; /* Hide the scrollbar track background */
+  }
+
+  /* Style the scrollbar thumb */
+  .content::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Optional: add rounded corners to the scrollbar thumb */
+    border: 2px solid transparent; /* Optional: creates a space around the thumb */
+    background-clip: content-box; /* Optional: prevents the border from showing */
   }
 }
 
