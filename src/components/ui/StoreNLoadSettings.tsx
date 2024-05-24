@@ -44,15 +44,11 @@ const StoreNLoadSettings = ({ settings, setSettings, name, setName, ...props }) 
               <FormField
                 className="authentication"
                 type ="text"
-                placeholder="name"
+                placeholder="Setting name"
                 value={settings.name}
                 onChange={setName}
               />
       <div style={{display: "flex", flexDirection: "row", gap: "1em", width: "100%"}}>
-      <Button onClick={storeSettings}
-        style={{width: "100%"}}
-        disabled={settings.name.length === 0}
-      >Store Settings</Button>
       <div className="store-settings load-container">
         Stored Settings:
       <div style={{overflowY: "scroll", maxHeight: "20vh", width: "100%", overflowX: "hidden"}}>
@@ -66,6 +62,10 @@ const StoreNLoadSettings = ({ settings, setSettings, name, setName, ...props }) 
         ))}
       </div>
       </div>
+      <Button onClick={storeSettings}
+        style={{width: "100%"}}
+        disabled={settings.name.length === 0}
+      >Store Settings</Button>
     </div>
     </div>
   );
