@@ -27,10 +27,20 @@
     max-width: 600px;
     display:flex;
     flex-direction: column;
-    text-align: center;
+    text-align: justify;
+    
+    @media all and (max-width: 632px) {
+      text-align: center;
+    }
 
     overflow-y: auto;
     max-height: 400px;
+  }
+
+  &.settings-title{
+    @include normal-title;
+    margin-bottom: 1em;
+    margin-top: 1em;
   }
 
   .instruction-title {

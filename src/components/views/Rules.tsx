@@ -42,6 +42,13 @@ const Rules = () => {
             The <strong>Double Points</strong> power up is super easy to understand and will just double the points you score in the upcoming round. Be sure to used it when you feel confident. The <strong>Shield</strong> power up helps you when you are unsure about a location.
             Using it will safely give you the average score of all players for the upcoming round.
           </div>
+
+          <div className="rules settings-title" style={{textAlign: "center"}}>
+            Settings Info:
+          </div>
+          <p><strong>Difficulty:</strong> we provide three preselected sets of Mountains and Lakes. You can choose between EASY, MEDIUM and HARD. These cannot be combined with any of the other filtering options.</p>
+          <p><strong>Region Filter:</strong> here you can select a Canton or a District of Switzerland. Only Mountains/Lakes in that region will be part of the Question pool. Since our data does not contain all Mountains/Lakes, some Regions might only have a hand full Mountains/Lakes. And the round number must be lowered accordingly.</p>
+          <p><strong>Advanced Settings:</strong> here you can combine the Region Filter with the Name Filter and additionally select Hills as a Location Type. The Name Filter will limit the Question Pool to the selected names. This can be used to create custom difficulties. These Settings can be stored and loaded.</p>
       </div>
       <Button onClick={handleGoBackClick} className="edit">Go Back</Button>
     </div>
